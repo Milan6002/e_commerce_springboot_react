@@ -73,7 +73,7 @@ function Cart() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {products.map((item) => (
-            <div key={item.productId} className="bg-white rounded-lg shadow-md overflow-hidden">
+            <div key={item.product_id} className="bg-white rounded-lg shadow-md overflow-hidden">
               <img
                 src={`data:image/jpeg;base64,${item.product_image}`}
                 alt={item.product_name}
