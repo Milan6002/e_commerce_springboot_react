@@ -29,15 +29,15 @@ public class AuthService {
 
     public String register(UserModel userModel, MultipartFile image) throws IOException {
         if (userRepository.findByEmail(userModel.getEmail()) == null) {
-            return "User already exists";
+            User user = new User();
+            BeanUtils.copyProperties(userModel, user);
+            user.setPassword(passwordEncoder.encode(userModel.getPassword()));
+            user.setRole("ROLE_USER");
+            user.setImg(image.getBytes());
+            userRepository.save(user);
+            return "User registered successfully";
         }
-        User user = new User();
-        BeanUtils.copyProperties(userModel, user);
-        user.setPassword(passwordEncoder.encode(userModel.getPassword()));
-        user.setRole("ROLE_USER");
-        user.setImg(image.getBytes());
-        userRepository.save(user);
-        return "User registered successfully";
+        return "User already exists";
     }
 
     public String login(LoginModel loginModel) {
