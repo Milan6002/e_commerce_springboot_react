@@ -116,7 +116,7 @@ function ViewProduct() {
           {/* Buttons */}
           <div className="mt-6 flex space-x-4">
             <button
-              onClick={(e) => handleAddToCart(e, 1, product.product_id, 1)}
+              onClick={(e) => handleAddToCart(e, 2, product.product_id, 1)}
               className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-6 rounded-lg"
             >
               Add to Cart

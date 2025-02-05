@@ -81,7 +81,7 @@ function Products() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
+    <div className="min-h-screen bg-gray-100 p-6 flex">
       {localStorage.getItem("role") === "ROLE_ADMIN" && (
         <button
           onClick={() => navigate("/AddProduct")}
@@ -115,18 +115,20 @@ function Products() {
 
       {/* Product Display */}
       {!loading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+        <div className="w-full">
           {filteredProducts.length > 0 ? (
             filteredProducts.map((product) => (
               <div
                 key={product.product_id}
-                className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                className="bg-white flex p-4 gap-2.5 mb-4 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
               >
-                <img
-                  src={`data:image/jpeg;base64,${product.product_image}`}
-                  alt={product.product_name}
-                  className="w-full h-72 object-cover"
-                />
+                <div className="min-w-60" >
+                  <img
+                    src={`data:image/jpeg;base64,${product.product_image}`}
+                    alt={product.product_name}
+                    className="w-full items-center"
+                  />
+                </div>
                 <div className="p-4">
                   <h2 className="text-xl font-bold text-gray-800">
                     {product.product_name}

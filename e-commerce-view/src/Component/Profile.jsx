@@ -23,7 +23,7 @@ function Profile() {
           email: response.data.email,
           img: response.data.img,
         });
-        localStorage.setItem("avtar", response.data.img);
+        localStorage.setItem("avtar", response.data.img); 
 
         // Dispatch event to update Navbar avatar
         const event = new CustomEvent("avatarUpdated", {

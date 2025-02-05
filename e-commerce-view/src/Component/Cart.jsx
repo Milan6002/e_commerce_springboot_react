@@ -64,33 +64,57 @@ function Cart() {
   }, [cart]);
 
   return (
-    <div className="min-h-screen bg-gray-100 py-6 px-4 sm:px-6 lg:px-8">
+    <div className="bg-gray-100 py-6 px-4 sm:px-6 lg:px-8">
       <h1 className="text-3xl font-semibold text-center text-gray-800 mb-6">Your Cart</h1>
       {cart.length === 0 ? (
         <p className="text-center text-xl text-gray-600">
           {localStorage.getItem("cart") ? "Loading cart..." : "Cart is empty"}
         </p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {products.map((item) => (
-            <div key={item.product_id} className="bg-white rounded-lg shadow-md overflow-hidden">
-              <img
-                src={`data:image/jpeg;base64,${item.product_image}`}
-                alt={item.product_name}
-                className="w-full h-56 object-cover"
-              />
-              <div className="p-4">
-                <h2 className="text-xl font-semibold text-gray-800">{item.product_name}</h2>
-                <p className="text-sm text-gray-600 mt-2">{item.description}</p>
-                <div className="mt-4 flex justify-between items-center">
-                  <span className="text-lg font-semibold text-gray-900">
-                    ₹{item.price} x {item.quantity}
-                  </span>
-                  <span className="text-sm text-gray-500">{item.category_name}</span>
+        <div className="flex gap-6 ">
+          <div className="">
+            {products.map((item) => (
+              <div key={item.product_id} className="bg-white rounded-lg shadow-md overflow-hidden flex p-4 gap-2.5 mb-4">
+                <div className="min-w-60  ">
+                  <img
+                    src={`data:image/jpeg;base64,${item.product_image}`}
+                    alt={item.product_name}
+                    className="w-full"
+                  />
+                </div>
+                <div className="p-4">
+                  <h2 className="text-xl font-semibold text-gray-800">{item.product_name}</h2>
+                  <p className="text-sm text-gray-600 mt-2">{item.description}</p>
+                  <div className="mt-4 flex justify-between items-center">
+                    <span className="text-lg font-semibold text-gray-900">
+                      ₹{item.price} x {item.quantity}
+                    </span>
+                    <span className="text-sm text-gray-500">{item.category_name}</span>
+                  </div>
                 </div>
               </div>
+            ))}
+          </div>
+          <div className="bg-white rounded-2xl w-full h-75 ">
+            <div className="border-b-2 border-b-red-100 p-3">
+              <h1 className=" text-xl uppercase">Price details</h1>
             </div>
-          ))}
+            <div className="p-3">
+              <p>Price (1 item) <span className="ml-35">₹ 2,22,900</span> </p>
+            </div>
+            <div className="p-3">
+              <p>Discount <span className="ml-44 text-green-600">- ₹9000</span></p>
+            </div>
+            <div className="p-3 border-b-2 border-dashed border-red-100 ">
+              <p> Delivery Charges <span className="ml-33 text-green-600"> Free</span> </p>
+            </div>
+            <div className="p-3 border-b-2 border-dashed border-red-100">
+              <p>Total Amount <span className="ml-35">₹ 2,31,400</span></p>
+            </div>
+            <div className="p-3">
+              <p className="text-green-600">You will save ₹9000 on this order</p>
+            </div>
+          </div>
         </div>
       )}
     </div>
