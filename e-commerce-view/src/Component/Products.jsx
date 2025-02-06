@@ -16,6 +16,7 @@ function Products() {
         const response = await AdminService.getAllProducts();
         const productList = response.data;
 
+        //Below code is used to display category name from category id
         const updatedProducts = await Promise.all(
           productList.map(async (product) => {
             const categoryResponse = await AdminService.getCategoryById(
@@ -80,26 +81,26 @@ function Products() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4 md:p-6">
+    <div className="min-h-screen bg-gray-100 p-6">
       {localStorage.getItem("role") === "ROLE_ADMIN" && (
         <button
           onClick={() => navigate("/AddProduct")}
-          className="mb-5 p-2 md:p-3 px-3 md:px-4 text-blue-600 font-bold text-lg rounded-lg border-2 border-blue-600 hover:bg-blue-600 hover:text-white transition-transform transform hover:scale-105"
+          className="mb-5 p-3 px-4 mt-5 text-blue-600 font-bold text-lg rounded-lg border-2 border-blue-600 hover:bg-blue-600 hover:text-white transition-transform transform hover:scale-105"
         >
           Add Product
         </button>
       )}
 
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+      <div className="flex">
         {/* Sorting Controls */}
-        <div className="mb-4 md:mb-0">
+        <div className="mb-5">
           <form>
-            <label className="me-2 md:me-6 text-lg" htmlFor="sortbyCategory">
+            <label className="me-6 text-lg" htmlFor="sortbyCategory">
               Sort By Category:
             </label>
             <select
               id="sortbyCategory"
-              className="bg-white p-1 rounded-md"
+              className="bg-white p-1 me-6"
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
             >
@@ -112,7 +113,6 @@ function Products() {
             </select>
           </form>
         </div>
-
 
         {/* Product Display */}
         {!loading ? (
@@ -179,73 +179,7 @@ function Products() {
         ) : (
           <p className="text-center text-gray-600">Loading products...</p>
         )}
-
       </div>
-
-      {/* Product Display */}
-      {!loading ? (
-        <div className="w-full">
-          {filteredProducts.length > 0 ? (
-            filteredProducts.map((product) => (
-              <div
-                key={product.product_id}
-                className="bg-white flex flex-col md:flex-row p-4 gap-2.5 mb-4 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
-              >
-                <div className="md:w-64">
-                  <img
-                    src={`data:image/jpeg;base64,${product.product_image}`}
-                    alt={product.product_name}
-                    className="w-96 md:h-64 object-cover"
-                  />
-                </div>
-                <div className="p-4 w-full">
-                  <h2 className="text-lg md:text-xl font-bold text-gray-800">
-                    {product.product_name}
-                  </h2>
-                  <p className="text-gray-600 text-sm md:text-base">
-                    Description: {product.description}
-                  </p>
-                  <p className="text-gray-800 font-semibold text-base md:text-lg">
-                    Price: ₹{product.price}
-                  </p>
-
-                  {localStorage.getItem("role") === "ROLE_ADMIN" ? (
-                    <div className="mt-4 flex justify-between">
-                      <button
-                        onClick={(e) => handleUpdate(e, product.product_id)}
-                        className="text-blue-600 font-medium hover:underline"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={(e) => handleDelete(e, product.product_id)}
-                        className="text-red-600 font-medium hover:underline"
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="mt-2">
-                      <button
-                        onClick={(e) =>
-                          handleViewProduct(e, product.product_id)
-                        }
-                        className="bg-blue-600 p-2 px-4 text-white rounded-lg hover:bg-blue-500"
-                      >
-                        View Product
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))
-          ) : (
-            <p className="text-center text-gray-600">No products available.</p>
-          )}
-        </div>
-      ) : (
-        <p className="text-center text-gray-600">Loading products...</p>
-      )}
     </div>
   );
 }

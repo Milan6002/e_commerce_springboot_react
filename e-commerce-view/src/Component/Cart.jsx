@@ -163,15 +163,6 @@ function Cart() {
               Price Details
             </h1>
 
-<<<<<<< HEAD
-          <div className="mt-3 border-b-2 border-dashed border-gray-300 pb-3">
-            <p className="flex justify-between text-lg font-bold">
-              Total Amount 
-              <span>
-                ₹{products.reduce((total, item) => total + item.price * item.quantity, 0)}
-              </span>
-            </p>
-=======
             <div className="mt-4">
               <p className="flex justify-between text-lg">
                 Price ({products.length} Items)
@@ -201,7 +192,6 @@ function Cart() {
             <div className="mt-3">
               <button type="submit" className="p-2 bg-blue-700 text-white font-extrabold font-sans rounded-xl  uppercase px-3 text-lg hover:bg-blue-500 hover:cursor-pointer">Check Out</button>
             </div>
->>>>>>> 078d1054c1b27514cddc2f88e82b29e716c9bbd0
           </div>
         </div>
       )}
