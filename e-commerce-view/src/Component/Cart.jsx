@@ -149,12 +149,6 @@ function Cart() {
               </span>
             </p>
           </div>
-
-          <div className="mt-3">
-            <p className="text-green-600 text-lg">
-              You will save ₹9000 on this order!
-            </p>
-          </div>
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:8080/api/auth/cart/";
+const BASE_URL = "http://192.168.1.11:8080/api/auth/cart/";
 
 class CartService{
 

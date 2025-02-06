@@ -52,7 +52,6 @@ function ViewProduct() {
   return (
     <div
       className="bg-gray-100 flex justify-center p-4"
-      style={{ height: "91.2vh" }}
     >
       <ToastContainer />
       <div className="bg-white shadow-lg rounded-lg p-6 max-w-5xl w-full flex">
@@ -61,7 +60,7 @@ function ViewProduct() {
           <img
             src={`data:image/jpeg;base64,${product.product_image}`}
             alt={product.product_name}
-            className="w-full   object-cover rounded-md"
+            className="h-full object-cover rounded-md"
           />
           <div className="flex mt-2 space-x-2">
             {/* Placeholder for additional images */}

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import LogoBg from "../assets/LogoRemovedBg.png";
+import LogoBg from "../assets/Img/LogoRemovedBg.png";
 
 const Navbar = () => {
   const user_role = localStorage.getItem("role");

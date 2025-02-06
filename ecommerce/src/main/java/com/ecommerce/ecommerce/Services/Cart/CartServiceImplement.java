@@ -107,12 +107,12 @@ public class CartServiceImplement implements CartService {
         return cartItems;
     }
 
-    @Override
-    public String removeItem(Long product_id) {
-        ProductEntity productEntity = productRepository.findById(product_id).get();
-        cartItemRepository.deleteByProduct(productEntity);
-        return "Product Removed from the cart ";
-    }
+    // @Override
+    // public String removeItem(Long product_id) {
+    //     ProductEntity productEntity = productRepository.findById(product_id).get();
+    //     cartItemRepository.deleteByProduct(productEntity);
+    //     return "Product Removed from the cart ";
+    // }
 }
 
 
