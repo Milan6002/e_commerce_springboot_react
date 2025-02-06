@@ -1,5 +1,5 @@
 import { Navigate } from "react-router-dom";
-import { getCurrentUser } from "../services/authService";
+import { getCurrentUser } from "../Services/authService";
 
 // eslint-disable-next-line react/prop-types
 const ProtectedRoute = ({ children }) => {

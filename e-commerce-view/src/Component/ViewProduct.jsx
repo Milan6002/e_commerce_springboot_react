@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import AdminServices from "../Services/AdminServices";
-import { useCart } from "../Context/CartContext";
+import CartService from "../Services/CartService";
 import { toast, ToastContainer } from "react-toastify";
+import { jwtDecode } from "jwt-decode";
 
 function ViewProduct() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
+
+  const token = localStorage.getItem("token");
+  const user_email = jwtDecode(token);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -30,12 +34,17 @@ function ViewProduct() {
     fetchProduct();
   }, [id]);
 
-  const { addToCart } = useCart();
-
-  const handleAddToCart = (e, userId, productId, quantity) => {
+  const handleAddToCart = (e, userEmail, productId, quantity) => {
     e.preventDefault();
-    addToCart(userId, productId, quantity);
-    toast.success("Item added To The Cart Successfully");
+    CartService.addToCart(userEmail, productId, quantity)
+      .then((response) => {
+        if (response.status == 200) {
+          toast.success("Item added To The Cart Successfully");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   if (!product) return <p className="text-center text-lg">Loading...</p>;
@@ -116,7 +125,9 @@ function ViewProduct() {
           {/* Buttons */}
           <div className="mt-6 flex space-x-4">
             <button
-              onClick={(e) => handleAddToCart(e, 2, product.product_id, 1)}
+              onClick={(e) =>
+                handleAddToCart(e, user_email.sub, product.product_id, 1)
+              }
               className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-6 rounded-lg"
             >
               Add to Cart

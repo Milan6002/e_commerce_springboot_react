@@ -40,6 +40,7 @@ class authService {
   ReadProfileById(id) {
     return axios.get(API_URL + "/read/" + id);
   }
+
   Updateprofile(id, updatedProfileModel) {
     return axios.put(API_URL + "/update/" + id, updatedProfileModel, {
       headers: {
@@ -47,5 +48,10 @@ class authService {
       },
     });
   }
+
+  ReadProfileByEmail(email){
+    return axios.get(API_URL+"/profile/"+email);
+  }
 }
+
 export default new authService();

@@ -81,7 +81,7 @@ function Products() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6 flex">
+    <div className="min-h-screen bg-gray-100 p-6">
       {localStorage.getItem("role") === "ROLE_ADMIN" && (
         <button
           onClick={() => navigate("/AddProduct")}
@@ -91,90 +91,95 @@ function Products() {
         </button>
       )}
 
-      {/* Sorting Controls */}
-      <div className="mb-5">
-        <form>
-          <label className="me-6 text-lg" htmlFor="sortbyCategory">
-            Sort By Category:
-          </label>
-          <select
-            id="sortbyCategory"
-            className="bg-white p-1 me-6"
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-          >
-            <option value="">All Categories</option>
-            {categories.map((cat) => (
-              <option key={cat.category_id} value={cat.category_id}>
-                {cat.category_name}
-              </option>
-            ))}
-          </select>
-        </form>
-      </div>
-
-      {/* Product Display */}
-      {!loading ? (
-        <div className="w-full">
-          {filteredProducts.length > 0 ? (
-            filteredProducts.map((product) => (
-              <div
-                key={product.product_id}
-                className="bg-white flex p-4 gap-2.5 mb-4 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
-              >
-                <div className="min-w-60" >
-                  <img
-                    src={`data:image/jpeg;base64,${product.product_image}`}
-                    alt={product.product_name}
-                    className="w-full items-center"
-                  />
-                </div>
-                <div className="p-4">
-                  <h2 className="text-xl font-bold text-gray-800">
-                    {product.product_name}
-                  </h2>
-                  <p className="text-gray-600">Quantity: {product.quantity}</p>
-                  <p className="text-gray-600">
-                    Category: {product.category_name}
-                  </p>
-                  <p className="text-gray-800 font-semibold">
-                    Price: ₹{product.price}
-                  </p>
-                  {localStorage.getItem("role") === "ROLE_ADMIN" ? (
-                    <div className="mt-4 flex justify-between">
-                      <button
-                        onClick={(e) => handleUpdate(e, product.product_id)}
-                        className="text-blue-600 font-medium hover:underline"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={(e) => handleDelete(e, product.product_id)}
-                        className="text-red-600 font-medium hover:underline"
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="mt-2">
-                      <button
-                        onClick={(e) => handleViewProduct(e, product.product_id)}
-                        className="bg-blue-600 p-2 px-4 text-white rounded-lg hover:bg-blue-500 hover:cursor-pointer"
-                      >
-                        View Product
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))
-          ) : (
-            <p className="text-center text-gray-600">No products available.</p>
-          )}
+      <div className="flex">
+        {/* Sorting Controls */}
+        <div className="mb-5">
+          <form>
+            <label className="me-6 text-lg" htmlFor="sortbyCategory">
+              Sort By Category:
+            </label>
+            <select
+              id="sortbyCategory"
+              className="bg-white p-1 me-6"
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+            >
+              <option value="">All Categories</option>
+              {categories.map((cat) => (
+                <option key={cat.category_id} value={cat.category_id}>
+                  {cat.category_name}
+                </option>
+              ))}
+            </select>
+          </form>
         </div>
-      ) : (
-        <p className="text-center text-gray-600">Loading products...</p>
-      )}
+
+        {/* Product Display */}
+        {!loading ? (
+          <div className="w-full">
+            {filteredProducts.length > 0 ? (
+              filteredProducts.map((product) => (
+                <div
+                  key={product.product_id}
+                  className="bg-white flex p-4 gap-2.5 mb-4 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                >
+                  <div className="min-w-64">
+                    <img
+                      src={`data:image/jpeg;base64,${product.product_image}`}
+                      alt={product.product_name}
+                      className="w-full h-64"
+                    />
+                  </div>
+                  <div className="p-4">
+                    <h2 className="text-xl font-bold text-gray-800">
+                      {product.product_name}
+                    </h2>
+                    <p className="text-gray-600">
+                      Category: {product.category_name}
+                    </p>
+                    <p className="text-gray-800 font-semibold">
+                      Price: ₹{product.price}
+                    </p>
+                    {localStorage.getItem("role") === "ROLE_ADMIN" ? (
+                      <div className="mt-4 flex justify-between">
+                        <button
+                          onClick={(e) => handleUpdate(e, product.product_id)}
+                          className="text-blue-600 font-medium hover:underline"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={(e) => handleDelete(e, product.product_id)}
+                          className="text-red-600 font-medium hover:underline"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="mt-2">
+                        <button
+                          onClick={(e) =>
+                            handleViewProduct(e, product.product_id)
+                          }
+                          className="bg-blue-600 p-2 px-4 text-white rounded-lg hover:bg-blue-500 hover:cursor-pointer"
+                        >
+                          View Product
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="text-center text-gray-600">
+                No products available.
+              </p>
+            )}
+          </div>
+        ) : (
+          <p className="text-center text-gray-600">Loading products...</p>
+        )}
+      </div>
     </div>
   );
 }

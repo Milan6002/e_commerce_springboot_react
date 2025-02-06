@@ -1,18 +1,20 @@
 package com.ecommerce.ecommerce.Services.Cart;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ecommerce.ecommerce.Entity.CartEntity;
 import com.ecommerce.ecommerce.Entity.CartItemEntity;
-import com.ecommerce.ecommerce.Entity.CartItemRepository;
 import com.ecommerce.ecommerce.Entity.ProductEntity;
 import com.ecommerce.ecommerce.Entity.User;
 import com.ecommerce.ecommerce.Model.CartItemModel;
 import com.ecommerce.ecommerce.Model.CartModel;
+import com.ecommerce.ecommerce.Repository.CartItemRepository;
 import com.ecommerce.ecommerce.Repository.CartRepository;
 import com.ecommerce.ecommerce.Repository.ProductRepository;
 import com.ecommerce.ecommerce.Repository.UserRepository;
@@ -36,9 +38,8 @@ public class CartServiceImplement implements CartService {
     UserRepository userRepository;
 
     @Override
-    public CartModel addToCart(Long userId, Long productId, int quantity) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    public CartModel addToCart(String userEmail, Long productId, int quantity) {
+        User user = userRepository.findByEmail(userEmail);
 
         ProductEntity product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
@@ -80,6 +81,37 @@ public class CartServiceImplement implements CartService {
             return cartItemDTO;
         }).toList());
         return cartDTO;
+    }
+
+    @Override
+    public CartModel getCartIdFromUserId(Long user_id) {
+        User user = userRepository.findById(user_id).get();
+        CartEntity cartEntity = cartRepository.findByUser(user).get();
+        CartModel cartModel = new CartModel();
+        cartModel.setUserId(cartEntity.getUser().getId());
+        BeanUtils.copyProperties(cartEntity, cartModel);
+        return cartModel;
+    }
+
+    @Override
+    public List<CartItemModel> getCartItemByCartId(Long cart_Id) {
+        CartEntity cartEntity = cartRepository.findById(cart_Id).get();
+        List<CartItemEntity> listOfCartItem = cartItemRepository.findByCart(cartEntity);
+        List<CartItemModel> cartItems = new ArrayList<>();
+        for (CartItemEntity listOfCartItems: listOfCartItem) {
+            CartItemModel cartItem = new CartItemModel();
+            cartItem.setProductId(listOfCartItems.getProduct().getProduct_id());
+            cartItem.setQuantity(listOfCartItems.getQuantity());
+            cartItems.add(cartItem);
+        }
+        return cartItems;
+    }
+
+    @Override
+    public String removeItem(Long product_id) {
+        ProductEntity productEntity = productRepository.findById(product_id).get();
+        cartItemRepository.deleteByProduct(productEntity);
+        return "Product Removed from the cart ";
     }
 }
 
