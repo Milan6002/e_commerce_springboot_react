@@ -13,7 +13,7 @@ import io.jsonwebtoken.security.Keys;
 @Component
 public class JwtUtil {
     private final String secret = "jhfuegshfuefjksdbfuefhweufgheufhdfjghuidr"; // Must be at least 256 bits for HMAC
-    private final long expiration = 3600000; // 1 hour
+    private final long expiration = 30L * 24 * 60 * 60 * 1000; // 30 Days
     private final Key key = Keys.hmacShaKeyFor(secret.getBytes()); // Generate a secure key
 
     public String generateToken(String email) {

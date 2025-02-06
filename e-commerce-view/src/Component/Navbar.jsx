@@ -16,7 +16,6 @@ const Navbar = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("avtar");
     localStorage.removeItem("role");
-    localStorage.removeItem("cart");
     setAvatar(null); // Clear avatar state
 
     navigate("/login");
@@ -122,10 +121,7 @@ const Navbar = () => {
                     onClick={() => navigate("/cart")}
                     className="hover:cursor-pointer rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
                   >
-                    Cart &nbsp;
-                    <sup>
-                      <span className="text-sm">0</span>
-                    </sup>
+                    Cart
                   </a>
                 </div>
               ) : (
@@ -262,12 +258,6 @@ const Navbar = () => {
               href="#"
               className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
             >
-              Category
-            </a>
-            <a
-              href="#"
-              className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-            >
               Deal
             </a>
             <a
@@ -275,9 +265,6 @@ const Navbar = () => {
               className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
             >
               Cart
-              <sup>
-                <span className="text-sm">0</span>
-              </sup>
             </a>
           </div>
         </div>

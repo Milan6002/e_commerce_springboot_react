@@ -135,7 +135,7 @@ function Products() {
                       {product.product_name}
                     </h2>
                     <p className="text-gray-600">
-                      Category: {product.category_name}
+                      {product.description}
                     </p>
                     <p className="text-gray-800 font-semibold">
                       Price: ₹{product.price}
