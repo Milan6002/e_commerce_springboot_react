@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ecommerce.ecommerce.Entity.CartEntity;
 import com.ecommerce.ecommerce.Entity.CartItemEntity;
@@ -107,6 +108,7 @@ public class CartServiceImplement implements CartService {
         return cartItems;
     }
 
+<<<<<<< HEAD
     // @Override
     // public String removeItem(Long product_id) {
     //     ProductEntity productEntity = productRepository.findById(product_id).get();
@@ -116,3 +118,12 @@ public class CartServiceImplement implements CartService {
 }
 
 
+=======
+    @Override
+    @Transactional
+    public String removeItem(Long productId) {
+        cartItemRepository.deleteByProduct(productId);
+        return "Product removed from the cart successfully";
+    }
+}
+>>>>>>> 078d1054c1b27514cddc2f88e82b29e716c9bbd0

@@ -21,8 +21,11 @@ export const getCurrentUser = () => {
 
   try {
     const decodedToken = jwtDecode(token);
-    if (decodedToken.exp * 1000 < Date.now()) {
+    if (decodedToken.exp && decodedToken.exp * 1000 < Date.now()) {
+      localStorage.removeItem("email");
       localStorage.removeItem("token");
+      localStorage.removeItem("avtar");
+      localStorage.removeItem("role");
       return null;
     }
     return decodedToken;
@@ -49,8 +52,8 @@ class authService {
     });
   }
 
-  ReadProfileByEmail(email){
-    return axios.get(API_URL+"/profile/"+email);
+  ReadProfileByEmail(email) {
+    return axios.get(API_URL + "/profile/" + email);
   }
 }
 

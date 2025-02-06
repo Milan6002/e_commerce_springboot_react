@@ -107,10 +107,26 @@ public class AdminServiceImplement implements AdminService {
     }
 
     @Override
-    public String updateProduct(Long product_id, ProductModel productModel,MultipartFile image) throws IOException {
-        ProductEntity getExistingProductData = productRepository.findById(product_id).get();
-        BeanUtils.copyProperties(productModel, getExistingProductData);
-        getExistingProductData.setProduct_image(image.getBytes());
+    public String updateProduct(Long product_id, ProductModel productModel, MultipartFile image) throws IOException {
+        ProductEntity getExistingProductData = productRepository.findById(product_id)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        // Copy only non-null properties
+        if (productModel.getProduct_name() != null) {
+            getExistingProductData.setProduct_name(productModel.getProduct_name());
+        }
+        if (productModel.getPrice() != null) {
+            getExistingProductData.setPrice(productModel.getPrice());
+        }
+        if (productModel.getDescription() != null) {
+            getExistingProductData.setDescription(productModel.getDescription());
+        }
+
+        // Update image only if a new image is provided
+        if (image != null && !image.isEmpty()) {
+            getExistingProductData.setProduct_image(image.getBytes());
+        }
+
         productRepository.save(getExistingProductData);
         return "Product Updated Successfully";
     }
@@ -127,10 +143,10 @@ public class AdminServiceImplement implements AdminService {
     @Override
     public List<ProductModel> getProductByCategory(Long category_id) {
         CategoryEntity categoryEntity = categoryRepository.findById(category_id).get();
-        List<ProductEntity> productByCategory = productRepository.findByCategory(categoryEntity);   
+        List<ProductEntity> productByCategory = productRepository.findByCategory(categoryEntity);
         List<ProductModel> listOfProduct = new ArrayList<>();
         for (ProductEntity productEntity : productByCategory) {
-            
+
             ProductModel productModel = new ProductModel();
             BeanUtils.copyProperties(productEntity, productModel);
             listOfProduct.add(productModel);
