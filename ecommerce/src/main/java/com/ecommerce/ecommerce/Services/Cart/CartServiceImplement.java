@@ -108,17 +108,6 @@ public class CartServiceImplement implements CartService {
         return cartItems;
     }
 
-<<<<<<< HEAD
-    // @Override
-    // public String removeItem(Long product_id) {
-    //     ProductEntity productEntity = productRepository.findById(product_id).get();
-    //     cartItemRepository.deleteByProduct(productEntity);
-    //     return "Product Removed from the cart ";
-    // }
-}
-
-
-=======
     @Override
     @Transactional
     public String removeItem(Long productId) {
@@ -126,4 +115,3 @@ public class CartServiceImplement implements CartService {
         return "Product removed from the cart successfully";
     }
 }
->>>>>>> 078d1054c1b27514cddc2f88e82b29e716c9bbd0

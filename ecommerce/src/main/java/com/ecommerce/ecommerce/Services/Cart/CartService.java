@@ -9,5 +9,5 @@ public interface CartService {
 	CartModel addToCart(String userEmail, Long productId, int quantity);
 	CartModel getCartIdFromUserId(Long user_id);
 	List<CartItemModel> getCartItemByCartId(Long cart_Id);
-	// String removeItem(Long product_id);
+	String removeItem(Long product_id);
 }
