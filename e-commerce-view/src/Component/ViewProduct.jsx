@@ -4,10 +4,13 @@ import AdminServices from "../Services/AdminServices";
 import CartService from "../Services/CartService";
 import { toast, ToastContainer } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 
 function ViewProduct() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
+  const [mainImage, setMainImage] = useState("");
 
   const token = localStorage.getItem("token");
   const user_email = jwtDecode(token);
@@ -26,6 +29,7 @@ function ViewProduct() {
           ...productData,
           category_name: category.data.category_name,
         });
+        setMainImage(`data:image/jpeg;base64,${productData.product_image}`);
       } catch (error) {
         console.log(error);
       }
@@ -34,11 +38,21 @@ function ViewProduct() {
     fetchProduct();
   }, [id]);
 
+  if (!product) return <p className="text-center text-lg">Loading...</p>;
+
+  const imageList = [
+    `data:image/jpeg;base64,${product.product_image}`,
+    "https://m.media-amazon.com/images/I/71m+dNHzoGL.jpg",
+    "https://motorolain.vtexassets.com/arquivos/ids/159186/2024_CUSCO-PLUS_FOREST-GREEN_PDP-HERO.png?v=638618115763230000",
+    "https://dakauf.eu/wp-content/uploads/2024/05/Motorola-XT2429-2-Moto-Edge-50-Fusion-5G-12GB-RAM-512GB-Marshmallow-Blue.png",
+    "https://doctorje.com/wp-content/uploads/2024/12/Motorola-Edge-50-Fusion-5G.jpg",
+  ];
+
   const handleAddToCart = (e, userEmail, productId, quantity) => {
     e.preventDefault();
     CartService.addToCart(userEmail, productId, quantity)
       .then((response) => {
-        if (response.status == 200) {
+        if (response.status === 200) {
           toast.success("Item added To The Cart Successfully");
         }
       })
@@ -47,53 +61,40 @@ function ViewProduct() {
       });
   };
 
-  if (!product) return <p className="text-center text-lg">Loading...</p>;
+  const whatsappMessage = `Hello, I am interested in your product: ${product.product_name}.\nPrice: ₹${product.price}.\nPlease provide more details.`;
+  const whatsappLink = `https://wa.me/919825336378?text=${encodeURIComponent(
+    whatsappMessage
+  )}`;
 
   return (
-    <div
-      className="bg-gray-100 flex justify-center p-4"
-    >
+    <div className="bg-gray-100 flex justify-center p-4">
       <ToastContainer />
-      <div className="bg-white shadow-lg rounded-lg p-6 max-w-5xl w-full flex">
+      <div className="bg-white shadow-lg rounded-lg p-6 max-w-5xl w-full flex flex-col md:flex-row">
         {/* Left - Image Section */}
-        <div className="w-96 h-96 flex flex-col items-center">
+        <div className="w-full md:w-1/2 flex flex-col items-center">
+          {/* Main Image */}
           <img
-            src={`data:image/jpeg;base64,${product.product_image}`}
+            src={mainImage}
             alt={product.product_name}
-            className="h-full object-cover rounded-md"
+            className="h-96  object-cover rounded-md"
           />
-          <div className="flex mt-2 space-x-2">
-            {/* Placeholder for additional images */}
-            <img
-              src={`data:image/jpeg;base64,${product.product_image}`}
-              alt="Thumbnail"
-              className="w-16 h-16 object-cover rounded border"
-            />
-            <img
-              src="https://m.media-amazon.com/images/I/71m+dNHzoGL.jpg"
-              alt="Thumbnail"
-              className="w-16 h-16 object-cover rounded border"
-            />
-            <img
-              src="https://motorolain.vtexassets.com/arquivos/ids/159186/2024_CUSCO-PLUS_FOREST-GREEN_PDP-HERO.png?v=638618115763230000"
-              alt="Thumbnail"
-              className="w-16 h-16 object-cover rounded border"
-            />
-            <img
-              src="https://dakauf.eu/wp-content/uploads/2024/05/Motorola-XT2429-2-Moto-Edge-50-Fusion-5G-12GB-RAM-512GB-Marshmallow-Blue.png"
-              alt="Thumbnail"
-              className="w-16 h-16 object-cover rounded border"
-            />
-            <img
-              src="https://doctorje.com/wp-content/uploads/2024/12/Motorola-Edge-50-Fusion-5G.jpg"
-              alt="Thumbnail"
-              className="w-16 h-16 object-cover rounded border"
-            />
+
+          {/* Thumbnail Images */}
+          <div className="flex mt-2 space-x-2 overflow-x-auto">
+            {imageList.map((img, index) => (
+              <img
+                key={index}
+                src={img}
+                alt="Thumbnail"
+                className="w-16 h-16 object-cover rounded border cursor-pointer hover:opacity-75"
+                onMouseEnter={() => setMainImage(img)} // Change image on hover
+              />
+            ))}
           </div>
         </div>
 
         {/* Right - Product Details */}
-        <div className="w-2/3 pl-6">
+        <div className="w-full md:w-1/2 pl-6 mt-4 md:mt-0">
           <h1 className="text-2xl font-bold text-gray-800">
             {product.product_name}
           </h1>
@@ -122,7 +123,7 @@ function ViewProduct() {
           <p className="text-gray-600 mt-4">{product.description}</p>
 
           {/* Buttons */}
-          <div className="mt-6 flex space-x-4">
+          <div className="mt-6 flex flex-wrap gap-4">
             <button
               onClick={(e) =>
                 handleAddToCart(e, user_email.sub, product.product_id, 1)
@@ -131,9 +132,14 @@ function ViewProduct() {
             >
               Add to Cart
             </button>
-            <button className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-6 rounded-lg">
-              Buy Now
-            </button>
+            <a
+              href={whatsappLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-white border-2 text-green-600 border-green-600 hover:bg-green-600 hover:text-white font-bold py-2 px-6 rounded-lg flex items-center justify-center"
+            >
+              <FontAwesomeIcon icon={faWhatsapp} className="text-2xl" />
+            </a>
           </div>
 
           {/* Offers Section */}
