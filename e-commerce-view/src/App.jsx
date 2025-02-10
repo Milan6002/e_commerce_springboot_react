@@ -29,7 +29,7 @@ function App() {
         <Routes>
           <Route index path="/" element={<Home />} />
 
-          {user_role === "ROLE_ADMIN" ? (
+          {user_role == "ROLE_ADMIN" ? (
             <>
               <Route
                 path="/Admin"
