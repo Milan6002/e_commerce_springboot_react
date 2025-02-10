@@ -62,9 +62,7 @@ function ViewProduct() {
   };
 
   const whatsappMessage = `Hello, I am interested in your product: ${product.product_name}.\nPrice: ₹${product.price}.\nPlease provide more details.`;
-  const whatsappLink = `https://wa.me/919825336378?text=${encodeURIComponent(
-    whatsappMessage
-  )}`;
+  const whatsappLink = `https://wa.me/919825336378?text=${encodeURIComponent(whatsappMessage)}`;
 
   return (
     <div className="bg-gray-100 flex justify-center p-4">

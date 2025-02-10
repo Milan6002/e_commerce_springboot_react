@@ -36,9 +36,9 @@ public class CartController {
         return cartService.getCartItemByCartId(cart_id);
     }
 
-    // @DeleteMapping("/deleteCartItem/{product_id}")
-    // public String removeCartItem(@PathVariable Long product_id){
-    //     return cartService.removeItem(product_id);
-    // }
+    @DeleteMapping("/deleteCartItem/{product_id}")
+    public String removeCartItem(@PathVariable Long product_id){
+        return cartService.removeItem(product_id);
+    }
     
 }
