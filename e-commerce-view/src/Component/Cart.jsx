@@ -5,6 +5,7 @@ import authService from "../Services/authService";
 import CartService from "../Services/CartService";
 import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import '../assets/Cart.css';
 
 function Cart() {
   const [products, setProducts] = useState([]);
@@ -93,26 +94,26 @@ function Cart() {
           </button>
         </div>
       ) : (
-        <div className="flex gap-6">
+        <div className="flex gap-6  cart-total">
           {/* Left - Cart Items */}
-          <div className="w-full">
+          <div className="w-full ">
             {products.map((item) => (
               <div
                 key={item.product_id}
-                className="bg-white rounded-lg shadow-md overflow-hidden flex p-4 gap-2.5 mb-4"
+                className="bg-white cart-inner-main rounded-lg shadow-md overflow-hidden flex p-4 gap-2.5 mb-4"
               >
                 <div className="min-w-72">
                   <img
                     src={`data:image/jpeg;base64,${item.product_image}`}
                     alt={item.product_name}
-                    className="w-full h-64"
+                    className="w-full h-64 cart-inner-img"
                   />
                 </div>
-                <div className="p-4 w-full">
-                  <h2 className="text-xl font-semibold text-gray-800">
+                <div className="p-4 w-full cart-product">
+                  <p className="font-semibold text-gray-800">
                     {item.product_name}
-                  </h2>
-                  <p className="text-sm text-gray-600 mt-2">{item.description}</p>
+                  </p>
+                  {/* <p className="text-sm text-gray-600 mt-2">{item.description}</p> */}
 
                   <div className="mt-4 flex justify-between items-center">
                     <span className="text-lg font-semibold text-gray-900">
@@ -158,7 +159,7 @@ function Cart() {
           </div>
 
           {/* Right - Price Summary */}
-          <div className="bg-white min-w-96 rounded-2xl h-75 shadow-lg p-4">
+          <div className="bg-white rounded-2xl w-96 h-76 shadow-lg p-4 cart-price">
             <h1 className="text-xl font-semibold border-b-2 pb-3 border-gray-300">
               Price Details
             </h1>

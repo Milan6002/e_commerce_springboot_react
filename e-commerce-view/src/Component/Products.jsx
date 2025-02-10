@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import AdminService from "../Services/AdminServices";
+import '../assets/shop.css';
 
 function Products() {
   const navigate = useNavigate();
@@ -91,10 +92,10 @@ function Products() {
         </button>
       )}
 
-      <div className="flex">
+      <div className=" flex main">
         {/* Sorting Controls */}
-        <div className="mb-5">
-          <form>
+        <div className="mb-5 ">
+          <form className="">
             <label className="me-6 text-lg" htmlFor="sortbyCategory">
               Sort By Category:
             </label>
@@ -121,19 +122,23 @@ function Products() {
               filteredProducts.map((product) => (
                 <div
                   key={product.product_id}
-                  className="bg-white flex p-4 gap-2.5 mb-4 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                  className=" flex p-4 gap-2.5 mb-4 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
                 >
-                  <div className="min-w-64">
+                  
+                  <div className="min-w-64 inner-img">
                     <img
                       src={`data:image/jpeg;base64,${product.product_image}`}
                       alt={product.product_name}
                       className="w-full h-64"
                     />
                   </div>
-                  <div className="p-4">
-                    <h2 className="text-xl font-bold text-gray-800">
+                  <div className="p-4 inner-product">
+                    {/* <h2 className="text-xl font-bold text-gray-800">
                       {product.product_name}
-                    </h2>
+                    </h2> */}
+                    <p className="font-bold text-gray-800">
+                       {product.product_name}
+                    </p>
                     <p className="text-gray-600">
                       {product.description}
                     </p>

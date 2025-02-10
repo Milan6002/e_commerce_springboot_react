@@ -62,7 +62,7 @@ function ViewProduct() {
   };
 
   const whatsappMessage = `Hello, I am interested in your product: ${product.product_name}.\nPrice: ₹${product.price}.\nPlease provide more details.`;
-  const whatsappLink = `https://wa.me/919825336378?text=${encodeURIComponent(
+  const whatsappLink = `https://wa.me/919512796272?text=${encodeURIComponent(
     whatsappMessage
   )}`;
 
