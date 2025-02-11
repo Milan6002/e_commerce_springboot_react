@@ -19,10 +19,10 @@ public interface AdminService {
 
 
     //Product Services
-    String addProducts(ProductModel productModel,MultipartFile image) throws IOException;
+    String addProducts(ProductModel productModel,MultipartFile[] image) throws IOException;
     List<ProductModel> getAllProduct();
     String deleteProduct(Long product_id);
-    String updateProduct(Long product_id,ProductModel productModel,MultipartFile image) throws IOException;
+    String updateProduct(Long product_id,ProductModel productModel,MultipartFile[] images) throws IOException;
     ProductModel getProductById(Long product_id);
     List<ProductModel> getProductByCategory(Long category_id);
 

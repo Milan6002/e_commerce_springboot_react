@@ -28,7 +28,7 @@ public class ProductControler {
     AdminService adminService;
 
     @PostMapping("/addProduct")
-    public String addProduct(@ModelAttribute ProductModel productModel, @RequestParam MultipartFile image)
+    public String addProduct(@ModelAttribute ProductModel productModel, @RequestParam MultipartFile[] image)
             throws IOException {
         return adminService.addProducts(productModel, image);
     }
@@ -50,14 +50,13 @@ public class ProductControler {
 
     @PutMapping("/updateProduct/{product_id}")
     public String updateProduct(@PathVariable Long product_id, @ModelAttribute ProductModel productModel,
-            @RequestParam(required = false) MultipartFile image) throws IOException {
+            @RequestParam(required = false) MultipartFile[] image) throws IOException {
         return adminService.updateProduct(product_id, productModel, image);
     }
 
     @GetMapping("/getProductByCategory/{category_id}")
-    public List<ProductModel> getProductByCategory(@PathVariable Long  category_id) {
+    public List<ProductModel> getProductByCategory(@PathVariable Long category_id) {
         return adminService.getProductByCategory(category_id);
     }
-    
 
 }

@@ -14,11 +14,14 @@ function UpdateProductForm() {
   const [productData, setProductData] = useState({
     product_id: id,
     product_name: "",
+    product_brand:"",
     description: "",
+    product_color:"",
     quantity: "",
     price: "",
+    discount:"",
     product_image: null,
-    category_id: "", // New field for the old image URL
+    category_id: "",
   });
 
   const [previewImage, setPreviewImage] = useState(null); // For previewing uploaded images
@@ -82,6 +85,25 @@ function UpdateProductForm() {
           Update Product Detail
         </h1>
         <form action="" method="post" className="space-y-6">
+          {/* Product Brand */}
+          <div>
+            <label
+              htmlFor="product_brand"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Product Brand
+            </label>
+            <input
+              onChange={handleChanges}
+              value={productData.product_brand}
+              type="text"
+              name="product_brand"
+              id="product_brand"
+              placeholder="Enter product Brand"
+              className="p-1.5 mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            />
+          </div>
+
           {/* Product Name */}
           <div>
             <label
@@ -118,6 +140,25 @@ function UpdateProductForm() {
               className="p-1.5 mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
               rows={4}
             ></textarea>
+          </div>
+
+          {/* Product Color */}
+          <div>
+            <label
+              htmlFor="product_color"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Product Color
+            </label>
+            <input
+              onChange={handleChanges}
+              value={productData.product_color}
+              type="text"
+              name="product_color"
+              id="product_color"
+              placeholder="Enter product Color"
+              className="p-1.5 mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            />
           </div>
 
           {/* Quantity */}
@@ -182,6 +223,25 @@ function UpdateProductForm() {
               name="price"
               id="price"
               placeholder="Enter price"
+              className="p-1.5 mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            />
+          </div>
+
+          {/* Discount */}
+          <div>
+            <label
+              htmlFor="discount"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Discount
+            </label>
+            <input
+              onChange={handleChanges}
+              value={productData.discount}
+              type="text"
+              name="discount"
+              id="discount"
+              placeholder="Enter Discount"
               className="p-1.5 mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
             />
           </div>

@@ -62,7 +62,9 @@ function ViewProduct() {
   };
 
   const whatsappMessage = `Hello, I am interested in your product: ${product.product_name}.\nPrice: ₹${product.price}.\nPlease provide more details.`;
-  const whatsappLink = `https://wa.me/919825336378?text=${encodeURIComponent(whatsappMessage)}`;
+  const whatsappLink = `https://wa.me/+919512796272?text=${encodeURIComponent(
+    whatsappMessage
+  )}`;
 
   return (
     <div className="bg-gray-100 flex justify-center p-4">
@@ -97,16 +99,33 @@ function ViewProduct() {
             {product.product_name}
           </h1>
           <p className="text-gray-500 mt-2">{product.category_name}</p>
+          <p className="text-gray-500 mt-2">
+            <b>Brand : </b>
+            {product.product_brand}
+          </p>
+          <p className="text-gray-500 mt-2">
+            <b>Color : </b>
+            {product.product_color}
+          </p>
 
           {/* Price and Discount */}
           <div className="flex items-center space-x-3 mt-2">
             <p className="text-2xl font-semibold text-green-600">
-              ₹{product.price}
+              ₹
+              {Math.round(
+                product.price +
+                  (product.price * product.discount) / 100 -
+                  (product.price * product.discount) / 100
+              )}
             </p>
             <p className="text-gray-400 line-through">
-              ₹{parseInt(product.price) + 500}
+              ₹
+              {parseInt((product.price * product.discount) / 100) +
+                product.price}
             </p>
-            <p className="text-green-600 font-medium">20% off</p>
+            <p className="text-green-600 font-medium">
+              {product.discount}% off
+            </p>
           </div>
 
           {/* Rating */}
@@ -130,14 +149,24 @@ function ViewProduct() {
             >
               Add to Cart
             </button>
-            <a
-              href={whatsappLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-white border-2 text-green-600 border-green-600 hover:bg-green-600 hover:text-white font-bold py-2 px-6 rounded-lg flex items-center justify-center"
+
+            <button>
+              <a
+                href={whatsappLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white border-2 text-green-600 border-green-600 hover:bg-green-600 hover:text-white font-bold py-2 px-6 rounded-lg flex items-center justify-center"
+              >
+                <FontAwesomeIcon icon={faWhatsapp} className="text-2xl" />
+              </a>
+            </button>
+
+            <button
+              type="submit"
+              className="bg-blue-700 p-3 text-white font-bold  rounded-lg hover:bg-blue-600 hover:cursor-pointer"
             >
-              <FontAwesomeIcon icon={faWhatsapp} className="text-2xl" />
-            </a>
+              Bulk Order or Customize Prodcut
+            </button>
           </div>
 
           {/* Offers Section */}

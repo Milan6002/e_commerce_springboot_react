@@ -115,7 +115,7 @@ const Navbar = () => {
                     href="#"
                     className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
                   >
-                    Deals
+                    Bulk Order
                   </a>
                   <a
                     onClick={() => navigate("/cart")}
@@ -216,13 +216,15 @@ const Navbar = () => {
                   >
                     Your Profile
                   </a>
-                  <a
-                    onClick={() => navigate("/login")}
-                    className="hover:cursor-pointer block px-4 py-2 text-sm text-gray-700"
-                    role="menuitem"
-                  >
-                    Login
-                  </a>
+                  {!localStorage.getItem("token") && (
+                    <a
+                      onClick={() => navigate("/login")}
+                      className="hover:cursor-pointer block px-4 py-2 text-sm text-gray-700"
+                      role="menuitem"
+                    >
+                      Login
+                    </a>
+                  )}
                   <a
                     className="hover:cursor-pointer block px-4 py-2 text-sm text-gray-700"
                     role="menuitem"
@@ -240,33 +242,69 @@ const Navbar = () => {
       {/* Mobile menu */}
       {mobileMenuOpen && (
         <div className="sm:hidden" id="mobile-menu">
-          <div className="space-y-1 px-2 pt-2 pb-3">
-            <a
-              onClick={() => navigate("/")}
-              className="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white"
-              aria-current="page"
-            >
-              Home
-            </a>
-            <a
-              onClick={() => navigate("/shop")}
-              className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-            >
-              Shop
-            </a>
-            <a
-              href="#"
-              className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-            >
-              Deal
-            </a>
-            <a
-              onClick={() => navigate("/cart")}
-              className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-            >
-              Cart
-            </a>
-          </div>
+          {user_role !== "ROLE_ADMIN" ? (
+            <div className="space-y-1 px-2 pt-2 pb-3">
+              <a
+                onClick={() => navigate("/")}
+                className="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white"
+                aria-current="page"
+              >
+                Home
+              </a>
+              <a
+                onClick={() => navigate("/shop")}
+                className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+              >
+                Shop
+              </a>
+              <a
+                href="#"
+                className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+              >
+                Bulk Order
+              </a>
+              <a
+                onClick={() => navigate("/cart")}
+                className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+              >
+                Cart
+              </a>
+            </div>
+          ) : (
+            <div className="space-y-1 px-2 pt-2 pb-3">
+              <a
+                onClick={() => navigate("/")}
+                className="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white"
+                aria-current="page"
+              >
+                Home
+              </a>
+              <a
+                onClick={() => navigate("/shop")}
+                className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+              >
+                Shop
+              </a>
+              <a
+                onClick={() => navigate("/Categories")}
+                className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+              >
+                Categories
+              </a>
+              <a
+                onClick={() => navigate("/Products")}
+                className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+              >
+                Products
+              </a>
+              <a
+                onClick={() => navigate("/admin")}
+                className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+              >
+                Admin Pannel
+              </a>
+            </div>
+          )}
         </div>
       )}
     </nav>

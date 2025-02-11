@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ecommerce.ecommerce.Entity.CategoryEntity;
 import com.ecommerce.ecommerce.Entity.ProductEntity;
+import com.ecommerce.ecommerce.Entity.ProductImageEntity;
 import com.ecommerce.ecommerce.Model.CategoryModel;
 import com.ecommerce.ecommerce.Model.ProductModel;
 import com.ecommerce.ecommerce.Repository.CategoryRepository;
@@ -69,12 +70,24 @@ public class AdminServiceImplement implements AdminService {
     }
 
     @Override
-    public String addProducts(ProductModel productModel, MultipartFile product_image) throws IOException {
-        CategoryEntity categoryEntity = categoryRepository.findById(productModel.getCategory_id()).get();
+    public String addProducts(ProductModel productModel, MultipartFile[] product_images) throws IOException {
+        CategoryEntity categoryEntity = categoryRepository.findById(productModel.getCategory_id())
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+
         ProductEntity productEntity = new ProductEntity();
         BeanUtils.copyProperties(productModel, productEntity);
         productEntity.setCategory(categoryEntity);
-        productEntity.setProduct_image(product_image.getBytes());
+
+        List<ProductImageEntity> images = new ArrayList<>();
+        for (MultipartFile file : product_images) {
+            ProductImageEntity imageEntity = new ProductImageEntity();
+            imageEntity.setImage(file.getBytes());
+            imageEntity.setProduct(productEntity);
+            images.add(imageEntity);
+        }
+
+        productEntity.setProduct_images(images);
+
         productRepository.save(productEntity);
         return "Product Added Successfully";
     }
@@ -92,8 +105,16 @@ public class AdminServiceImplement implements AdminService {
             productModel.setDescription(allProductList.getDescription());
             productModel.setQuantity(allProductList.getQuantity());
             productModel.setPrice(allProductList.getPrice());
-            productModel.setProduct_image(allProductList.getProduct_image());
             productModel.setCategory_id(allProductList.getCategory().getCategory_id());
+
+            // Convert List<ProductImageEntity> to List<byte[]>
+            List<byte[]> imageList = allProductList.getProduct_images()
+                    .stream()
+                    .map(ProductImageEntity::getImage)
+                    .toList();
+
+            productModel.setProduct_images(imageList); // Set multiple images
+
             listOfProduct.add(productModel);
         }
 
@@ -107,27 +128,52 @@ public class AdminServiceImplement implements AdminService {
     }
 
     @Override
-    public String updateProduct(Long product_id, ProductModel productModel, MultipartFile image) throws IOException {
-        ProductEntity getExistingProductData = productRepository.findById(product_id)
+    public String updateProduct(Long product_id, ProductModel productModel, MultipartFile[] images) throws IOException {
+        ProductEntity existingProduct = productRepository.findById(product_id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
         // Copy only non-null properties
+        if (productModel.getProduct_brand() != null) {
+            existingProduct.setProduct_brand(productModel.getProduct_brand());
+        }
         if (productModel.getProduct_name() != null) {
-            getExistingProductData.setProduct_name(productModel.getProduct_name());
+            existingProduct.setProduct_name(productModel.getProduct_name());
         }
         if (productModel.getPrice() != null) {
-            getExistingProductData.setPrice(productModel.getPrice());
+            existingProduct.setPrice(productModel.getPrice());
         }
         if (productModel.getDescription() != null) {
-            getExistingProductData.setDescription(productModel.getDescription());
+            existingProduct.setDescription(productModel.getDescription());
+        }
+        if (productModel.getDiscount() != null) {
+            existingProduct.setDiscount(productModel.getDiscount());
+        }
+        if (productModel.getProduct_color() != null) {
+            existingProduct.setProduct_color(productModel.getProduct_color());
         }
 
-        // Update image only if a new image is provided
-        if (image != null && !image.isEmpty()) {
-            getExistingProductData.setProduct_image(image.getBytes());
+        // Update product images (if new images are provided)
+        if (images != null && images.length > 0) {
+            List<ProductImageEntity> newImages = new ArrayList<>();
+
+            for (MultipartFile image : images) {
+                if (!image.isEmpty()) {
+                    ProductImageEntity imageEntity = new ProductImageEntity();
+                    imageEntity.setImage(image.getBytes());
+                    imageEntity.setProduct(existingProduct);
+                    newImages.add(imageEntity);
+                }
+            }
+
+            // Option 1: Append new images to the existing ones
+            existingProduct.getProduct_images().addAll(newImages);
+
+            // Option 2: Replace all images (uncomment below to enable replacement)
+            // existingProduct.getProductImages().clear();
+            // existingProduct.setProductImages(newImages);
         }
 
-        productRepository.save(getExistingProductData);
+        productRepository.save(existingProduct);
         return "Product Updated Successfully";
     }
 
