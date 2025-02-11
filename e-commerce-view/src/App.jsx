@@ -18,6 +18,7 @@ import NotFound from "./Component/NotFound";
 import Shop from "./Component/Shop";
 import ViewProduct from "./Component/ViewProduct";
 import Cart from "./Component/Cart";
+import BulkOrder from "./Component/BulkOrder";
 
 function App() {
   const user_role = localStorage.getItem("role");
@@ -120,6 +121,14 @@ function App() {
               </ProtectedRoute>
             }
           />
+           <Route
+            path="/BulkOrder"
+            element={
+              <ProtectedRoute>
+                <BulkOrder />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/viewproduct/:id"
             element={
@@ -144,7 +153,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
           {/* 404 Not Found Route */}
           <Route path="*" element={<NotFound />} />
         </Routes>

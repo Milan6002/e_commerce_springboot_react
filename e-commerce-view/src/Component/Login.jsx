@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../services/authService";
 import { ToastContainer, toast } from "react-toastify";
+import '../assets/login.css';
 
 const Login = () => {
   const [loginData, setLoginData] = useState({ email: "", password: "" });
@@ -43,11 +44,11 @@ const Login = () => {
 
   return (
     <div
-      className="flex items-center justify-center bg-gray-900 text-white"
+      className="flex items-center justify-center bg-gray-900 text-white outter-login-main"
       style={{ height: "91.2vh" }}
     >
       <ToastContainer />
-      <div className="w-full max-w-md p-8 space-y-10 bg-gray-800 shadow-lg rounded-xl">
+      <div className="w-96 p-8 space-y-10 mt-10 mb-15 bg-gray-800 shadow-lg rounded-xl login-main">
         <h1 className="text-3xl font-bold text-center">Login</h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>

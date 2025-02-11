@@ -11,14 +11,19 @@
     .inner-product {
         margin-left: -30vw;
         font-size: 3.2vw;
-        /* text-align: justify; */
-        /* background-color: red; */
+    }
+    .cart-description{
+        height: 10vw;
+        overflow: hidden;
+    }
+    .cart-form{
+        font-size: 3.5vw;
     }
 }
 
 @media(max-width:375px) {
     .inner-img>img {
-        height: 15vh;
+        height: 20vh;
         width: 36vw;
     }
 
@@ -30,7 +35,7 @@
 
 @media(max-width:360px) and (min-height:667px) {
     .inner-img>img {
-        height: 15vh;
+        height: 18vh;
         width: 36vw;
     }
 

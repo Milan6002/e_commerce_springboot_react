@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import '../assets/profile.css'; 
 
 function Profile() {
   const [user, setUser] = useState({
@@ -38,10 +39,10 @@ function Profile() {
 
   return (
     <div
-      className="flex justify-center items-center bg-gradient-to-r from-gray-900 to-gray-700 overflow-hidden"
+      className="profile-main flex justify-center items-center bg-gradient-to-r from-gray-900 to-gray-700 overflow-hidden"
       style={{ height: "91.2vh" }}
     >
-      <div className="bg-gray-800 shadow-lg rounded-2xl w-96 p-6 text-white text-center">
+      <div className="bg-gray-800 rounded-2xl w-96 p-6 text-white text-center inner-proflle-main">
         <div className="flex justify-end">
           <a
             href={`/updateprofile/${user.id}`}

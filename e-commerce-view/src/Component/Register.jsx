@@ -2,6 +2,7 @@ import { useState } from "react";
 import { register } from "../services/authService";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
+import '../assets/register.css';
 
 const Register = () => {
   const [userData, setUserData] = useState({
@@ -37,12 +38,13 @@ const Register = () => {
     setError("");
 
     // Simple email validation
-    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(userData.email)) {
       setError("Please enter a valid email.");
       setLoading(false);
       return;
     }
+    
 
     // Simple password validation (length)
     if (userData.password.length < 6) {
@@ -74,11 +76,11 @@ const Register = () => {
 
   return (
     <div
-      className="flex items-center justify-center  bg-gradient-to-r from-gray-900 to-gray-700"
+      className=" register-main flex items-center justify-center  bg-gradient-to-r from-gray-900 to-gray-700"
       style={{ height: "91.2vh", overflow: "hidden" }}
     >
       <ToastContainer />
-      <div className="bg-gray-800 text-white p-8 rounded-lg shadow-lg w-96">
+      <div className="bg-gray-800 text-white p-8 rounded-lg shadow-lg w-96 inner-register-main">
         <h1 className="text-3xl font-bold text-center mb-6">Register</h1>
 
         {error && <p className="text-red-400 text-center mb-4">{error}</p>}
@@ -99,13 +101,12 @@ const Register = () => {
           <div className="flex flex-col">
             <label className="mb-1 font-semibold">Email:</label>
             <input
-              type="email"
+              type="text"
               name="email"
               value={userData.email}
               onChange={handleChange}
               placeholder="Enter your email"
               className="p-3 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-              required
             />
           </div>
 
