@@ -95,13 +95,13 @@ function Products() {
       <div className=" flex main">
         {/* Sorting Controls */}
         <div className="mb-5 ">
-          <form className="">
-            <label className="me-6 text-lg" htmlFor="sortbyCategory">
+          <form className="cart-form ">
+            {/* <label className="me-6 text-lg" htmlFor="sortbyCategory ">
               Sort By Category:
-            </label>
+            </label> */}
             <select
               id="sortbyCategory"
-              className="bg-white p-1 me-6"
+              className="bg-white p-2 me-6 rounded-2xl"
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
             >
@@ -125,7 +125,7 @@ function Products() {
                   className=" flex p-4 gap-2.5 mb-4 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
                 >
                   
-                  <div className="min-w-64 inner-img">
+                  <div className="min-w-70 inner-img">
                     <img
                       src={`data:image/jpeg;base64,${product.product_image}`}
                       alt={product.product_name}
@@ -139,7 +139,7 @@ function Products() {
                     <p className="font-bold text-gray-800">
                        {product.product_name}
                     </p>
-                    <p className="text-gray-600">
+                    <p className="text-gray-600 cart-description">
                       {product.description}
                     </p>
                     <p className="text-gray-800 font-semibold">
