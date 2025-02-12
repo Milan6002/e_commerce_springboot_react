@@ -166,11 +166,11 @@ public class AdminServiceImplement implements AdminService {
             }
 
             // Option 1: Append new images to the existing ones
-            existingProduct.getProduct_images().addAll(newImages);
+            // existingProduct.getProduct_images().addAll(newImages);
 
-            // Option 2: Replace all images (uncomment below to enable replacement)
-            // existingProduct.getProductImages().clear();
-            // existingProduct.setProductImages(newImages);
+            // Option 2: Replace all images (It Will Delete ALl the old Image)
+            existingProduct.getProduct_images().clear();
+            existingProduct.setProduct_images(newImages);
         }
 
         productRepository.save(existingProduct);
@@ -183,6 +183,13 @@ public class AdminServiceImplement implements AdminService {
         ProductModel displayProductById = new ProductModel();
         BeanUtils.copyProperties(getProductByid, displayProductById);
         displayProductById.setCategory_id(getProductByid.getCategory().getCategory_id());
+
+        List<byte[]> imageList = getProductByid.getProduct_images()
+                .stream()
+                .map(ProductImageEntity::getImage)
+                .toList();
+        displayProductById.setProduct_images(imageList);
+
         return displayProductById;
     }
 

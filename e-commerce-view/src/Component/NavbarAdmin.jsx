@@ -1,10 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import LogoBg from "../assets/Img/LogoRemovedBg.png";
-import NavbarAdmin from "./NavbarAdmin";
 
-const Navbar = () => {
-  const user_role = localStorage.getItem("role");
+function NavbarAdmin() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [avatar, setAvatar] = useState(localStorage.getItem("avtar")); // Initialize state with localStorage value
@@ -36,10 +34,7 @@ const Navbar = () => {
       window.removeEventListener("avatarUpdated", handleAvatarUpdate);
     };
   }, []);
-
-  return user_role === "ROLE_ADMIN" ? (
-    <NavbarAdmin />
-  ) : (
+  return (
     <nav className=" bg-black">
       <div className="  px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-16 items-center justify-between">
@@ -108,22 +103,28 @@ const Navbar = () => {
                   Home
                 </a>
                 <a
-                  onClick={() => navigate("/shop")}
-                  className="hover:cursor-pointer rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                  href="#"
+                  className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
                 >
                   Shop
                 </a>
                 <a
-                  onClick={() => navigate("/BulkOrder")}
+                  onClick={() => navigate("/Categories")}
                   className="hover:cursor-pointer rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
                 >
-                  Bulk Order
+                  Categories
                 </a>
                 <a
-                  onClick={() => navigate("/cart")}
+                  onClick={() => navigate("/Products")}
                   className="hover:cursor-pointer rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
                 >
-                  Cart
+                  Products
+                </a>
+                <a
+                  onClick={() => navigate("/admin")}
+                  className="hover:cursor-pointer rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                >
+                  Admin Pannel
                 </a>
               </div>
             </div>
@@ -224,22 +225,28 @@ const Navbar = () => {
               Shop
             </a>
             <a
-              href="#"
+              onClick={() => navigate("/Categories")}
               className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
             >
-              Bulk Order
+              Categories
             </a>
             <a
-              onClick={() => navigate("/cart")}
+              onClick={() => navigate("/Products")}
               className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
             >
-              Cart
+              Products
+            </a>
+            <a
+              onClick={() => navigate("/admin")}
+              className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+            >
+              Admin Pannel
             </a>
           </div>
         </div>
       )}
     </nav>
-  );  
-};
+  );
+}
 
-export default Navbar;
+export default NavbarAdmin;

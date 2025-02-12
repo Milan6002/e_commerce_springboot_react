@@ -50,8 +50,8 @@ public class ProductControler {
 
     @PutMapping("/updateProduct/{product_id}")
     public String updateProduct(@PathVariable Long product_id, @ModelAttribute ProductModel productModel,
-            @RequestParam(required = false) MultipartFile[] image) throws IOException {
-        return adminService.updateProduct(product_id, productModel, image);
+            @RequestParam(value = "images", required = false) MultipartFile[] images) throws IOException {
+        return adminService.updateProduct(product_id, productModel, images);
     }
 
     @GetMapping("/getProductByCategory/{category_id}")

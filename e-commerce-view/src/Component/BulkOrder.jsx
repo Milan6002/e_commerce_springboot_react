@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 function BulkOrder() {
     const [formData, setFormData] = useState({
@@ -50,7 +50,7 @@ function BulkOrder() {
     const grandTotal = formData.items.reduce((acc, item) => acc + parseFloat(item.total || 0), 0);
 
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-gray-700 to-gray-900 p-6">
+        <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-gray-700 to-gray-900 ">
             <div className="bg-gray-50 p-8 rounded-xl shadow-xl w-full max-w-3xl">
                 <h2 className="text-3xl font-bold text-center text-gray-900">Wholesale Order Form</h2>
                 <form className="mt-6 space-y-4" onSubmit={handleSubmit}>

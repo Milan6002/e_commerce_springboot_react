@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import AdminService from "../Services/AdminServices";
 import '../assets/shop.css';
+import { motion } from "framer-motion";
 
 function Products() {
   const navigate = useNavigate();
@@ -16,8 +17,6 @@ function Products() {
       try {
         const response = await AdminService.getAllProducts();
         const productList = response.data;
-
-        //Below code is used to display category name from category id
         const updatedProducts = await Promise.all(
           productList.map(async (product) => {
             const categoryResponse = await AdminService.getCategoryById(
@@ -29,7 +28,6 @@ function Products() {
             };
           })
         );
-
         setProducts(updatedProducts);
       } catch (error) {
         console.error(error);
@@ -84,24 +82,22 @@ function Products() {
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       {localStorage.getItem("role") === "ROLE_ADMIN" && (
-        <button
+        <motion.button
           onClick={() => navigate("/AddProduct")}
-          className="mb-5 p-3 px-4 mt-5 text-blue-600 font-bold text-lg rounded-lg border-2 border-blue-600 hover:bg-blue-600 hover:text-white transition-transform transform hover:scale-105"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          className="mb-5 p-3 px-4 mt-5 text-blue-600 font-bold text-lg rounded-lg border-2 border-blue-600 hover:bg-blue-600 hover:text-white transition-all"
         >
           Add Product
-        </button>
+        </motion.button>
       )}
 
-      <div className=" flex main">
-        {/* Sorting Controls */}
-        <div className="mb-5 ">
-          <form className="cart-form ">
-            {/* <label className="me-6 text-lg" htmlFor="sortbyCategory ">
-              Sort By Category:
-            </label> */}
+      <div className="flex main">
+        <div className="mb-5">
+          <form className="cart-form">
             <select
               id="sortbyCategory"
-              className="bg-white p-2 me-6 rounded-2xl"
+              className="bg-white p-2 me-6 rounded-2xl border border-gray-300 hover:border-blue-500 transition"
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
             >
@@ -115,72 +111,65 @@ function Products() {
           </form>
         </div>
 
-        {/* Product Display */}
         {!loading ? (
-          <div className="w-full">
+          <motion.div 
+            className="w-full"
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1.5 }}
+          >
             {filteredProducts.length > 0 ? (
               filteredProducts.map((product) => (
-                <div
+                <motion.div
                   key={product.product_id}
-                  className=" flex p-4 gap-2.5 mb-4 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                  className="flex p-4 gap-2.5 mb-4 rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow bg-white"
+                  whileHover={{ scale: 1.02 }}
                 >
-                  
                   <div className="min-w-70 inner-img">
                     <img
-                      src={`data:image/jpeg;base64,${product.product_image}`}
+                      src={`data:image/jpeg;base64,${product.product_images[0]}`}
                       alt={product.product_name}
-                      className="w-full h-64"
+                      className="w-full h-64 rounded-lg object-cover"
                     />
                   </div>
-                  <div className="p-4 inner-product">
-                    {/* <h2 className="text-xl font-bold text-gray-800">
-                      {product.product_name}
-                    </h2> */}
-                    <p className="font-bold text-gray-800">
-                       {product.product_name}
-                    </p>
-                    <p className="text-gray-600 cart-description">
-                      {product.description}
-                    </p>
-                    <p className="text-gray-800 font-semibold">
-                      Price: ₹{product.price}
-                    </p>
+
+                  <div className="p-4 inner-product w-full">
+                    <p className="font-bold text-gray-800">{product.product_name}</p>
+                    <p className="text-gray-600 cart-description">{product.description}</p>
+                    <p className="text-gray-800 font-semibold">Price: ₹{product.price}</p>
                     {localStorage.getItem("role") === "ROLE_ADMIN" ? (
                       <div className="mt-4 flex justify-between">
-                        <button
+                        <motion.button
                           onClick={(e) => handleUpdate(e, product.product_id)}
                           className="text-blue-600 font-medium hover:underline"
+                          whileHover={{ scale: 1.1 }}
                         >
                           Edit
-                        </button>
-                        <button
+                        </motion.button>
+                        <motion.button
                           onClick={(e) => handleDelete(e, product.product_id)}
                           className="text-red-600 font-medium hover:underline"
+                          whileHover={{ scale: 1.1 }}
                         >
                           Remove
-                        </button>
+                        </motion.button>
                       </div>
                     ) : (
-                      <div className="mt-2">
-                        <button
-                          onClick={(e) =>
-                            handleViewProduct(e, product.product_id)
-                          }
-                          className="bg-blue-600 p-2 px-4 text-white rounded-lg hover:bg-blue-500 hover:cursor-pointer"
-                        >
-                          View Product
-                        </button>
-                      </div>
+                      <motion.button
+                        onClick={(e) => handleViewProduct(e, product.product_id)}
+                        className="bg-blue-600 p-2 px-4 text-white rounded-lg hover:bg-blue-500 transition"
+                        whileHover={{ scale: 1.1 }}
+                      >
+                        View Product
+                      </motion.button>
                     )}
                   </div>
-                </div>
+                </motion.div>
               ))
             ) : (
-              <p className="text-center text-gray-600">
-                No products available.
-              </p>
+              <p className="text-center text-gray-600">No products available.</p>
             )}
-          </div>
+          </motion.div>
         ) : (
           <p className="text-center text-gray-600">Loading products...</p>
         )}
