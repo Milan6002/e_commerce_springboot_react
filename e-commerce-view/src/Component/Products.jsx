@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import AdminService from "../Services/AdminServices";
-import '../assets/shop.css';
+// import "../assets/shop.css";
 import { motion } from "framer-motion";
 
 function Products() {
@@ -92,12 +92,12 @@ function Products() {
         </motion.button>
       )}
 
-      <div className="flex main">
+      <div className=" main">
         <div className="mb-5">
           <form className="cart-form">
             <select
               id="sortbyCategory"
-              className="bg-white p-2 me-6 rounded-2xl border border-gray-300 hover:border-blue-500 transition"
+              className="bg-white p-3 me-6 rounded-2xl border border-gray-300 hover:border-blue-500 transition"
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
             >
@@ -112,9 +112,9 @@ function Products() {
         </div>
 
         {!loading ? (
-          <motion.div 
-            className="w-full"
-            initial={{ opacity: 0 }} 
+          <motion.div
+            className="w-full grid grid-cols-1 md:grid-cols-4 gap-3"
+            initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1.5 }}
           >
@@ -122,21 +122,30 @@ function Products() {
               filteredProducts.map((product) => (
                 <motion.div
                   key={product.product_id}
-                  className="flex p-4 gap-2.5 mb-4 rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow bg-white"
+                  className="p-4 gap-2.5 mb-4 rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow bg-white"
                   whileHover={{ scale: 1.02 }}
                 >
-                  <div className="min-w-70 inner-img">
+                  <motion.div
+                    className="min-w-70 min-h-96 overflow-hidden inner-img p-8"
+                    whileHover={{ scale: 1.2 }}
+                  >
                     <img
                       src={`data:image/jpeg;base64,${product.product_images[0]}`}
                       alt={product.product_name}
-                      className="w-full h-64 rounded-lg object-cover"
+                      className="w-full rounded-lg object-cover"
                     />
-                  </div>
+                  </motion.div>
 
                   <div className="p-4 inner-product w-full">
-                    <p className="font-bold text-gray-800">{product.product_name}</p>
-                    <p className="text-gray-600 cart-description">{product.description}</p>
-                    <p className="text-gray-800 font-semibold">Price: ₹{product.price}</p>
+                    <p className="font-bold text-gray-800 h-5 overflow-hidden mb-3">
+                      {product.product_name}
+                    </p>
+                    <p className="text-gray-600 cart-description h-12 overflow-hidden mb-3">
+                      {product.description}
+                    </p>
+                    <p className="text-gray-800 font-semibold mb-3">
+                      Price: ₹{product.price}
+                    </p>
                     {localStorage.getItem("role") === "ROLE_ADMIN" ? (
                       <div className="mt-4 flex justify-between">
                         <motion.button
@@ -156,7 +165,9 @@ function Products() {
                       </div>
                     ) : (
                       <motion.button
-                        onClick={(e) => handleViewProduct(e, product.product_id)}
+                        onClick={(e) =>
+                          handleViewProduct(e, product.product_id)
+                        }
                         className="bg-blue-600 p-2 px-4 text-white rounded-lg hover:bg-blue-500 transition"
                         whileHover={{ scale: 1.1 }}
                       >
@@ -167,7 +178,9 @@ function Products() {
                 </motion.div>
               ))
             ) : (
-              <p className="text-center text-gray-600">No products available.</p>
+              <p className="text-center text-gray-600">
+                No products available.
+              </p>
             )}
           </motion.div>
         ) : (
