@@ -151,6 +151,10 @@ public class AdminServiceImplement implements AdminService {
         if (productModel.getProduct_color() != null) {
             existingProduct.setProduct_color(productModel.getProduct_color());
         }
+        CategoryEntity categoryEntity = categoryRepository.findById(productModel.getCategory_id()).get();
+        if (productModel.getCategory_id() != null) {
+            existingProduct.setCategory(categoryEntity);
+        }
 
         // Update product images (if new images are provided)
         if (images != null && images.length > 0) {
@@ -169,8 +173,12 @@ public class AdminServiceImplement implements AdminService {
             // existingProduct.getProduct_images().addAll(newImages);
 
             // Option 2: Replace all images (It Will Delete ALl the old Image)
-            existingProduct.getProduct_images().clear();
-            existingProduct.setProduct_images(newImages);
+            // existingProduct.getProduct_images().clear();
+            // existingProduct.setProduct_images(newImages);
+
+            existingProduct.getProduct_images().clear(); // If you want to remove all images
+            existingProduct.getProduct_images().addAll(newImages);
+            newImages.forEach(image -> image.setProduct(existingProduct));
         }
 
         productRepository.save(existingProduct);

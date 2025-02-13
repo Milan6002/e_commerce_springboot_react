@@ -86,7 +86,7 @@ Please provide more details.`;
             transition={{ duration: 0.5 }}
           />
 
-          <div className="flex mt-2 space-x-2 overflow-x-auto">
+          <div className="flex mt-2 space-x-2 overflow-x-auto max-w-96 min-h-24">
             {imageList.map((img, index) => (
               <motion.img
                 key={index}

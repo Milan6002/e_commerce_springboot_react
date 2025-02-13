@@ -19,6 +19,7 @@ import Shop from "./Component/Shop";
 import ViewProduct from "./Component/ViewProduct";
 import Cart from "./Component/Cart";
 import BulkOrder from "./Component/BulkOrder";
+import Footer from "./Component/Footer";
 
 function App() {
   const user_role = localStorage.getItem("role");
@@ -27,6 +28,7 @@ function App() {
     <>
       <BrowserRouter>
         <Navbar />
+
         <Routes>
           <Route index path="/" element={<Home />} />
 
@@ -156,6 +158,7 @@ function App() {
           {/* 404 Not Found Route */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <Footer/>
       </BrowserRouter>
     </>
   );
