@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import AdminService from "../Services/AdminServices";
-// import "../assets/shop.css";
+import "../assets/shop.css";
 import { motion, useScroll } from "framer-motion";
 
 function Products() {
