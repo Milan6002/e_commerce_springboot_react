@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import LogoBg from "../assets/Img/BL_Favicon_removebg.png";
+import LogoBg from "../assets/Img/BL_Long_Logo.png";
 import NavbarAdmin from "./NavbarAdmin";
 import "../assets/Navbar.css";
 
@@ -43,6 +43,14 @@ const Navbar = () => {
   ) : (
     <>
       <nav className=" bg-black">
+        <div className="bg-black pt-4">
+          <img
+            className="h-32 w-auto mx-auto  rounded-lg"
+            src={LogoBg}
+            alt="Bombay Luggage"
+          />
+        </div>
+
         <div className="px-2 sm:px-6 lg:px-8">
           <div className="relative flex h-16 items-center justify-between">
             {/* Mobile menu button */}
@@ -91,21 +99,13 @@ const Navbar = () => {
 
             {/* Logo and desktop menu */}
             <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-              <div className="flex shrink-0 items-center">
-                <img className="h-8 w-auto" src={LogoBg} alt="Your Company" />
-                <a
-                  className="text-xl font-extrabold font-monospace tracking-widest uppercase text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-white"
-                  onClick={() => navigate("/Home")}
-                >
-                   &nbsp;Bombay Luggage
-                </a>
-              </div>
               <div className="hidden sm:ml-6 sm:block">
-                <div className="flex space-x-4 ">
-                  <div className="relative group">
+                <div className="flex gap-36 ">
+
+                  <div className="relative group ">
                     <div
                       onClick={() => navigate("/")}
-                      className="hover:cursor-pointer rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-gray-700 hover:text-white"
+                      className="hover:cursor-pointer rounded-md px-3 py-2 text-lg font-medium text-white hover:bg-gray-700 hover:text-white"
                     >
                       Brands
                     </div>
@@ -130,23 +130,163 @@ const Navbar = () => {
                     </div>
                   </div>
 
+                  <div className="relative group">
+                    <div
+                      onClick={() => navigate("/")}
+                      className="hover:cursor-pointer rounded-md px-3 py-2 text-lg font-medium text-white hover:bg-gray-700 hover:text-white"
+                    >
+                      Luggage
+                    </div>
+                    <div className="absolute hidden bg-white text-black rounded-md shadow-lg group-hover:block z-20 ">
+                      <div className="flex ">
+                        <div className="w-60">
+                          <h1
+                            className="text-xl ms-2 uppercase  font-bold"
+                            style={{ color: "#ed1c24", letterSpacing: "1px" }}
+                          >
+                            Categories
+                          </h1>
+                          <ul>
+                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                              New Arrivals
+                            </li>
+                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                              Bestsellers
+                            </li>
+                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                              Soft Side Luggage
+                            </li>
+                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                              Hard Side Luggage
+                            </li>
+                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                              Cabin Luggage
+                            </li>
+                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                              Check-in Luggage
+                            </li>
+                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                              Light Weight Luggage
+                            </li>
+                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                              Luggage Set
+                            </li>
+                          </ul>
+                        </div>
+                        <div className="w-60">
+                          <h1
+                            className="text-xl uppercase ms-2 font-bold"
+                            style={{ color: "#ed1c24", letterSpacing: "1px" }}
+                          >
+                            Trip Duration
+                          </h1>
+                          <ul>
+                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                              Business Trips
+                            </li>
+                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                              Short Getaways
+                            </li>
+                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                              Long Getaways
+                            </li>
+                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                              Weekend Trips
+                            </li>
+                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                              Wedding Special
+                            </li>
+                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                              Smart Ranges
+                            </li>
+                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                              Strong Ranges
+                            </li>
+                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                              Luggage Set
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="relative group">
+                    <div
+                      onClick={() => navigate("/")}
+                      className="hover:cursor-pointer rounded-md px-3 py-2 text-lg font-medium text-white hover:bg-gray-700 hover:text-white"
+                    >
+                      Backpack
+                    </div>
+                    <div className="absolute hidden bg-white text-black rounded-md shadow-lg group-hover:block z-20">
+                      <div className="flex ">
+
+                        <div className="w-44">
+                          <h1
+                            className="text-xl ms-2 uppercase  font-bold"
+                            style={{ color: "#ed1c24", letterSpacing: "1px" }}
+                          >
+                            Type
+                          </h1>
+                          <ul>
+                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                              School
+                            </li>
+                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                              College
+                            </li>
+                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                              Professional
+                            </li>
+                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                              Outdoor
+                            </li>
+                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                              Daypack
+                            </li>
+                          </ul>
+                        </div>
+
+                        <div className="w-44">
+                          <h1
+                            className="text-xl uppercase ms-2 font-bold"
+                            style={{ color: "#ed1c24", letterSpacing: "1px" }}
+                          >
+                            Occasion
+                          </h1>
+                          <ul>
+                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                              Adventure
+                            </li>
+                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                              Students
+                            </li>
+                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                              Day Trips
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                   <a
                     onClick={() => navigate("/shop")}
-                    className="hover:cursor-pointer rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                    className="hover:cursor-pointer rounded-md px-3 py-2 text-lg font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
                   >
-                    Shop
+                    Duffle
                   </a>
 
                   <a
                     onClick={() => navigate("/BulkOrder")}
-                    className="hover:cursor-pointer rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                    className="hover:cursor-pointer rounded-md px-3 py-2 text-lg font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
                   >
                     Bulk Order
                   </a>
 
                   <a
                     onClick={() => navigate("/cart")}
-                    className="hover:cursor-pointer rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                    className="hover:cursor-pointer rounded-md px-3 py-2 text-lg font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
                   >
                     Cart
                   </a>
@@ -156,27 +296,6 @@ const Navbar = () => {
 
             {/* Notifications and profile dropdown */}
             <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-              <button
-                type="button"
-                className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-none"
-              >
-                <span className="sr-only">View notifications</span>
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"
-                  />
-                </svg>
-              </button>
-
               <div className="relative ml-3">
                 <button
                   type="button"

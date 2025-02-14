@@ -15,7 +15,7 @@ function Profile() {
 
   useEffect(() => {
     axios
-      .get("http://192.168.1.2:8080/api/auth/profile/" + decodeToken.sub)
+      .get("http://192.168.1.16:8080/api/auth/profile/" + decodeToken.sub)
       .then((response) => {
         localStorage.setItem("role", response.data.role);
         setUser({

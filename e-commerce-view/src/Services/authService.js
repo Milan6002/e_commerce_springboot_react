@@ -1,7 +1,7 @@
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
-const API_URL = "http://192.168.1.2:8080/api/auth";
+const API_URL = "http://192.168.1.16:8080/api/auth";
 
 export const login = async (loginData) => {
   return await axios.post(API_URL + "/login", loginData);

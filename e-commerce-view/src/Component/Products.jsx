@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import AdminService from "../Services/AdminServices";
 // import "../assets/shop.css";
-import { motion } from "framer-motion";
+import { motion, useScroll } from "framer-motion";
 
 function Products() {
   const navigate = useNavigate();
@@ -79,8 +79,13 @@ function Products() {
     navigate(`/viewproduct/${id}`);
   };
 
+  const { scrollYProgress } = useScroll();
   return (
     <div className="min-h-screen bg-gray-100 p-6">
+      <motion.div
+        style={{ scaleX: scrollYProgress }}
+        className="bg-red-600 w-full h-1 top-0 fixed left-0 origin-left"
+      ></motion.div>
       {localStorage.getItem("role") === "ROLE_ADMIN" && (
         <motion.button
           onClick={() => navigate("/AddProduct")}
@@ -127,7 +132,7 @@ function Products() {
                 >
                   <motion.div
                     className="min-w-70 min-h-96 overflow-hidden inner-img p-8"
-                    whileHover={{ scale: 1.2 }}
+                    whileHover={{ scale: 1.2  }}
                   >
                     <img
                       src={`data:image/jpeg;base64,${product.product_images[0]}`}
