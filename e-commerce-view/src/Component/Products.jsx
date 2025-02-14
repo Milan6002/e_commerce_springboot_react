@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import AdminService from "../Services/AdminServices";
-// import "../assets/shop.css";
+import "../assets/shop.css";
 import { motion } from "framer-motion";
 
 function Products() {
@@ -92,10 +92,10 @@ function Products() {
         </motion.button>
       )}
 
-      <div className=" main">
+      <div className=" main flex">
         <div className="mb-5">
           <form className="cart-form">
-            <select
+            <select 
               id="sortbyCategory"
               className="bg-white p-3 me-6 rounded-2xl border border-gray-300 hover:border-blue-500 transition"
               value={selectedCategory}
@@ -113,7 +113,7 @@ function Products() {
 
         {!loading ? (
           <motion.div
-            className="w-full grid grid-cols-1 md:grid-cols-4 gap-3"
+            className="  grid grid-cols-1 md:grid-cols-4 gap-3"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1.5 }}
@@ -122,17 +122,17 @@ function Products() {
               filteredProducts.map((product) => (
                 <motion.div
                   key={product.product_id}
-                  className="p-4 gap-2.5 mb-4 rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow bg-white"
+                  className=" gap-2.5 mb-4 rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow bg-white"
                   whileHover={{ scale: 1.02 }}
                 >
                   <motion.div
-                    className="min-w-70 min-h-96 overflow-hidden inner-img p-8"
+                    className="min-w-70 min-h-70 overflow-hidden inner-img p-8"
                     whileHover={{ scale: 1.2 }}
                   >
                     <img
                       src={`data:image/jpeg;base64,${product.product_images[0]}`}
                       alt={product.product_name}
-                      className="w-full rounded-lg object-cover"
+                      className="w-full p-3 rounded-lg object-cover"
                     />
                   </motion.div>
 

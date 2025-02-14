@@ -6,6 +6,7 @@ import Warranty from "../assets/Img/warranty.png";
 import Facebook from "../assets/Img/facebook_color.png";
 import Instagram from "../assets/Img/instagram_color.png";
 import Whatsapp from "../assets/Img/whatsapp_color.png";
+import '../assets/Footer.css';
 function Footer() {
   return (
     <div className="bg-black pt-8 text-white">
@@ -21,47 +22,47 @@ function Footer() {
             Why To Buy From Bombay Luggage
           </h1>
         </div>
-        <div className="grid grid-cols-4 text-center mt-14">
-          <div>
+        <div className="grid md:grid-cols-4 grid-cols-2 text-center mt-14 footer-inner-main">
+          <div className="mb-4">
             <img
               src={Shipping}
               alt="Genuine"
-              className="w-14 text-white mx-auto"
+              className="w-14 text-white mx-auto footer-img"
             />
-            <h1 className="font-extrabold text-lg tracking-widest font-">
+            <h1 className="font-extrabold text-lg tracking-widest footer-h1">
               Free Shipping
             </h1>
             <p>Prompt shipping across India.</p>
           </div>
-          <div>
+          <div  className="mb-4">
             <img
               src={Wallet}
               alt="Genuine"
-              className="w-14 text-white mx-auto"
+              className="w-14 text-white mx-auto footer-img"
             />
-            <h1 className="font-extrabold text-lg tracking-widest font-">
+            <h1 className="font-extrabold text-lg tracking-widest footer-h1">
               Secure Payment
             </h1>
             <p>Ensuring top-tier payment security.</p>
           </div>
-          <div>
+          <div  className="mb-4">
             <img
               src={Warranty}
               alt="Genuine"
-              className="w-14 text-white mx-auto"
+              className="w-14 text-white mx-auto footer-img"
             />
-            <h1 className="font-extrabold text-lg tracking-widest font-">
+            <h1 className="font-extrabold text-lg tracking-widest footer-h1">
               Brand Warranty
             </h1>
             <p>All products are backed by international warranty.</p>
           </div>
-          <div>
+          <div  className="mb-4">
             <img
               src={Genuine}
               alt="Genuine"
-              className="w-14 text-white mx-auto"
+              className="w-14 text-white mx-auto footer-img"
             />
-            <h1 className="font-extrabold text-lg tracking-widest font-">
+            <h1 className="font-extrabold text-lg tracking-widest footer-h1">
               Genuine Products
             </h1>
             <p>Subjected to rigorous 8-level testing.</p>
