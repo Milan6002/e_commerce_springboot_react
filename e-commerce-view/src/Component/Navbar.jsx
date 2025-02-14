@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import LogoBg from "../assets/Img/LogoRemovedBg.png";
+import LogoBg from "../assets/Img/BL_Favicon_removebg.png";
 import NavbarAdmin from "./NavbarAdmin";
 import "../assets/Navbar.css";
 
@@ -97,7 +97,7 @@ const Navbar = () => {
                   className="text-xl font-extrabold font-monospace tracking-widest uppercase text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-white"
                   onClick={() => navigate("/Home")}
                 >
-                  iseOnix
+                   &nbsp;Bombay Luggage
                 </a>
               </div>
               <div className="hidden sm:ml-6 sm:block">
