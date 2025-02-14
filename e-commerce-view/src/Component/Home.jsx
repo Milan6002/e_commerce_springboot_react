@@ -5,6 +5,7 @@ import "swiper/css/pagination";
 import { Pagination, Autoplay } from "swiper/modules";
 import { Navigation } from "swiper/modules";
 import "swiper/css/navigation";
+import '../assets/Home.css';
 
 function Home() {
   return (
@@ -30,9 +31,9 @@ function Home() {
           <img src="/src/assets/Img/height600_2.png" alt="Height 600" className="w-full h-auto object-cover" />
         </SwiperSlide>
       </Swiper>
-      <div className="flex gap-2 p-4" >
+      <div className="flex gap-2 p-4 home-inner-main" >
         <div className="bg-gray-200 rounded-full hover:bg-amber-300 hover:rounded-none">
-          <img src="/src/assets/Img/vip4.png" className="h-96 w-96" alt="" />
+          <img src="/src/assets/Img/vip4.png" className="h-96 w-96 " alt="" />
         </div>
         <div className=" bg-gray-200 rounded-full  hover:bg-green-500 hover:rounded-none" >
           <img src="/src/assets/Img/vip3.png" className="h-96 w-96" alt="" />
