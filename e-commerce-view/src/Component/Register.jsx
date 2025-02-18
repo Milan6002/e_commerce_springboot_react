@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import '../assets/register.css';
 
-const Register = () => {
+function Register() {
   const [userData, setUserData] = useState({
     name: "",
     email: "",
@@ -154,4 +154,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default Register

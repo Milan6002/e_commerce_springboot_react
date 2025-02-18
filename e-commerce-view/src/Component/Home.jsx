@@ -1,4 +1,3 @@
-import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
@@ -6,12 +5,19 @@ import { Pagination, Autoplay } from "swiper/modules";
 import { Navigation } from "swiper/modules";
 import "swiper/css/navigation";
 import '../assets/Home.css';
+import Home_Video from "../assets/Img/bag.mp4";
+import Card_Img1 from "../assets/Img/vip4.png";
+import Card_Img2 from "../assets/Img/vip3.png";
+import Card_Img3 from "../assets/Img/vip1.png";
+import Slider_Img1 from "../assets/Img/aer_height_600.png";
+import Slider_Img2 from "../assets/Img/vapour_height_600.png";
+import Slider_Img3 from "../assets/Img/height600_2.png";
 
 function Home() {
   return (
     <div>
       <div>
-        <video src="/src/assets/Img/bag.mp4" muted loop autoPlay className="w-full h-full"></video>
+        <video src={Home_Video} muted loop autoPlay className="w-full h-full"></video>
       </div >
       <Swiper
         modules={[Pagination, Autoplay]}
@@ -22,24 +28,24 @@ function Home() {
         className="w-full"
       >
         <SwiperSlide>
-          <img src="/src/assets/Img/aer_height_600.png" alt="Aer" className="w-full h-auto object-cover" />
+          <img src={Slider_Img1} alt="Aer" className="w-full h-auto object-cover" />
         </SwiperSlide>
         <SwiperSlide>
-          <img src="/src/assets/Img/vapour_height_600.png" alt="Vapour" className="w-full h-auto object-cover" />
+          <img src={Slider_Img2} alt="Vapour" className="w-full h-auto object-cover" />
         </SwiperSlide>
         <SwiperSlide>
-          <img src="/src/assets/Img/height600_2.png" alt="Height 600" className="w-full h-auto object-cover" />
+          <img src={Slider_Img3} alt="Height 600" className="w-full h-auto object-cover" />
         </SwiperSlide>
       </Swiper>
       <div className="flex gap-2 p-4 home-inner-main" >
         <div className="bg-gray-200 rounded-full hover:bg-amber-300 hover:rounded-none">
-          <img src="/src/assets/Img/vip4.png" className="h-96 w-96 " alt="" />
+          <img src={Card_Img1} className="h-96 w-96 " alt="" />
         </div>
         <div className=" bg-gray-200 rounded-full  hover:bg-green-500 hover:rounded-none" >
-          <img src="/src/assets/Img/vip3.png" className="h-96 w-96" alt="" />
+          <img src={Card_Img2} className="h-96 w-96" alt="" />
         </div>
         <div className="bg-gray-200 rounded-full  hover:bg-blue-600 hover:rounded-none">
-          <img src=" /src/assets/Img/vip1.png " className="h-96 w-96 " alt="" />
+          <img src={Card_Img3} className="h-96 w-96 " alt="" />
         </div>
       </div>
       <div className=" mt-16 w-80 mx-auto ">

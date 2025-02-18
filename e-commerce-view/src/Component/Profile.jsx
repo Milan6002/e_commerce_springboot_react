@@ -2,8 +2,11 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import '../assets/profile.css'; 
+import { useNavigate } from "react-router-dom";
 
 function Profile() {
+  const navigate = useNavigate();
+
   const [user, setUser] = useState({
     id: "",
     name: "",
@@ -15,7 +18,7 @@ function Profile() {
 
   useEffect(() => {
     axios
-      .get("http://192.168.1.16:8080/api/auth/profile/" + decodeToken.sub)
+      .get("http://localhost:8080/ecommerce/api/auth/profile/" + decodeToken.sub)
       .then((response) => {
         localStorage.setItem("role", response.data.role);
         setUser({
@@ -45,8 +48,8 @@ function Profile() {
       <div className="bg-gray-800 rounded-2xl w-96 p-6 text-white text-center inner-proflle-main">
         <div className="flex justify-end">
           <a
-            href={`/updateprofile/${user.id}`}
-            className="text-blue-400 hover:text-blue-300 transition-all duration-300 text-sm"
+            onClick={()=> navigate(`/updateprofile/${user.id}`)}
+            className="hover:cursor-pointer text-blue-400 hover:text-blue-300 transition-all duration-300 text-sm"
           >
             📝 Edit Profile
           </a>

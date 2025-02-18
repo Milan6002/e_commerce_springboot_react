@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://192.168.1.16:8080/api/auth/";
+const BASE_URL = "http://localhost:8080/ecommerce/api/auth/";
 
 class AdminServices {
   //Category Related Services

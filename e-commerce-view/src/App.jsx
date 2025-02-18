@@ -30,7 +30,7 @@ function App() {
         <Navbar />
 
         <Routes>
-          <Route index path="/" element={<Home />} />
+          <Route index path="/ecommerce" element={<Home />} />
 
           {user_role == "ROLE_ADMIN" ? (
             <>
@@ -123,7 +123,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-           <Route
+          <Route
             path="/BulkOrder"
             element={
               <ProtectedRoute>
@@ -148,7 +148,7 @@ function App() {
             }
           />
           <Route
-            path="/"
+            path="/ecoomerce"
             element={
               <ProtectedRoute>
                 <Home />
@@ -158,7 +158,8 @@ function App() {
           {/* 404 Not Found Route */}
           <Route path="*" element={<NotFound />} />
         </Routes>
-        <Footer/>
+        
+        <Footer />
       </BrowserRouter>
     </>
   );

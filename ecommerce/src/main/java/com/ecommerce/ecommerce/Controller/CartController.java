@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/auth/cart")
-@CrossOrigin("http://localhost:5173")
+@CrossOrigin("http://localhost:8080/ecommerce")
 public class CartController {
 
     @Autowired

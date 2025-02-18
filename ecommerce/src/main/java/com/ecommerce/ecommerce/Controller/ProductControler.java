@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin("http://localhost:5173")
+@CrossOrigin("http://localhost:8080/ecommerce")
 public class ProductControler {
     @Autowired
     AdminService adminService;

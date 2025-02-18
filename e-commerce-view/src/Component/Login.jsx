@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../services/authService";
 import { ToastContainer, toast } from "react-toastify";
-import '../assets/login.css';
+import "../assets/login.css";
 
 const Login = () => {
   const [loginData, setLoginData] = useState({ email: "", password: "" });
@@ -85,7 +85,10 @@ const Login = () => {
         </form>
         <p className="text-center text-sm">
           Don&apos;t have an account?
-          <a href="/register" className="text-blue-400 hover:underline ml-1">
+          <a
+            onClick={() => navigate("/register")}
+            className="hover:cursor-pointer text-blue-400 hover:underline ml-1"
+          >
             Register
           </a>
         </p>

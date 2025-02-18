@@ -45,7 +45,7 @@ const Navbar = () => {
       <nav className=" bg-black">
         <div className="bg-black pt-4">
           <img
-            className="h-32 w-auto mx-auto  rounded-lg"
+            className="h-32 w-auto mx-auto  rounded-lg" 
             src={LogoBg}
             alt="Bombay Luggage"
           />

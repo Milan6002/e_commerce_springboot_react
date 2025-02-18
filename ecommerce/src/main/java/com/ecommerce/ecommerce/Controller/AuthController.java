@@ -23,7 +23,7 @@ import com.ecommerce.ecommerce.Services.AuthService;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin("http://localhost:5173")
+@CrossOrigin("http://localhost:8080/ecommerce")
 public class AuthController {
     
     @Autowired
