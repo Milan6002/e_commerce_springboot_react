@@ -11,15 +11,16 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SecurityConfig {
-    
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(authorize -> authorize
-                                .requestMatchers("/api/auth/**").permitAll()
-                                .requestMatchers("/", "/index.html", "/static/**", "/assets/**").permitAll()
-                                .anyRequest().authenticated()
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/auth/**").permitAll() // Public authentication APIs (e.g., login/signup)
+                        .requestMatchers("/", "/index.html", "/ecommerce/**", "/static/**", "/assets/**", "/templates/**").permitAll() // React frontend paths
+                        .anyRequest().permitAll() // Allow everything else
                 );
+
         return http.build();
     }
 
@@ -29,7 +30,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 }

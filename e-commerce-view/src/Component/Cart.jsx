@@ -106,7 +106,7 @@ function Cart() {
           <p className="text-gray-600">Your cart is empty.</p>
           <button
             className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-            onClick={() => navigate("/shop")}
+            onClick={() => navigate("/ecommerce/shop")}
           >
             Shop Now
           </button>

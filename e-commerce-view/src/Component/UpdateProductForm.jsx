@@ -84,7 +84,7 @@ function UpdateProductForm() {
 
     try {
       await AdminServices.updateProduct(formData, id);
-      navigate("/Products");
+      navigate("/ecommerce/Products");
     } catch (error) {
       console.error("Update failed:", error);
     }

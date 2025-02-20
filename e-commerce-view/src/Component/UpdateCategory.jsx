@@ -36,7 +36,7 @@ function UpdateCategory() {
     AdminServices.updateCategory(id, categoryData)
       .then((response) => {
         console.log(response.data);
-        navigate("/Categories");
+        navigate("/ecommerce/Categories");
       })
       .catch((error) => {
         console.log(error);

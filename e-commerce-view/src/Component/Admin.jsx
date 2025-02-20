@@ -22,7 +22,7 @@ function Admin() {
             Manage the categories section here
           </p>
           <button
-            onClick={() => navigate("/Categories")}
+            onClick={() => navigate("/ecommerce/Categories")}
             className="mt-5 bg-blue-600 p-3 px-8 rounded-3xl text-sm md:text-xl font-extrabold text-white uppercase hover:cursor-grab hover:bg-blue-500"
           >
             Manage
@@ -38,7 +38,7 @@ function Admin() {
             Manage the products section here
           </p>
           <button
-            onClick={() => navigate("/Products")}
+            onClick={() => navigate("/ecommerce/Products")}
             className="mt-5 bg-blue-600 p-3 px-8 rounded-3xl text-sm md:text-xl font-extrabold text-white uppercase hover:cursor-grab hover:bg-blue-500"
           >
             Manage

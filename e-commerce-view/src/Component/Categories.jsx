@@ -40,11 +40,11 @@ function Categories() {
 
   const handleUpdateCategory = (e, id) => {
     e.preventDefault();
-    navigate(`/UpdateCategory/${id}`);
+    navigate(`/ecommerce/UpdateCategory/${id}`);
   };
 
   const handleAddCategory = () => {
-    navigate("/AddCategory");
+    navigate("/ecommerce/AddCategory");
   };
 
   return (

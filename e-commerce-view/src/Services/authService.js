@@ -1,7 +1,7 @@
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
-const API_URL = "http://localhost:8080/ecommerce/api/auth";
+const API_URL = "http://192.168.1.16:8080/ecommerce/api/auth";
 
 export const login = async (loginData) => {
   return await axios.post(API_URL + "/login", loginData);

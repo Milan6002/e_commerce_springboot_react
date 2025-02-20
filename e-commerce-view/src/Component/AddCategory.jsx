@@ -21,7 +21,7 @@ function AddCategory() {
     AdminServices.addCategory(categorydata)
       .then((response) => {
         console.log(response.data);
-        navigate("/Categories");
+        navigate("/ecommerce/Categories");
       })
       .catch((error) => {
         console.log(error);

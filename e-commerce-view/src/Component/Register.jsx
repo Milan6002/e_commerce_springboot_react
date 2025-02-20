@@ -59,12 +59,12 @@ function Register() {
       if (response.data === "User already exists") {
         toast.error(response.data);
         setTimeout(() => {
-          navigate("/login");
+          navigate("/ecommerce/login");
         }, 2500);
       } else if (response.data === "User registered successfully") {
         toast.success("🎉 " + response.data);
         setTimeout(() => {
-          navigate("/login");
+          navigate("/ecommerce/login");
         }, 2500);
       }
     } catch (err) {

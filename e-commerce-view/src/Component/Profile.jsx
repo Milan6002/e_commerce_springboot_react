@@ -18,7 +18,7 @@ function Profile() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/ecommerce/api/auth/profile/" + decodeToken.sub)
+      .get("http://192.168.1.16:8080/ecommerce/api/auth/profile/" + decodeToken.sub)
       .then((response) => {
         localStorage.setItem("role", response.data.role);
         setUser({
@@ -48,7 +48,7 @@ function Profile() {
       <div className="bg-gray-800 rounded-2xl w-96 p-6 text-white text-center inner-proflle-main">
         <div className="flex justify-end">
           <a
-            onClick={()=> navigate(`/updateprofile/${user.id}`)}
+            onClick={()=> navigate(`/ecommerce/updateprofile/${user.id}`)}
             className="hover:cursor-pointer text-blue-400 hover:text-blue-300 transition-all duration-300 text-sm"
           >
             📝 Edit Profile

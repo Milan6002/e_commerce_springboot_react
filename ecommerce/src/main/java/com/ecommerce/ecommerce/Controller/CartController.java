@@ -9,13 +9,11 @@ import org.springframework.web.bind.annotation.*;
 import com.ecommerce.ecommerce.Model.CartItemModel;
 import com.ecommerce.ecommerce.Model.CartModel;
 import com.ecommerce.ecommerce.Services.Cart.CartService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
 @RequestMapping("/api/auth/cart")
-@CrossOrigin("http://localhost:8080/ecommerce")
+@CrossOrigin("*")
 public class CartController {
 
     @Autowired

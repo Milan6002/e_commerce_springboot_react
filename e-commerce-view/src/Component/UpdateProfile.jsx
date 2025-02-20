@@ -56,7 +56,7 @@ function UpdateProfile() {
 
     try {
       await authService.Updateprofile(id, user);
-      navigate("/profile");
+      navigate("/ecommerce/profile");
     } catch (err) {
       console.error("Error updating profile:", err);
       setError("Failed to update profile. Please try again.");

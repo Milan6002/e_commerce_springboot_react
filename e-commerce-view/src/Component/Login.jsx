@@ -21,20 +21,20 @@ const Login = () => {
       if (response.data === "No Record Found") {
         toast.error(response.data + " Register First");
         setTimeout(() => {
-          navigate("/register");
+          navigate("/ecommerce/register");
         }, 2500);
         return;
       } else if (response.data === "Invalid credentials") {
         toast.error(response.data);
         setTimeout(() => {
-          navigate("/login");
+          navigate("/ecommerce/login");
         }, 2500);
         return;
       }
       toast.success("Login Successfully");
       setTimeout(() => {
         localStorage.setItem("token", response.data);
-        navigate("/profile");
+        navigate("/ecommerce/profile");
       }, 2500);
     } catch (err) {
       console.log(err);
@@ -86,7 +86,7 @@ const Login = () => {
         <p className="text-center text-sm">
           Don&apos;t have an account?
           <a
-            onClick={() => navigate("/register")}
+            onClick={() => navigate("/ecommerce/register")}
             className="hover:cursor-pointer text-blue-400 hover:underline ml-1"
           >
             Register

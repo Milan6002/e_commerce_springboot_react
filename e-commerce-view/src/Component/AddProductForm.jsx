@@ -77,7 +77,7 @@ function AddProductForm() {
 
     try {
       await AdminServices.addProduct(formData);
-      navigate("/Products");
+      navigate("/ecommerce/Products");
     } catch (error) {
       console.error(error);
     }
@@ -252,6 +252,7 @@ function AddProductForm() {
             <button
               className="bg-blue-600 text-white p-2 px-6 rounded-lg hover:bg-blue-500 transition-all hover:scale-105"
               type="submit"
+              onClick={handleSubmitForm}
             >
               Submit
             </button>

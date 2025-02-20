@@ -6,7 +6,7 @@ const ProtectedRoute = ({ children }) => {
   const user = getCurrentUser();
 
   if (!user ) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/ecommerce/login" />;
   }
 
   return children;

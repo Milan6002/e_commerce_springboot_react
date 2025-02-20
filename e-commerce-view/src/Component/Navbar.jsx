@@ -20,7 +20,7 @@ const Navbar = () => {
     localStorage.removeItem("role");
     setAvatar(null); // Clear avatar state
 
-    navigate("/login");
+    navigate("ecommerce/login");
   };
 
   const handleAvatarUpdate = (event) => {
@@ -104,7 +104,7 @@ const Navbar = () => {
 
                   <div className="relative group ">
                     <div
-                      onClick={() => navigate("/")}
+                      onClick={() => navigate("/ecommerce")}
                       className="hover:cursor-pointer rounded-md px-3 py-2 text-lg font-medium text-white hover:bg-gray-700 hover:text-white"
                     >
                       Brands
@@ -132,7 +132,7 @@ const Navbar = () => {
 
                   <div className="relative group">
                     <div
-                      onClick={() => navigate("/")}
+                      onClick={() => navigate("/ecommerce")}
                       className="hover:cursor-pointer rounded-md px-3 py-2 text-lg font-medium text-white hover:bg-gray-700 hover:text-white"
                     >
                       Luggage
@@ -213,7 +213,7 @@ const Navbar = () => {
 
                   <div className="relative group">
                     <div
-                      onClick={() => navigate("/")}
+                      onClick={() => navigate("/ecommerce")}
                       className="hover:cursor-pointer rounded-md px-3 py-2 text-lg font-medium text-white hover:bg-gray-700 hover:text-white"
                     >
                       Backpack
@@ -271,21 +271,21 @@ const Navbar = () => {
                   </div>
 
                   <a
-                    onClick={() => navigate("/shop")}
+                    onClick={() => navigate("ecommerce/shop")}
                     className="hover:cursor-pointer rounded-md px-3 py-2 text-lg font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
                   >
                     Duffle
                   </a>
 
                   <a
-                    onClick={() => navigate("/BulkOrder")}
+                    onClick={() => navigate("ecommerce/BulkOrder")}
                     className="hover:cursor-pointer rounded-md px-3 py-2 text-lg font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
                   >
                     Bulk Order
                   </a>
 
                   <a
-                    onClick={() => navigate("/cart")}
+                    onClick={() => navigate("ecommerce/cart")}
                     className="hover:cursor-pointer rounded-md px-3 py-2 text-lg font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
                   >
                     Cart
@@ -321,7 +321,7 @@ const Navbar = () => {
                     aria-labelledby="user-menu-button"
                   >
                     <a
-                      onClick={() => navigate("/profile")}
+                      onClick={() => navigate("ecommerce/profile")}
                       className="hover:cursor-pointer block px-4 py-2 text-sm text-gray-700"
                       role="menuitem"
                     >
@@ -329,7 +329,7 @@ const Navbar = () => {
                     </a>
                     {!localStorage.getItem("token") && (
                       <a
-                        onClick={() => navigate("/login")}
+                        onClick={() => navigate("ecommerce/login")}
                         className="hover:cursor-pointer block px-4 py-2 text-sm text-gray-700"
                         role="menuitem"
                       >
@@ -355,14 +355,14 @@ const Navbar = () => {
           <div className="sm:hidden" id="mobile-menu">
             <div className="space-y-1 px-2 pt-2 pb-3">
               <a
-                onClick={() => navigate("/")}
+                onClick={() => navigate("/ecommerce")}
                 className="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white"
                 aria-current="page"
               >
                 Home
               </a>
               <a
-                onClick={() => navigate("/shop")}
+                onClick={() => navigate("ecommerce/shop")}
                 className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
               >
                 Shop
@@ -374,7 +374,7 @@ const Navbar = () => {
                 Bulk Order
               </a>
               <a
-                onClick={() => navigate("/cart")}
+                onClick={() => navigate("ecommerce/cart")}
                 className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
               >
                 Cart

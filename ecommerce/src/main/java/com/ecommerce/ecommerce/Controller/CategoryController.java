@@ -18,7 +18,7 @@ import com.ecommerce.ecommerce.Services.AdminService;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin("http://localhost:8080/ecommerce")
+@CrossOrigin("*")
 public class CategoryController {
 
     @Autowired

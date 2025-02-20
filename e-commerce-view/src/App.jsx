@@ -35,7 +35,7 @@ function App() {
           {user_role == "ROLE_ADMIN" ? (
             <>
               <Route
-                path="/Admin"
+                path="ecommerce/Admin"
                 element={
                   <ProtectedRoute>
                     <Admin />
@@ -43,7 +43,7 @@ function App() {
                 }
               />
               <Route
-                path="/Categories"
+                path="ecommerce/Categories"
                 element={
                   <ProtectedRoute>
                     <Categories />
@@ -51,7 +51,7 @@ function App() {
                 }
               />
               <Route
-                path="/AddCategory"
+                path="ecommerce/AddCategory"
                 element={
                   <ProtectedRoute>
                     <AddCategory />
@@ -59,7 +59,7 @@ function App() {
                 }
               />
               <Route
-                path="/UpdateCategory/:id"
+                path="ecommerce/UpdateCategory/:id"
                 element={
                   <ProtectedRoute>
                     <UpdateCategory />
@@ -67,7 +67,7 @@ function App() {
                 }
               />
               <Route
-                path="/Products"
+                path="ecommerce/Products"
                 element={
                   <ProtectedRoute>
                     <Products />
@@ -75,7 +75,7 @@ function App() {
                 }
               />
               <Route
-                path="/AddProduct"
+                path="ecommerce/AddProduct"
                 element={
                   <ProtectedRoute>
                     <AddProductForm />
@@ -83,7 +83,7 @@ function App() {
                 }
               />
               <Route
-                path="/UpdateProduct/:id"
+                path="ecommerce/UpdateProduct/:id"
                 element={
                   <ProtectedRoute>
                     <UpdateProductForm />
@@ -92,15 +92,17 @@ function App() {
               />
             </>
           ) : (
-            <Route path="/Admin" element={<Navigate to="/" />} />
+            <Route path="ecommerce/Admin" element={<Navigate to="/ecommerce" />} />
           )}
 
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/updateprofile/:id" element={<UpdateProfile />} />
+          <Route path="ecommerce/login" element={<Login />} />
+
+          <Route path="ecommerce/register" element={<Register />} />
+
+          <Route path="ecommerce/updateprofile/:id" element={<UpdateProfile />} />
 
           <Route
-            path="/profile"
+            path="ecommerce/profile"
             element={
               <ProtectedRoute>
                 <Profile />
@@ -108,7 +110,7 @@ function App() {
             }
           />
           <Route
-            path="/shop"
+            path="ecommerce/shop"
             element={
               <ProtectedRoute>
                 <Shop />
@@ -116,7 +118,7 @@ function App() {
             }
           />
           <Route
-            path="/cart"
+            path="ecommerce/cart"
             element={
               <ProtectedRoute>
                 <Cart />
@@ -124,7 +126,7 @@ function App() {
             }
           />
           <Route
-            path="/BulkOrder"
+            path="ecommerce/BulkOrder"
             element={
               <ProtectedRoute>
                 <BulkOrder />
@@ -132,7 +134,7 @@ function App() {
             }
           />
           <Route
-            path="/viewproduct/:id"
+            path="ecommerce/viewproduct/:id"
             element={
               <ProtectedRoute>
                 <ViewProduct />
@@ -140,7 +142,7 @@ function App() {
             }
           />
           <Route
-            path="/home"
+            path="ecommerce/home"
             element={
               <ProtectedRoute>
                 <Home />

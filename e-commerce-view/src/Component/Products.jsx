@@ -64,7 +64,7 @@ function Products() {
 
   const handleUpdate = (e, productId) => {
     e.preventDefault();
-    navigate(`/UpdateProduct/${productId}`);
+    navigate(`/ecommerce/UpdateProduct/${productId}`);
   };
 
   const filteredProducts = useMemo(() => {
@@ -76,7 +76,7 @@ function Products() {
 
   const handleViewProduct = (e, id) => {
     e.preventDefault();
-    navigate(`/viewproduct/${id}`);
+    navigate(`/ecommerce/viewproduct/${id}`);
   };
 
   const { scrollYProgress } = useScroll();
@@ -88,7 +88,7 @@ function Products() {
       ></motion.div>
       {localStorage.getItem("role") === "ROLE_ADMIN" && (
         <motion.button
-          onClick={() => navigate("/AddProduct")}
+          onClick={() => navigate("/ecommerce/AddProduct")}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           className="mb-5 p-3 px-4 mt-5 text-blue-600 font-bold text-lg rounded-lg border-2 border-blue-600 hover:bg-blue-600 hover:text-white transition-all"

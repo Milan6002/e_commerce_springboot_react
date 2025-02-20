@@ -17,7 +17,7 @@ function NavbarAdmin() {
     localStorage.removeItem("role");
     setAvatar(null); // Clear avatar state
 
-    navigate("/login");
+    navigate("/ecommerce/login");
   };
 
   const handleAvatarUpdate = (event) => {
@@ -88,7 +88,7 @@ function NavbarAdmin() {
               <img className="h-8 w-auto" src={LogoBg} alt="Your Company" />
               <a
                 className="text-xl font-extrabold font-monospace tracking-widest uppercase text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-white"
-                onClick={() => navigate("/Home")}
+                onClick={() => navigate("/ecommerce/Home")}
               >
                 iseOnix
               </a>
@@ -96,7 +96,7 @@ function NavbarAdmin() {
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4">
                 <a
-                  onClick={() => navigate("/")}
+                  onClick={() => navigate("/ecommerce")}
                   className="hover:cursor-pointer rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white"
                   aria-current="page"
                 >
@@ -109,19 +109,19 @@ function NavbarAdmin() {
                   Shop
                 </a>
                 <a
-                  onClick={() => navigate("/Categories")}
+                  onClick={() => navigate("/ecommerce/Categories")}
                   className="hover:cursor-pointer rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
                 >
                   Categories
                 </a>
                 <a
-                  onClick={() => navigate("/Products")}
+                  onClick={() => navigate("/ecommerce/Products")}
                   className="hover:cursor-pointer rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
                 >
                   Products
                 </a>
                 <a
-                  onClick={() => navigate("/admin")}
+                  onClick={() => navigate("/ecommerce/admin")}
                   className="hover:cursor-pointer rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
                 >
                   Admin Pannel
@@ -178,7 +178,7 @@ function NavbarAdmin() {
                   aria-labelledby="user-menu-button"
                 >
                   <a
-                    onClick={() => navigate("/profile")}
+                    onClick={() => navigate("/ecommerce/profile")}
                     className="hover:cursor-pointer block px-4 py-2 text-sm text-gray-700"
                     role="menuitem"
                   >
@@ -186,7 +186,7 @@ function NavbarAdmin() {
                   </a>
                   {!localStorage.getItem("token") && (
                     <a
-                      onClick={() => navigate("/login")}
+                      onClick={() => navigate("/ecommerce/login")}
                       className="hover:cursor-pointer block px-4 py-2 text-sm text-gray-700"
                       role="menuitem"
                     >
@@ -212,32 +212,32 @@ function NavbarAdmin() {
         <div className="sm:hidden" id="mobile-menu">
           <div className="space-y-1 px-2 pt-2 pb-3">
             <a
-              onClick={() => navigate("/")}
+              onClick={() => navigate("/ecommerce")}
               className="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white"
               aria-current="page"
             >
               Home
             </a>
             <a
-              onClick={() => navigate("/shop")}
+              onClick={() => navigate("/ecommerce/shop")}
               className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
             >
               Shop
             </a>
             <a
-              onClick={() => navigate("/Categories")}
+              onClick={() => navigate("/ecommerce/Categories")}
               className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
             >
               Categories
             </a>
             <a
-              onClick={() => navigate("/Products")}
+              onClick={() => navigate("/ecommerce/Products")}
               className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
             >
               Products
             </a>
             <a
-              onClick={() => navigate("/admin")}
+              onClick={() => navigate("/ecommerce/admin")}
               className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
             >
               Admin Pannel
