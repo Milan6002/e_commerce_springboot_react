@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { jwtDecode } from "jwt-decode";
-import '../assets/profile.css'; 
+import '../assets/profile.css';
 import { useNavigate } from "react-router-dom";
+import authService from "../services/authService";
 
 function Profile() {
   const navigate = useNavigate();
@@ -17,8 +17,7 @@ function Profile() {
   const decodeToken = jwtDecode(localStorage.getItem("token"));
 
   useEffect(() => {
-    axios
-      .get("http://192.168.1.16:8080/ecommerce/api/auth/profile/" + decodeToken.sub)
+    authService.ReadProfileByEmail(decodeToken.sub)
       .then((response) => {
         localStorage.setItem("role", response.data.role);
         setUser({
@@ -27,7 +26,7 @@ function Profile() {
           email: response.data.email,
           img: response.data.img,
         });
-        localStorage.setItem("avtar", response.data.img); 
+        localStorage.setItem("avtar", response.data.img);
 
         // Dispatch event to update Navbar avatar
         const event = new CustomEvent("avatarUpdated", {
@@ -38,7 +37,7 @@ function Profile() {
       .catch((error) => {
         console.error("Error fetching user data:", error);
       });
-  }, [decodeToken.sub]);
+  },[decodeToken.sub  ]);
 
   return (
     <div
@@ -48,7 +47,7 @@ function Profile() {
       <div className="bg-gray-800 rounded-2xl w-96 p-6 text-white text-center inner-proflle-main">
         <div className="flex justify-end">
           <a
-            onClick={()=> navigate(`/ecommerce/updateprofile/${user.id}`)}
+            onClick={() => navigate(`/ecommerce/updateprofile/${user.id}`)}
             className="hover:cursor-pointer text-blue-400 hover:text-blue-300 transition-all duration-300 text-sm"
           >
             📝 Edit Profile
