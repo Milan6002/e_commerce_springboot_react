@@ -22,9 +22,11 @@ function UpdateProfile() {
       try {
         const response = await authService.ReadProfileById(id);
         setUser(response.data);
+
         if (response.data.img) {
           setPreviewImage(`data:image/jpeg;base64,${response.data.img}`);
         }
+        
       } catch (error) {
         console.error("Error fetching profile:", error);
         setError("Failed to load profile data.");

@@ -17,6 +17,7 @@ public class User {
 
     @Column(nullable = false)
     private String password;
+    
     @Lob
     private byte[] img; 
 

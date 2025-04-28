@@ -53,8 +53,8 @@ class AdminServices {
     });
   }
 
-  getProductByCategory(category_id){
-    return axios.get(BASE_URL+"getProductByCategory/"+category_id);
+  getProductByCategory(category_id) {
+    return axios.get(BASE_URL + "getProductByCategory/" + category_id);
   }
 }
 

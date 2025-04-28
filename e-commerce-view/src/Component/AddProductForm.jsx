@@ -263,6 +263,7 @@ function AddProductForm() {
               Reset
             </button>
           </div>
+          
         </div>
       </form>
     </div>

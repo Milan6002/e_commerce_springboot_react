@@ -12,6 +12,7 @@ function Products() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+     
     const fetchData = async () => {
       setLoading(true);
       try {
@@ -80,6 +81,7 @@ function Products() {
   };
 
   const { scrollYProgress } = useScroll();
+  
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       <motion.div

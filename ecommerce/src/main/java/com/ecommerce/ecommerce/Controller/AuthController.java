@@ -45,11 +45,6 @@ public class AuthController {
         return authService.getuserprofile(email);
     }
 
-    @GetMapping("/read/{id}")
-    public ProfileModel ReadProfileById(@PathVariable Long id) {
-        return authService.ReadProfileById(id);
-    }
-
     @PutMapping("/update/{id}")
     public ResponseEntity<String> Updateprofile(@PathVariable Long id, @ModelAttribute ProfileModel profileModel,
             @RequestParam("image") MultipartFile image) throws IOException {
