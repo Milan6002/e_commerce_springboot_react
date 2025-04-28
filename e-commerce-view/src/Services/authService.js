@@ -40,10 +40,7 @@ export const logout = () => {
 };
 
 class authService {
-  ReadProfileById(id) {
-    return axios.get(API_URL + "/read/" + id);
-  }
-
+  
   Updateprofile(id, updatedProfileModel) {
     return axios.put(API_URL + "/update/" + id, updatedProfileModel, {
       headers: {

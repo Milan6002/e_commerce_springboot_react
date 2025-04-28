@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import authService from "../services/authService";
+import { jwtDecode } from "jwt-decode";
 
 function UpdateProfile() {
   const navigate = useNavigate();
   const { id } = useParams();
-  
+
   const [user, setUser] = useState({
     id: id,
     name: "",
@@ -16,11 +17,11 @@ function UpdateProfile() {
   const [previewImage, setPreviewImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
+  const decodeToken = jwtDecode(localStorage.getItem("token"));
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await authService.ReadProfileById(id);
+        const response = await authService.ReadProfileByEmail(decodeToken.sub);
         setUser(response.data);
         if (response.data.img) {
           setPreviewImage(`data:image/jpeg;base64,${response.data.img}`);
@@ -66,7 +67,7 @@ function UpdateProfile() {
   };
 
   return (
-    <div className="flex items-center justify-center  bg-gradient-to-r from-gray-900 to-gray-700" style={{height:"91.2vh"}}>
+    <div className="flex items-center justify-center  bg-gradient-to-r from-gray-900 to-gray-700" style={{ height: "91.2vh" }}>
       <div className="bg-gray-800 text-white p-8 rounded-lg shadow-lg w-96">
         <h1 className="text-3xl font-bold text-center mb-6">Update Profile</h1>
 
