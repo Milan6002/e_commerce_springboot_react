@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.4.2</version>
+		<version>3.4.5</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.ecommerce</groupId>
@@ -14,7 +14,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>ecommerce</name>
 	<description>Demo project for Spring Boot</description>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<url />
 	<licenses>
 		<license />
@@ -74,7 +74,8 @@
 			<artifactId>spring-boot-starter-oauth2-authorization-server</artifactId>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
+		<!--
+		https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
@@ -105,7 +106,7 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<optional>true</optional>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
@@ -119,7 +120,7 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
- 
+
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-api</artifactId>

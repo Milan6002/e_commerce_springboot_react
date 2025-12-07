@@ -17,6 +17,8 @@ import com.ecommerce.ecommerce.Model.ProductModel;
 import com.ecommerce.ecommerce.Repository.CategoryRepository;
 import com.ecommerce.ecommerce.Repository.ProductRepository;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class AdminServiceImplement implements AdminService {
 
@@ -28,10 +30,14 @@ public class AdminServiceImplement implements AdminService {
 
     @Override
     public String addCategory(CategoryModel categoryModel) {
-        CategoryEntity categoryEntity = new CategoryEntity();
-        BeanUtils.copyProperties(categoryModel, categoryEntity);
-        categoryRepository.save(categoryEntity);
-        return "Category Added Successfully";
+        if (validateCategoryName(categoryModel.getCategory_name())) {
+            CategoryEntity categoryEntity = new CategoryEntity();
+            BeanUtils.copyProperties(categoryModel, categoryEntity);
+            categoryRepository.save(categoryEntity);
+            return "Category Added Successfully";
+        } else {
+            throw new RuntimeException("Invalid name of Category");
+        }
     }
 
     @Override
@@ -57,13 +63,14 @@ public class AdminServiceImplement implements AdminService {
     public String updateCategory(CategoryModel categoryModel, Long category_id) {
         CategoryEntity categoryEntity = categoryRepository.findById(category_id).get();
         categoryEntity.setCategory_name(categoryModel.getCategory_name());
+
         categoryRepository.save(categoryEntity);
         return "Category Updated Successfully";
     }
 
     @Override
     public CategoryModel getCategoryById(Long id) {
-        CategoryEntity categoryEntity = categoryRepository.findById(id).get();
+        CategoryEntity categoryEntity = categoryRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Category not found"));
         CategoryModel categoryModel = new CategoryModel();
         BeanUtils.copyProperties(categoryEntity, categoryModel);
         return categoryModel;
@@ -100,6 +107,8 @@ public class AdminServiceImplement implements AdminService {
 
         for (ProductEntity allProductList : allProduct) {
             ProductModel productModel = new ProductModel();
+            productModel.setProduct_brand(allProductList.getProduct_brand());
+            productModel.setProduct_color(allProductList.getProduct_color());
             productModel.setProduct_id(allProductList.getProduct_id());
             productModel.setProduct_name(allProductList.getProduct_name());
             productModel.setDescription(allProductList.getDescription());
@@ -151,6 +160,9 @@ public class AdminServiceImplement implements AdminService {
         if (productModel.getProduct_color() != null) {
             existingProduct.setProduct_color(productModel.getProduct_color());
         }
+        if (productModel.getQuantity() != null) {
+            existingProduct.setQuantity(productModel.getQuantity());
+        }
         CategoryEntity categoryEntity = categoryRepository.findById(productModel.getCategory_id()).get();
         if (productModel.getCategory_id() != null) {
             existingProduct.setCategory(categoryEntity);
@@ -169,13 +181,6 @@ public class AdminServiceImplement implements AdminService {
                 }
             }
 
-            // Option 1: Append new images to the existing ones
-            // existingProduct.getProduct_images().addAll(newImages);
-
-            // Option 2: Replace all images (It Will Delete ALl the old Image)
-            // existingProduct.getProduct_images().clear();
-            // existingProduct.setProduct_images(newImages);
-
             existingProduct.getProduct_images().clear(); // If you want to remove all images
             existingProduct.getProduct_images().addAll(newImages);
             newImages.forEach(image -> image.setProduct(existingProduct));
@@ -187,7 +192,8 @@ public class AdminServiceImplement implements AdminService {
 
     @Override
     public ProductModel getProductById(Long product_id) {
-        ProductEntity getProductByid = productRepository.findById(product_id).get();
+        ProductEntity getProductByid = productRepository.findById(product_id).orElseThrow(() -> new RuntimeException("Product not found"));
+
         ProductModel displayProductById = new ProductModel();
         BeanUtils.copyProperties(getProductByid, displayProductById);
         displayProductById.setCategory_id(getProductByid.getCategory().getCategory_id());
@@ -203,16 +209,31 @@ public class AdminServiceImplement implements AdminService {
 
     @Override
     public List<ProductModel> getProductByCategory(Long category_id) {
-        CategoryEntity categoryEntity = categoryRepository.findById(category_id).get();
+        CategoryEntity categoryEntity = categoryRepository.findById(category_id).orElseThrow(() -> new RuntimeException("Category not found"));
         List<ProductEntity> productByCategory = productRepository.findByCategory(categoryEntity);
         List<ProductModel> listOfProduct = new ArrayList<>();
         for (ProductEntity productEntity : productByCategory) {
 
             ProductModel productModel = new ProductModel();
             BeanUtils.copyProperties(productEntity, productModel);
+            productModel.setCategory_id(productEntity.getCategory().getCategory_id());
+            // Convert List<ProductImageEntity> to List<byte[]>
+            List<byte[]> imageList = productEntity.getProduct_images()
+                    .stream()
+                    .map(ProductImageEntity::getImage)
+                    .toList();
+
+            productModel.setProduct_images(imageList); // Set multiple images
             listOfProduct.add(productModel);
         }
         return listOfProduct;
     }
 
+    public void deleteById(Long id) {
+        categoryRepository.deleteById(id);
+    }
+
+    private boolean validateCategoryName(String name) {
+        return name != null && !name.isEmpty();
+    }
 }

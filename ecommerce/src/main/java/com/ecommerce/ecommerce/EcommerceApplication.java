@@ -9,5 +9,4 @@ public class EcommerceApplication extends SpringBootServletInitializer  {
 	public static void main(String[] args) {
 		SpringApplication.run(EcommerceApplication.class, args);
 	}
-
 }

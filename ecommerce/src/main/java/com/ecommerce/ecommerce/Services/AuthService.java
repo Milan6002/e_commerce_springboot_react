@@ -59,7 +59,7 @@ public class AuthService {
         return profileModel;
     }
 
-    public String Updateprofile(Long id, ProfileModel updatedProfileModel, MultipartFile image) throws IOException {
+    public String updateProfile(Long id, ProfileModel updatedProfileModel, MultipartFile image) throws IOException {
         // Fetch the user by email
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         BeanUtils.copyProperties(updatedProfileModel, user);
