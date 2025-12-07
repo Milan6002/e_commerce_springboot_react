@@ -20,7 +20,7 @@ const Navbar = () => {
     localStorage.removeItem("role");
     setAvatar(null); // Clear avatar state
 
-    navigate("ecommerce/login");
+    navigate("/login");
   };
 
   const handleAvatarUpdate = (event) => {
@@ -42,16 +42,16 @@ const Navbar = () => {
     <NavbarAdmin />
   ) : (
     <>
-      <nav className=" bg-black">
-        <div className="bg-black pt-4">
-          <img
-            className="h-32 w-auto mx-auto  rounded-lg" 
-            src={LogoBg}
-            alt="Bombay Luggage"
-          />
-        </div>
+      <nav className=" bg-black flex p-2 items-center">
 
-        <div className="px-2 sm:px-6 lg:px-8">
+        <img
+          className="h-20 w-60 rounded-lg"
+          src={LogoBg}
+          alt="Bombay Luggage"
+        />
+
+
+        <div className="mx-auto">
           <div className="relative flex h-16 items-center justify-between">
             {/* Mobile menu button */}
             <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -98,194 +98,69 @@ const Navbar = () => {
             </div>
 
             {/* Logo and desktop menu */}
-            <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-              <div className="hidden sm:ml-6 sm:block">
-                <div className="flex gap-24 ">
+            <div className="">
+              <div className="hidden sm:block">
+                <div className="flex gap-8">
 
+                  <div onClick={() => navigate("/")}
+                    className="hover:cursor-pointer rounded-md px-3 py-2 text-lg font-medium text-white hover:bg-gray-700 hover:text-white">
+                    Home
+                  </div>
                   <div className="relative group ">
                     <div
-                      onClick={() => navigate("/ecommerce")}
+                      onClick={() => navigate("//Shop")}
+                      className="hover:cursor-pointer rounded-md px-3 py-2 text-lg font-medium text-white hover:bg-gray-700 hover:text-white"
+                    >
+                      Shop
+                    </div>
+
+                  </div>
+                  <div className="relative group ">
+                    <div
+                      onClick={() => navigate("//Brands")}
                       className="hover:cursor-pointer rounded-md px-3 py-2 text-lg font-medium text-white hover:bg-gray-700 hover:text-white"
                     >
                       Brands
                     </div>
-                    <div className="absolute hidden bg-white text-black rounded-md shadow-lg group-hover:block w-48 z-20">
-                      <ul>
-                        <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                          VIP
-                        </li>
-                        <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                          SKY BAG
-                        </li>
-                        <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                          BOMBAY LUGGAGE
-                        </li>
-                        <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                          FB
-                        </li>
-                        <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                          HRX
-                        </li>
-                      </ul>
-                    </div>
+
                   </div>
 
                   <div className="relative group">
                     <div
-                      onClick={() => navigate("/ecommerce")}
+                      onClick={() => navigate("//Luggage")}
                       className="hover:cursor-pointer rounded-md px-3 py-2 text-lg font-medium text-white hover:bg-gray-700 hover:text-white"
                     >
                       Luggage
                     </div>
-                    <div className="absolute hidden bg-white text-black rounded-md shadow-lg group-hover:block z-20 ">
-                      <div className="flex ">
-                        <div className="w-60">
-                          <h1
-                            className="text-xl ms-2 uppercase  font-bold"
-                            style={{ color: "#ed1c24", letterSpacing: "1px" }}
-                          >
-                            Categories
-                          </h1>
-                          <ul>
-                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                              New Arrivals
-                            </li>
-                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                              Bestsellers
-                            </li>
-                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                              Soft Side Luggage
-                            </li>
-                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                              Hard Side Luggage
-                            </li>
-                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                              Cabin Luggage
-                            </li>
-                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                              Check-in Luggage
-                            </li>
-                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                              Light Weight Luggage
-                            </li>
-                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                              Luggage Set
-                            </li>
-                          </ul>
-                        </div>
-                        <div className="w-60">
-                          <h1
-                            className="text-xl uppercase ms-2 font-bold"
-                            style={{ color: "#ed1c24", letterSpacing: "1px" }}
-                          >
-                            Trip Duration
-                          </h1>
-                          <ul>
-                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                              Business Trips
-                            </li>
-                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                              Short Getaways
-                            </li>
-                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                              Long Getaways
-                            </li>
-                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                              Weekend Trips
-                            </li>
-                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                              Wedding Special
-                            </li>
-                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                              Smart Ranges
-                            </li>
-                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                              Strong Ranges
-                            </li>
-                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                              Luggage Set
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
+
                   </div>
 
                   <div className="relative group">
                     <div
-                      onClick={() => navigate("/ecommerce")}
+                      onClick={() => navigate("//Backpack")}
                       className="hover:cursor-pointer rounded-md px-3 py-2 text-lg font-medium text-white hover:bg-gray-700 hover:text-white"
                     >
                       Backpack
                     </div>
-                    <div className="absolute hidden bg-white text-black rounded-md shadow-lg group-hover:block z-20">
-                      <div className="flex ">
 
-                        <div className="w-44">
-                          <h1
-                            className="text-xl ms-2 uppercase  font-bold"
-                            style={{ color: "#ed1c24", letterSpacing: "1px" }}
-                          >
-                            Type
-                          </h1>
-                          <ul>
-                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                              School
-                            </li>
-                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                              College
-                            </li>
-                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                              Professional
-                            </li>
-                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                              Outdoor
-                            </li>
-                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                              Daypack
-                            </li>
-                          </ul>
-                        </div>
-
-                        <div className="w-44">
-                          <h1
-                            className="text-xl uppercase ms-2 font-bold"
-                            style={{ color: "#ed1c24", letterSpacing: "1px" }}
-                          >
-                            Occasion
-                          </h1>
-                          <ul>
-                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                              Adventure
-                            </li>
-                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                              Students
-                            </li>
-                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                              Day Trips
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
                   </div>
 
                   <a
-                    onClick={() => navigate("ecommerce/shop")}
+                    onClick={() => navigate("/Duffle")}
                     className="hover:cursor-pointer rounded-md px-3 py-2 text-lg font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
                   >
                     Duffle
                   </a>
 
                   <a
-                    onClick={() => navigate("ecommerce/BulkOrder")}
+                    onClick={() => navigate("/BulkOrder")}
                     className="hover:cursor-pointer rounded-md px-3 py-2 text-lg font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
                   >
                     Bulk Order
                   </a>
 
                   <a
-                    onClick={() => navigate("ecommerce/cart")}
+                    onClick={() => navigate("/cart")}
                     className="hover:cursor-pointer rounded-md px-3 py-2 text-lg font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
                   >
                     Cart
@@ -321,7 +196,7 @@ const Navbar = () => {
                     aria-labelledby="user-menu-button"
                   >
                     <a
-                      onClick={() => navigate("ecommerce/profile")}
+                      onClick={() => navigate("/profile")}
                       className="hover:cursor-pointer block px-4 py-2 text-sm text-gray-700"
                       role="menuitem"
                     >
@@ -329,7 +204,7 @@ const Navbar = () => {
                     </a>
                     {!localStorage.getItem("token") && (
                       <a
-                        onClick={() => navigate("ecommerce/login")}
+                        onClick={() => navigate("/login")}
                         className="hover:cursor-pointer block px-4 py-2 text-sm text-gray-700"
                         role="menuitem"
                       >
@@ -355,26 +230,52 @@ const Navbar = () => {
           <div className="sm:hidden" id="mobile-menu">
             <div className="space-y-1 px-2 pt-2 pb-3">
               <a
-                onClick={() => navigate("/ecommerce")}
+                onClick={() => navigate("/")}
                 className="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white"
                 aria-current="page"
               >
                 Home
               </a>
+
               <a
-                onClick={() => navigate("ecommerce/shop")}
+                onClick={() => navigate("/shop")}
                 className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
               >
                 Shop
               </a>
               <a
-                href="#"
+                onClick={() => navigate("/Brands")}
+                className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+              >
+                Brands
+              </a>
+              <a
+                onClick={() => navigate("/Luggage")}
+                className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+              >
+                Luggage
+              </a>
+              <a
+                onClick={() => navigate("/Backpack")}
+                className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+              >
+                Backpack
+              </a>
+              <a
+                onClick={() => navigate("/Duffle")}
+                className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+              >
+                Duffle
+              </a>
+
+              <a
+                onClick={() => navigate("/BulkOrder")}
                 className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
               >
                 Bulk Order
               </a>
               <a
-                onClick={() => navigate("ecommerce/cart")}
+                onClick={() => navigate("/cart")}
                 className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
               >
                 Cart

@@ -7,6 +7,7 @@ import { jwtDecode } from "jwt-decode";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom"
 
 function ViewProduct() {
   const { id } = useParams();
@@ -15,7 +16,7 @@ function ViewProduct() {
 
   const token = localStorage.getItem("token");
   const user_email = jwtDecode(token);
-
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -65,44 +66,49 @@ Please provide more details.`;
 
   return (
     <motion.div
-      className="bg-gray-100 flex justify-center p-4"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
+      className="p-5"
+    // initial={{ opacity: 0 }}
+    // animate={{ opacity: 1 }}
+    // transition={{ duration: 0.5 }}
     >
       <ToastContainer />
       <motion.div
-        className="bg-white shadow-lg rounded-lg p-6 max-w-5xl w-full flex flex-col md:flex-row"
-        whileHover={{ scale: 1.02 }}
+        className="bg-white w-full flex flex-col md:flex-row"
+      // whileHover={{ scale: 1.02 }}
       >
         {/* Left - Image Section */}
-        <div className="w-full md:w-1/2 flex flex-col items-center">
+        <div className="w-[40vw]">
           <motion.img
             src={`data:image/jpeg;base64,${mainImage}`}
             alt={product.product_name}
-            className="h-96 object-cover rounded-md shadow-md"
+            className="mb-4 h-80 w-auto rounded-md shadow-md mx-auto"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.4 }}
           />
 
-          <div className="flex mt-2 space-x-2 overflow-x-auto max-w-96 min-h-24">
-            {imageList.map((img, index) => (
-              <motion.img
-                key={index}
-                src={`data:image/jpeg;base64,${img}`}
-                alt="Thumbnail"
-                className="w-16 h-16 object-cover rounded border cursor-pointer hover:opacity-75"
-                onMouseEnter={() => setMainImage(img)}
-                onClick={()=> setMainImage(img)}
-                whileHover={{ scale: 1.1 }}
-              />
-            ))}
+          <div className="flex mt-3 gap-3">
+            {imageList.map((img, index) => {
+              const isActive = img === mainImage;
+              return (
+                <motion.img
+                  key={index}
+                  src={`data:image/jpeg;base64,${img}`}
+                  alt={`Thumbnail ${index + 1}`}
+                  className={`w-16 h-16 rounded border-2 cursor-pointer transition duration-300 ${isActive ? "border-blue-700" : "border-gray-300"
+                    }`}
+                  whileHover={{ scale: 1.1 }}
+                  onMouseEnter={() => setMainImage(img)}
+                  onClick={() => setMainImage(img)}
+                />
+              );
+            })}
           </div>
         </div>
 
+
         {/* Right - Product Details */}
-        <div className="w-full md:w-1/2 pl-6 mt-4 md:mt-0">
+        <div className="w-full pl-6 mt-4 md:mt-0">
           <h1 className="text-2xl font-bold text-gray-800">
             {product.product_name}
           </h1>
@@ -128,7 +134,7 @@ Please provide more details.`;
             </p>
           </div>
 
-          <p className="text-gray-600 mt-4">{product.description}</p>
+          <p className="text-gray-600 mt-4 text-justify">{product.description}</p>
 
           <div className="mt-6 flex flex-wrap gap-4">
             <motion.button
@@ -153,8 +159,9 @@ Please provide more details.`;
 
             <motion.button
               type="submit"
+              onClick={() => navigate("/BulkOrder")}
               className="bg-blue-700 p-3 text-white font-bold border-2 rounded-lg hover:bg-transparent hover:cursor-pointer hover:border-blue-700 hover:text-blue-700 font-mono "
-              whileHover={{scale: 1.1}}
+              whileHover={{ scale: 1.1 }}
             >
               Bulk Order Or Customize Prodcut
             </motion.button>

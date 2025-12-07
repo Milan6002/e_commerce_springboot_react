@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import '../assets/profile.css';
 import { useNavigate } from "react-router-dom";
-import authService from "../services/authService";
+import authService from "../Services/authService";
+
 
 function Profile() {
+
   const navigate = useNavigate();
 
   const [user, setUser] = useState({
@@ -39,15 +41,17 @@ function Profile() {
       });
   },[decodeToken.sub  ]);
 
+
+
   return (
     <div
-      className="profile-main flex justify-center items-center bg-gradient-to-r from-gray-900 to-gray-700 overflow-hidden"
+      className="profile-main flex justify-center items-center "
       style={{ height: "91.2vh" }}
     >
       <div className="bg-gray-800 rounded-2xl w-96 p-6 text-white text-center inner-proflle-main">
         <div className="flex justify-end">
           <a
-            onClick={() => navigate(`/ecommerce/updateprofile/${user.id}`)}
+            onClick={() => navigate(`/updateprofile/${user.id}`)}
             className="hover:cursor-pointer text-blue-400 hover:text-blue-300 transition-all duration-300 text-sm"
           >
             📝 Edit Profile

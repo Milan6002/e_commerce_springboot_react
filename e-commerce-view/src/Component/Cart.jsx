@@ -66,11 +66,15 @@ function Cart() {
     );
 
     try {
-      await CartService.updateCartItemQuantity(productId, newQuantity);
+      const cartItem = products.find(p => p.product_id === productId);
+      if (cartItem) {
+        await CartService.updateCartItemQuantity(cartItem.cartItemId, newQuantity);
+      }
     } catch (error) {
       console.error("Error updating quantity:", error);
     }
   };
+
 
   const handleRemoveItem = async (e, productId) => {
     e.preventDefault();
@@ -106,7 +110,7 @@ function Cart() {
           <p className="text-gray-600">Your cart is empty.</p>
           <button
             className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-            onClick={() => navigate("/ecommerce/shop")}
+            onClick={() => navigate("/shop")}
           >
             Shop Now
           </button>
@@ -121,11 +125,11 @@ function Cart() {
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.3 }}
               >
-                <motion.div className="min-w-72">
+                <motion.div className="min-w-70">
                   <img
                     src={`data:image/jpeg;base64,${item.product_images[0]}`}
                     alt={item.product_name}
-                    className="w-full h-64 cart-inner-img"
+                    className="w-64 h-64 cart-inner-img p-3"
                   />
                 </motion.div>
                 <div className="p-4 w-full cart-product">
@@ -179,7 +183,7 @@ function Cart() {
             ))}
           </div>
           <motion.div
-            className="bg-white rounded-2xl w-96 h-76 shadow-lg p-4 cart-price"
+            className="bg-white rounded-2xl w-96 h-72 shadow-lg p-4 cart-price"
             initial={{ y: 30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5 }}
@@ -223,7 +227,7 @@ function Cart() {
             <div className="mt-3">
               <button
                 type="submit"
-                className="p-2 bg-blue-700 text-white font-extrabold font-sans rounded-xl  uppercase px-3 text-lg hover:bg-blue-500 hover:cursor-pointer"
+                className="p-2 bg-blue-700 text-white font-extrabold font-sans rounded-xl  uppercase px-3 text-lg hover:bg-blue-500 hover:cursor-pointer hover:text-black"
               >
                 Check Out
               </button>

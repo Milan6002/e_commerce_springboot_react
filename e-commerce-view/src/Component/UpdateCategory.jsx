@@ -35,8 +35,7 @@ function UpdateCategory() {
     e.preventDefault();
     AdminServices.updateCategory(id, categoryData)
       .then((response) => {
-        console.log(response.data);
-        navigate("/ecommerce/Categories");
+        navigate("/Categories");
       })
       .catch((error) => {
         console.log(error);
@@ -44,14 +43,14 @@ function UpdateCategory() {
   };
 
   return (
-    <div className="mt-4">
-      <h1 className="text-center text-3xl uppercase font-mono font-extrabold text-blue-300 ">
+    <div className="p-4">
+      <h1 className="text-center text-3xl border-2 w-96 mx-auto  uppercase font-mono font-extrabold text-gray-900 ">
         Update Category Form
       </h1>
       <form
         action=""
         method="post"
-        className="bg-blue-300 w-96 mx-auto p-5 rounded-xl"
+        className="bg-gray-300 w-96 mx-auto border-2 p-5 "
       >
         <div className="flex flex-col mb-3">
           <label htmlFor="category_id">Category ID </label>
@@ -61,14 +60,14 @@ function UpdateCategory() {
             type="text"
             name="category_id"
             id="category_id"
-            className="bg-white p-1 hover:cursor-not-allowed"
+            className="bg-white p-1 hover:cursor-not-allowed rounded-lg"
             disabled
           />
         </div>
         <div className="flex flex-col mb-3">
           <label htmlFor="category_name">Category Name </label>
           <input
-            className="bg-white p-1"
+            className="bg-white p-1 rounded-lg"
             value={categoryData.category_name}
             onChange={(e) => handleChanges(e)}
             type="text"
@@ -79,7 +78,7 @@ function UpdateCategory() {
         <button
           onClick={(e) => handleUpdate(e,categoryData.category_id)}
           type="submit"
-          className="bg-gray-900 text-white p-2 px-4 rounded-3xl hover:cursor-pointer  hover:bg-gray-800"
+          className="bg-gray-900 items-center text-white p-2 px-4 rounded-3xl hover:cursor-pointer  hover:bg-gray-800"
         >
           UPDATE
         </button>

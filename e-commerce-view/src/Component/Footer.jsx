@@ -88,7 +88,7 @@ function Footer() {
           © 2025 BOMBAY LUGGAGE. All Right Reserved | Terms & Condition |
           Privacy & Policy
         </p>
-        <p>(Monday to Sunday. 09:00 to 11:00)</p>
+        <p>(Monday to Sunday. 09:00 AM to 11:00 PM)</p>
       </div>
     </div>
   );

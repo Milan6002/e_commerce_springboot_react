@@ -8,6 +8,7 @@ function UpdateProductForm() {
   const { id } = useParams();
 
   const [categories, setCategories] = useState([]);
+  const [Type, setTypes] = useState([]);
   const [selectedImages, setSelectedImages] = useState([]);
 
   const [productData, setProductData] = useState({
@@ -26,13 +27,15 @@ function UpdateProductForm() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [responseCategory, responseProduct] = await Promise.all([
+        const [responseCategory, responseProduct,responseType] = await Promise.all([
           AdminServices.getAllCategories(),
           AdminServices.getProductById(id),
+          AdminServices.getAllTypes(),
         ]);
 
         setCategories(responseCategory.data);
         setProductData(responseProduct.data);
+        setTypes(responseType.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -84,7 +87,7 @@ function UpdateProductForm() {
 
     try {
       await AdminServices.updateProduct(formData, id);
-      navigate("/ecommerce/Products");
+      navigate("/Products");
     } catch (error) {
       console.error("Update failed:", error);
     }
@@ -118,7 +121,7 @@ function UpdateProductForm() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-200">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-200 p-4">
       <div className="w-full max-w-2xl bg-white rounded-2xl shadow-lg p-8">
         <h1 className="text-2xl font-bold text-center mb-6">
           Update Product Detail
@@ -181,6 +184,29 @@ function UpdateProductForm() {
               {categories.map(({ category_id, category_name }) => (
                 <option key={category_id} value={category_id}>
                   {category_name}
+                </option>
+              ))}
+            </select>
+          </div>
+             {/* Type Dropdown */}
+          <div>
+            <label
+              htmlFor="type_id"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Type
+            </label>
+            <select
+              id="type_id"
+              name="type_id"
+              value={productData.type_id}
+              onChange={handleChanges}
+              className="p-1.5 mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            >
+              <option value="">Select Category</option>
+              {Type.map(({ type_id, type_name }) => (
+                <option key={type_id} value={type_id}>
+                  {type_name}
                 </option>
               ))}
             </select>

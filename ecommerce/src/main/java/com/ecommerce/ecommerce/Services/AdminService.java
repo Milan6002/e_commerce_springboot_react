@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ecommerce.ecommerce.Model.CategoryModel;
 import com.ecommerce.ecommerce.Model.ProductModel;
+import com.ecommerce.ecommerce.Model.TypeModel;
 
 public interface AdminService {
     
@@ -25,5 +26,13 @@ public interface AdminService {
     String updateProduct(Long product_id,ProductModel productModel,MultipartFile[] images) throws IOException;
     ProductModel getProductById(Long product_id);
     List<ProductModel> getProductByCategory(Long category_id);
+
+
+    // Type Services
+    List<TypeModel> getAllType();
+    String deleteType(Long type_id);
+    String updateType(TypeModel typeModel,Long type_id);
+    TypeModel getTypeById(Long type_id);
+    String addType(TypeModel typeModel);
 
 }

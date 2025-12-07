@@ -17,11 +17,9 @@ function AddCategory() {
 
   const addCategory = (e) => {
     e.preventDefault();
-    console.log(categorydata);
     AdminServices.addCategory(categorydata)
       .then((response) => {
-        console.log(response.data);
-        navigate("/ecommerce/Categories");
+        navigate("/Categories");
       })
       .catch((error) => {
         console.log(error);
@@ -29,11 +27,11 @@ function AddCategory() {
   };
 
   return (
-    <div>
+    <div className="p-7">
       <form
         action=""
         method="post"
-        className="bg-gray-800 rounded-xl w-96 mx-auto mt-5 p-5 text-white"
+        className="bg-gray-800 rounded-xl w-96 mx-auto  p-5 text-white"
       >
         <div className="flex flex-col mb-3">
           <label className="mb-3" htmlFor="category_name">

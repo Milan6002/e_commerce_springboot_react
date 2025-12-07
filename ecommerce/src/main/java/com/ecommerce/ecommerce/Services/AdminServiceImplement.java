@@ -6,16 +6,21 @@ import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.ecommerce.ecommerce.Entity.CategoryEntity;
 import com.ecommerce.ecommerce.Entity.ProductEntity;
 import com.ecommerce.ecommerce.Entity.ProductImageEntity;
+import com.ecommerce.ecommerce.Entity.TypeEntity;
 import com.ecommerce.ecommerce.Model.CategoryModel;
 import com.ecommerce.ecommerce.Model.ProductModel;
+import com.ecommerce.ecommerce.Model.TypeModel;
 import com.ecommerce.ecommerce.Repository.CategoryRepository;
 import com.ecommerce.ecommerce.Repository.ProductRepository;
+import com.ecommerce.ecommerce.Repository.TypeRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -27,6 +32,9 @@ public class AdminServiceImplement implements AdminService {
 
     @Autowired
     ProductRepository productRepository;
+
+    @Autowired
+    TypeRepository typeRepository;
 
     @Override
     public String addCategory(CategoryModel categoryModel) {
@@ -70,7 +78,8 @@ public class AdminServiceImplement implements AdminService {
 
     @Override
     public CategoryModel getCategoryById(Long id) {
-        CategoryEntity categoryEntity = categoryRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Category not found"));
+        CategoryEntity categoryEntity = categoryRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Category not found"));
         CategoryModel categoryModel = new CategoryModel();
         BeanUtils.copyProperties(categoryEntity, categoryModel);
         return categoryModel;
@@ -192,7 +201,8 @@ public class AdminServiceImplement implements AdminService {
 
     @Override
     public ProductModel getProductById(Long product_id) {
-        ProductEntity getProductByid = productRepository.findById(product_id).orElseThrow(() -> new RuntimeException("Product not found"));
+        ProductEntity getProductByid = productRepository.findById(product_id)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
 
         ProductModel displayProductById = new ProductModel();
         BeanUtils.copyProperties(getProductByid, displayProductById);
@@ -209,7 +219,8 @@ public class AdminServiceImplement implements AdminService {
 
     @Override
     public List<ProductModel> getProductByCategory(Long category_id) {
-        CategoryEntity categoryEntity = categoryRepository.findById(category_id).orElseThrow(() -> new RuntimeException("Category not found"));
+        CategoryEntity categoryEntity = categoryRepository.findById(category_id)
+                .orElseThrow(() -> new RuntimeException("Category not found"));
         List<ProductEntity> productByCategory = productRepository.findByCategory(categoryEntity);
         List<ProductModel> listOfProduct = new ArrayList<>();
         for (ProductEntity productEntity : productByCategory) {
@@ -235,5 +246,51 @@ public class AdminServiceImplement implements AdminService {
 
     private boolean validateCategoryName(String name) {
         return name != null && !name.isEmpty();
+    }
+
+    @Override
+    public String addType(TypeModel typeModel) {
+        TypeEntity typeEntity = new TypeEntity();
+        BeanUtils.copyProperties(typeModel, typeEntity);
+        typeEntity.setCategory(categoryRepository.findById(typeModel.getCategory_id()).get());
+        typeRepository.save(typeEntity);
+        return "Type Added Successfully";
+    }
+
+    @Override
+    public String updateType(TypeModel typeModel, Long type_id) {
+        TypeEntity typeEntity = typeRepository.findById(type_id).get();
+        typeEntity.setType_name(typeModel.getType_name());
+        typeRepository.save(typeEntity);
+        return "Type Updated Successfully";
+    }
+
+    @Override
+    public TypeModel getTypeById(Long type_id) {
+        TypeEntity typeEntity = typeRepository.findById(type_id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Type not found"));
+
+        TypeModel typeModel = new TypeModel();
+        BeanUtils.copyProperties(typeEntity, typeModel);
+        return typeModel;
+    }
+
+    @Override
+    public List<TypeModel> getAllType() {
+        List<TypeEntity> typeEntity = typeRepository.findAll();
+        List<TypeModel> typeModels = new ArrayList<>();
+        for (TypeEntity type : typeEntity) {
+            TypeModel typeModel = new TypeModel();
+            typeModel.setType_id(type.getType_id());
+            typeModel.setType_name(type.getType_name());
+            typeModels.add(typeModel);
+        }
+        return typeModels;
+    }
+
+    @Override
+    public String deleteType(Long type_id) {
+        typeRepository.deleteById(type_id);
+        return "Type Deleted Successfully";
     }
 }

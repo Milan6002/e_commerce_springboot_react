@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { register } from "../services/authService";
+import { register } from "../Services/authService";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import '../assets/register.css';
@@ -55,16 +55,15 @@ function Register() {
 
     try {
       const response = await register(userData);
-      console.log(response.data);
       if (response.data === "User already exists") {
         toast.error(response.data);
         setTimeout(() => {
-          navigate("/ecommerce/login");
+          navigate("/login");
         }, 2500);
       } else if (response.data === "User registered successfully") {
         toast.success("🎉 " + response.data);
         setTimeout(() => {
-          navigate("/ecommerce/login");
+          navigate("/login");
         }, 2500);
       }
     } catch (err) {
@@ -76,8 +75,8 @@ function Register() {
 
   return (
     <div
-      className=" register-main flex items-center justify-center  bg-gradient-to-r from-gray-900 to-gray-700"
-      style={{ height: "91.2vh", overflow: "hidden" }}
+      className=" register-main flex items-center justify-center p-3"
+     
     >
       <ToastContainer />
       <div className="bg-gray-800 text-white p-8 rounded-lg shadow-lg w-96 inner-register-main">

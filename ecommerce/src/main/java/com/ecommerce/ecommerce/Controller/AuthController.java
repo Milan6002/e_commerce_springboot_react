@@ -31,7 +31,8 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@ModelAttribute UserModel userModel,
-            @RequestParam("image") MultipartFile image) throws IOException {
+            @RequestParam(required = false) MultipartFile image) throws IOException {
+                System.out.println(userModel);
         return ResponseEntity.ok(authService.register(userModel, image));
     }
 
@@ -47,7 +48,7 @@ public class AuthController {
 
     @PutMapping("/update/{id}")
     public ResponseEntity<String> Updateprofile(@PathVariable Long id, @ModelAttribute ProfileModel profileModel,
-            @RequestParam("image") MultipartFile image) throws IOException {
+            @RequestParam MultipartFile image) throws IOException {
         return ResponseEntity.ok(authService.Updateprofile(id, profileModel, image));
     }
 }

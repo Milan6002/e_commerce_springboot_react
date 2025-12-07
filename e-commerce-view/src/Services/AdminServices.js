@@ -1,9 +1,25 @@
 import axios from "axios";
 
-const BASE_URL = "http://192.168.1.16:8080/ecommerce/api/auth/";
+const BASE_URL = "http://localhost:8081/api/auth/";
 
 class AdminServices {
   //Category Related Services
+  addtype(typeData) {
+    return axios.post(BASE_URL + "addType", typeData);
+  }
+  getAllTypes() {
+    return axios.get(BASE_URL + "getAllType");
+  }
+  deleteType(type_id) {
+    return axios.delete(BASE_URL + "deleteType/" + type_id);
+  }
+  getTypeById(type_id) {
+    return axios.get(BASE_URL + "getTypeById/" + type_id);
+  }
+  updateType(type_id, typeData) {
+    return axios.put(BASE_URL + "updateType/" + type_id, typeData);
+  }
+
   addCategory(categoryData) {
     return axios.post(BASE_URL + "addCategory", categoryData);
   }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import authService from "../services/authService";
+import authService from "../Services/authService";
 import { jwtDecode } from "jwt-decode";
 
 function UpdateProfile() {
@@ -59,7 +59,7 @@ function UpdateProfile() {
 
     try {
       await authService.Updateprofile(id, user);
-      navigate("/ecommerce/profile");
+      navigate("/profile");
     } catch (err) {
       console.error("Error updating profile:", err);
       setError("Failed to update profile. Please try again.");
@@ -69,7 +69,7 @@ function UpdateProfile() {
   };
 
   return (
-    <div className="flex items-center justify-center  bg-gradient-to-r from-gray-900 to-gray-700" style={{ height: "91.2vh" }}>
+    <div className="flex items-center justify-center  p-3">
       <div className="bg-gray-800 text-white p-8 rounded-lg shadow-lg w-96">
         <h1 className="text-3xl font-bold text-center mb-6">Update Profile</h1>
 

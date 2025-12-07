@@ -21,7 +21,8 @@ public class CartController {
 
     @PostMapping("/add")
     public CartModel addToCart(@RequestParam String userEmail, @RequestParam Long productId, @RequestParam int quantity) {
-        return cartService.addToCart(userEmail, productId, quantity);
+        // return cartService.addToCart(userEmail, productId, quantity);
+        return null; // Placeholder for actual implementation
     }
 
     @GetMapping("/cartId/{user_id}")

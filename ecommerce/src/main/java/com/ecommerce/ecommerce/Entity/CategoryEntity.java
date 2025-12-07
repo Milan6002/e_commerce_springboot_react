@@ -23,4 +23,7 @@ public class CategoryEntity {
 
     @OneToMany(mappedBy = "category",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductEntity> products;
+
+    @OneToMany(mappedBy = "category",cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TypeEntity> types; // This is the new field for types associated with this category
 }

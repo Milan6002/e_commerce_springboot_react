@@ -20,22 +20,29 @@ import ViewProduct from "./Component/ViewProduct";
 import Cart from "./Component/Cart";
 import BulkOrder from "./Component/BulkOrder";
 import Footer from "./Component/Footer";
+import Brands from "./Component/Brands";
+import Luggage from "./Component/Luggage";
+import Backpack from "./Component/Backpack";
+import AddType from "./Component/AddType";
+import Type from "./Component/Type";
+import UpdateType from "./Component/UpdateType";
+import Duffle from "./Component/Duffle";
 
 function App() {
   const user_role = localStorage.getItem("role");
 
   return (
     <>
-      <BrowserRouter>
+      <BrowserRouter basename="/ecommerce">
         <Navbar />
 
         <Routes>
-          <Route index path="/ecommerce" element={<Home />} />
+          <Route index path="/" element={<Home />} />
 
           {user_role == "ROLE_ADMIN" ? (
             <>
               <Route
-                path="ecommerce/Admin"
+                path="/Admin"
                 element={
                   <ProtectedRoute>
                     <Admin />
@@ -43,7 +50,31 @@ function App() {
                 }
               />
               <Route
-                path="ecommerce/Categories"
+                path="/AddType"
+                element={
+                  <ProtectedRoute>
+                    <AddType />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/Type"
+                element={
+                  <ProtectedRoute>
+                    <Type />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/UpdateType/:id"
+                element={
+                  <ProtectedRoute>
+                    <UpdateType />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/Categories"
                 element={
                   <ProtectedRoute>
                     <Categories />
@@ -51,7 +82,7 @@ function App() {
                 }
               />
               <Route
-                path="ecommerce/AddCategory"
+                path="/AddCategory"
                 element={
                   <ProtectedRoute>
                     <AddCategory />
@@ -59,7 +90,7 @@ function App() {
                 }
               />
               <Route
-                path="ecommerce/UpdateCategory/:id"
+                path="/UpdateCategory/:id"
                 element={
                   <ProtectedRoute>
                     <UpdateCategory />
@@ -67,7 +98,7 @@ function App() {
                 }
               />
               <Route
-                path="ecommerce/Products"
+                path="/Products"
                 element={
                   <ProtectedRoute>
                     <Products />
@@ -75,7 +106,7 @@ function App() {
                 }
               />
               <Route
-                path="ecommerce/AddProduct"
+                path="/AddProduct"
                 element={
                   <ProtectedRoute>
                     <AddProductForm />
@@ -83,7 +114,7 @@ function App() {
                 }
               />
               <Route
-                path="ecommerce/UpdateProduct/:id"
+                path="/UpdateProduct/:id"
                 element={
                   <ProtectedRoute>
                     <UpdateProductForm />
@@ -92,17 +123,17 @@ function App() {
               />
             </>
           ) : (
-            <Route path="ecommerce/Admin" element={<Navigate to="/ecommerce" />} />
+            <Route path="/Admin" element={<Navigate to="/" />} />
           )}
 
-          <Route path="ecommerce/login" element={<Login />} />
+          <Route path="/login" element={<Login />} />
 
-          <Route path="ecommerce/register" element={<Register />} />
+          <Route path="/register" element={<Register />} />
 
-          <Route path="ecommerce/updateprofile/:id" element={<UpdateProfile />} />
+          <Route path="/updateprofile/:id" element={<UpdateProfile />} />
 
           <Route
-            path="ecommerce/profile"
+            path="/profile"
             element={
               <ProtectedRoute>
                 <Profile />
@@ -110,7 +141,7 @@ function App() {
             }
           />
           <Route
-            path="ecommerce/shop"
+            path="/shop"
             element={
               <ProtectedRoute>
                 <Shop />
@@ -118,7 +149,15 @@ function App() {
             }
           />
           <Route
-            path="ecommerce/cart"
+            path="/Duffle"
+            element={
+              <ProtectedRoute>
+                <Duffle />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/cart"
             element={
               <ProtectedRoute>
                 <Cart />
@@ -126,7 +165,7 @@ function App() {
             }
           />
           <Route
-            path="ecommerce/BulkOrder"
+            path="/BulkOrder"
             element={
               <ProtectedRoute>
                 <BulkOrder />
@@ -134,7 +173,7 @@ function App() {
             }
           />
           <Route
-            path="ecommerce/viewproduct/:id"
+            path="/viewproduct/:id"
             element={
               <ProtectedRoute>
                 <ViewProduct />
@@ -142,7 +181,7 @@ function App() {
             }
           />
           <Route
-            path="ecommerce/home"
+            path="/"
             element={
               <ProtectedRoute>
                 <Home />
@@ -150,13 +189,30 @@ function App() {
             }
           />
           <Route
-            path="/ecoomerce"
+            path="/Brands"
             element={
               <ProtectedRoute>
-                <Home />
+                <Brands />
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/Luggage"
+            element={
+              <ProtectedRoute>
+                <Luggage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/Backpack"
+            element={
+              <ProtectedRoute>
+                <Backpack />
+              </ProtectedRoute>
+            }
+          />
+
           {/* 404 Not Found Route */}
           <Route path="*" element={<NotFound />} />
         </Routes>

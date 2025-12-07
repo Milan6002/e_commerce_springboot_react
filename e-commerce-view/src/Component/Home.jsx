@@ -12,6 +12,13 @@ import Card_Img3 from "../assets/Img/vip1.png";
 import Slider_Img1 from "../assets/Img/aer_height_600.png";
 import Slider_Img2 from "../assets/Img/vapour_height_600.png";
 import Slider_Img3 from "../assets/Img/height600_2.png";
+import Aristocrat_logo from "../assets/Img/Aristocrat_logo.jpg";
+import CityBag_logo from "../assets/Img/CityBag_logo.jpg";
+import VIP_logo from "../assets/Img/VIP_logo.png";
+import HP_logo from "../assets/Img/HP_logo.png";
+import HRX_logo from "../assets/Img/HRX_logo.jpg";
+import Safari_logo from "../assets/Img/Safari_logo.jpg";
+import { Link } from "react-router-dom";
 
 function Home() {
   return (
@@ -103,6 +110,30 @@ function Home() {
           </SwiperSlide>
         </Swiper>
       </div>
+      <div className=" mt-5 w-50 mx-auto ">
+        <p className=" border-b-4 font-bold text-2xl border-b-red-500  text-center">Brands </p>
+      </div>
+      <div className="flex gap-10 m-7">
+        <Link to={`Shop?Brand=ARISTOCRAT`}>
+          <img src={Aristocrat_logo} className="h-30" alt="Aristocrat" />
+        </Link>
+        <Link to={`Shop?Brand=City Bag`}>
+          <img src={CityBag_logo} alt="CityBag" className="h-30" />
+        </Link>
+        <Link to={`Shop?Brand=VIP`}>
+          <img src={VIP_logo} alt="VIP" className="h-30" />
+        </Link>
+        <Link to={`Shop?Brand=HP`}>
+          <img src={HP_logo} alt="HP" className="h-30" />
+        </Link>
+        <Link to={`Shop?Brand=HRX`}>
+          <img src={HRX_logo} alt="HRX" className="h-30" />
+        </Link>
+        <Link to={`Shop?Brand=SAFARI`}>
+          <img src={Safari_logo} alt="Safari" className="h-30" />
+        </Link>
+      </div>
+
     </div >
   );
 }

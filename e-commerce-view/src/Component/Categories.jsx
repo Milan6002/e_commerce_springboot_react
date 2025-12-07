@@ -40,15 +40,15 @@ function Categories() {
 
   const handleUpdateCategory = (e, id) => {
     e.preventDefault();
-    navigate(`/ecommerce/UpdateCategory/${id}`);
+    navigate(`/UpdateCategory/${id}`);
   };
 
   const handleAddCategory = () => {
-    navigate("/ecommerce/AddCategory");
+    navigate("/AddCategory");
   };
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
+    <div className="p-5 max-w-7xl mx-auto">
       <button
         onClick={handleAddCategory}
         className="mb-6 bg-blue-600 text-white font-semibold py-2 px-6 rounded-full hover:bg-blue-700 transition-colors duration-200"
