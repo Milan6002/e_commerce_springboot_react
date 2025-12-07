@@ -49,6 +49,6 @@ public class AuthController {
     @PutMapping("/update/{id}")
     public ResponseEntity<String> Updateprofile(@PathVariable Long id, @ModelAttribute ProfileModel profileModel,
             @RequestParam MultipartFile image) throws IOException {
-        return ResponseEntity.ok(authService.Updateprofile(id, profileModel, image));
+        return ResponseEntity.ok(authService.updateProfile(id, profileModel, image));
     }
 }
