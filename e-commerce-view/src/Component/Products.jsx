@@ -2,115 +2,118 @@ import { useEffect, useState, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import AdminService from "../Services/AdminServices";
 import "../assets/shop.css";
-import { motion, useScroll } from "framer-motion";
-import { Dropdown } from 'primereact/dropdown';
-import { Card } from "primereact/card";
+import { motion } from "framer-motion";
+import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
-// import { motion } from "framer-motion";
-// import "./ProductCard.css";
-
 
 function Products() {
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const selectedBrand = queryParams.get("Brand"); // ✅ FIX: Capital B
+  const selectedBrand = queryParams.get("Brand");
 
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [searchText, setSearchText] = useState("");
   const [loading, setLoading] = useState(true);
 
+  // LOAD DATA
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await AdminService.getAllProducts();
-        const productList = response.data;
+        const productRes = await AdminService.getAllProducts();
+        const categoryRes = await AdminService.getAllCategories();
 
-        const updatedProducts = await Promise.all(
-          productList.map(async (product) => {
-            const categoryResponse = await AdminService.getCategoryById(product.category_id);
-            const fullProduct = {
-              ...product,
-              category_name: categoryResponse.data.category_name,
-              product_brand: product.product_brand || "",
-            };
-            return fullProduct;
-          })
+        const categoryMap = {};
+        categoryRes.data.forEach(
+          (c) => (categoryMap[c.category_id] = c.category_name)
         );
 
-        setProducts(updatedProducts);
-      } catch (error) {
-        console.error(error);
+        const updated = productRes.data.map((p) => ({
+          ...p,
+          category_name: categoryMap[p.category_id],
+          product_brand: p.product_brand || "",
+        }));
+
+        setProducts(updated);
+        setCategories(categoryRes.data);
+      } catch (err) {
+        console.error(err);
       }
       setLoading(false);
     };
 
-    const fetchCategory = async () => {
-      try {
-        const response = await AdminService.getAllCategories();
-        setCategories(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchCategory();
     fetchData();
   }, []);
 
-  // ✅ Optional: Reset category when a brand is selected
+  // Reset category if brand filter is active
   useEffect(() => {
-    if (selectedBrand) {
-      setSelectedCategory("");
-    }
+    if (selectedBrand) setSelectedCategory("");
   }, [selectedBrand]);
 
+  // FILTERED PRODUCTS
   const filteredProducts = useMemo(() => {
-    let result = products;
+    let result = [...products];
+
+    // CATEGORY FILTER
     if (selectedCategory) {
       result = result.filter(
-        (product) => String(product.category_id) === String(selectedCategory)
+        (p) => String(p.category_id) === String(selectedCategory)
       );
     }
 
+    // BRAND FILTER
     if (selectedBrand) {
       result = result.filter(
-        (product) =>
-          product.product_brand &&
-          product.product_brand.toLowerCase() === selectedBrand.toLowerCase()
+        (p) =>
+          p.product_brand &&
+          p.product_brand.toLowerCase() === selectedBrand.toLowerCase()
       );
     }
-    return result;
-  }, [selectedCategory, selectedBrand, products]);
 
-  const handleDelete = async (e, productId) => {
+    // SEARCH FILTER
+    if (searchText.trim() !== "") {
+      const query = searchText.toLowerCase();
+
+      result = result.filter(
+        (p) =>
+          p.product_name?.toLowerCase().includes(query) ||
+          p.description?.toLowerCase().includes(query) ||
+          p.product_brand?.toLowerCase().includes(query) ||
+          p.category_name?.toLowerCase().includes(query)
+      );
+    }
+
+    return result;
+  }, [products, selectedCategory, selectedBrand, searchText]);
+
+  // ACTION HANDLERS
+  const handleDelete = async (e, id) => {
     e.preventDefault();
     try {
-      await AdminService.deleteProduct(productId);
-      setProducts((prev) =>
-        prev.filter((product) => product.product_id !== productId)
-      );
-    } catch (error) {
-      console.error("Error deleting product:", error);
+      await AdminService.deleteProduct(id);
+      setProducts((prev) => prev.filter((p) => p.product_id !== id));
+    } catch (err) {
+      console.error(err);
     }
   };
 
-  const handleUpdate = (e, productId) => {
+  const handleUpdate = (e, id) => {
     e.preventDefault();
-    navigate(`/UpdateProduct/${productId}`);
+    navigate(`/UpdateProduct/${id}`);
   };
 
-  const handleViewProduct = (e, id) => {
+  const handleView = (e, id) => {
     e.preventDefault();
     navigate(`/viewproduct/${id}`);
   };
 
-  const { scrollYProgress } = useScroll();
-
   return (
     <div className="min-h-screen bg-gray-100 p-6">
+
+      {/* ADMIN ADD PRODUCT BUTTON */}
       {localStorage.getItem("role") === "ROLE_ADMIN" && (
         <motion.button
           onClick={() => navigate("/AddProduct")}
@@ -122,89 +125,143 @@ function Products() {
         </motion.button>
       )}
 
-      <div className="main">
+      {/* CATEGORY DROPDOWN + SEARCH */}
+      <div className="mb-6 flex justify-between items-center w-full">
         <div className="mb-5">
-          <div className="card flex justify-content-center ">
-            <Dropdown value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)} options={categories.map((cat) => ({ key: cat.category_id, value: cat.category_id, name: cat.category_name }))} optionLabel="name"
-              placeholder="All Categories" className="w-96 p-2 border-2 rounded-md md:w-14rem " checkmark={true} highlightOnSelect={false} panelStyle={{ backgroundColor: 'black', color: 'white' }} // black background
-            />
-          </div>
+          <Dropdown
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.value)}
+            options={categories.map((c) => ({
+              label: c.category_name,
+              value: c.category_id,
+            }))}
+            placeholder="All Categories"
+            className="w-96 p-2"
+            showClear
+            panelStyle={{ backgroundColor: "black", color: "white" }}
+          />
         </div>
 
-        {!loading ? (
-          <motion.div
-            className="grid grid-cols-1 md:grid-cols-4 gap-3"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1.5 }}
-          >
-            {products.length > 0 ? (
-              products.map((product) => {
-                const header = (
-                  <img
-                    alt={product.product_name}
-                    src={`data:image/jpeg;base64,${product.product_images[0]}`}
-                    className="product-image"
-                  />
-                );
-
-                const footer =
-                  localStorage.getItem("role") === "ROLE_ADMIN" ? (
-                    <div className="flex justify-between mt-3">
-                      <Button
-                        label="Edit"
-                        className="p-button-text p-button-info"
-                        onClick={(e) => handleUpdate(e, product.product_id)}
-                      />
-                      <Button
-                        label="Remove"
-                        className="p-button-text p-button-danger"
-                        onClick={(e) => handleDelete(e, product.product_id)}
-                      />
-                    </div>
-                  ) : (
-                    <Button
-                      icon="pi pi-eye"
-                      label="View Product"
-                      className="p-button-info w-full mt-3"
-                      onClick={(e) => handleViewProduct(e, product.product_id)}
-                    />
-                  );
-
-                return (
-                  <motion.div
-                    key={product.product_id}
-                    whileHover={{ scale: 1.03 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <Card
-                      header={header}
-                      footer={footer}
-                      className="animated-card"
-                    >
-                      <div className="text-xl font-bold mb-2">
-                        {product.product_name}
-                      </div>
-                      <div className="text-500 h-12 overflow-hidden mb-2">
-                        {product.description}
-                      </div>
-                      <div className="text-2xl font-semibold">
-                        ₹{product.price}
-                      </div>
-                    </Card>
-                  </motion.div>
-                );
-              })
-            ) : (
-              <p className="text-center text-gray-600 col-span-full">
-                No products available.
-              </p>
-            )}
-          </motion.div>
-        ) : (
-          <p className="text-center text-gray-600">Loading products...</p>
-        )}
+        <div className="mb-6 justify-end">
+          <input
+            type="text"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            placeholder="Search products..."
+            className="w-96 p-3 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
       </div>
+
+      {/* PRODUCT GRID */}
+      {!loading ? (
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.1 }}
+        >
+          {filteredProducts.length > 0 ? (
+            filteredProducts.map((product) => (
+              <motion.div
+                key={product.product_id}
+                whileHover={{ scale: 1.05, y: -5 }}
+                transition={{ duration: 0.25 }}
+                className="bg-white rounded-2xl shadow-md hover:shadow-xl overflow-hidden border border-gray-200"
+              >
+                {/* PRODUCT IMAGE */}
+                <div className="relative w-full h-56 bg-gray-100 overflow-hidden flex items-center justify-center">
+                  <img
+                    src={`data:image/jpeg;base64,${product.product_images[0]}`}
+                    alt={product.product_name}
+                    className="h-full w-auto object-contain transition-transform duration-300"
+                  />
+                </div>
+
+                {/* PRODUCT DETAILS */}
+                <div className="p-4">
+                  {/* CATEGORY + BRAND */}
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-md font-semibold">
+                      {product.category_name}
+                    </span>
+
+                    {product.product_brand && (
+                      <span className="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-md font-semibold">
+                        {product.product_brand}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* NAME */}
+                  <h3 className="font-bold text-lg text-gray-800 mb-1 line-clamp-1">
+                    {product.product_name}
+                  </h3>
+
+                  {/* DESCRIPTION */}
+                  <p className="text-sm text-gray-500 line-clamp-2 h-10">
+                    {product.description}
+                  </p>
+
+                  {/* PRICE + DISCOUNT */}
+                  <div className="mt-3">
+                    <div className="flex items-center gap-3">
+                      <p className="text-xl font-bold text-indigo-600">
+                        ₹{Math.round(product.price)}
+                      </p>
+
+                      <p className="text-sm text-gray-400 line-through">
+                        ₹
+                        {Math.round(
+                          product.price +
+                            (product.price * product.discount) / 100
+                        )}
+                      </p>
+
+                      {product.discount > 0 && (
+                        <span className="text-sm font-semibold text-green-600 bg-green-100 px-2 py-1 rounded-md">
+                          {product.discount}% OFF
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* ACTION BUTTONS */}
+                  <div className="mt-4">
+                    {localStorage.getItem("role") === "ROLE_ADMIN" ? (
+                      <div className="flex justify-between">
+                        <Button
+                          label="Edit"
+                          className="p-button-info p-button-sm"
+                          onClick={(e) => handleUpdate(e, product.product_id)}
+                        />
+                        <Button
+                          label="Delete"
+                          className="p-button-danger p-button-sm"
+                          onClick={(e) => handleDelete(e, product.product_id)}
+                        />
+                      </div>
+                    ) : (
+                      <Button
+                        icon="pi pi-eye"
+                        label="View"
+                        className="p-button-info w-full p-button-sm"
+                        onClick={(e) => handleView(e, product.product_id)}
+                      />
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+            ))
+          ) : (
+            <p className="text-center text-gray-600 col-span-full">
+              No products found.
+            </p>
+          )}
+        </motion.div>
+      ) : (
+        <p className="text-center text-gray-600 text-lg">Loading products...</p>
+      )}
     </div>
   );
 }

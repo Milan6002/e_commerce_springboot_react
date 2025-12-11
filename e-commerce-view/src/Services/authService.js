@@ -1,10 +1,10 @@
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
-const API_URL = "http://localhost:8081/api/auth";
+const API_URL = "http:///localhost:8081/api/auth";
 
 export const login = async (loginData) => {
-  return await axios.post("http://localhost:8081/api/auth/login", loginData);
+  return await axios.post("http:///localhost:8081/api/auth/login", loginData);
 };
 
 export const register = async (userData) => {

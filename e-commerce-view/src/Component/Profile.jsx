@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
-import '../assets/profile.css';
 import { useNavigate } from "react-router-dom";
 import authService from "../Services/authService";
-
+import { motion } from "framer-motion";
+import '../assets/profile.css';
 
 function Profile() {
-
   const navigate = useNavigate();
 
   const [user, setUser] = useState({
@@ -16,71 +15,98 @@ function Profile() {
     img: null,
   });
 
-  const decodeToken = jwtDecode(localStorage.getItem("token"));
+  // Safely decode token
+  const token = localStorage.getItem("token");
+  let decoded = null;
+  if (token) {
+    try {
+      decoded = jwtDecode(token);
+    } catch (err) {
+      console.error("Invalid token:", err);
+    }
+  }
 
   useEffect(() => {
-    authService.ReadProfileByEmail(decodeToken.sub)
-      .then((response) => {
-        localStorage.setItem("role", response.data.role);
-        setUser({
-          id: response.data.id,
-          name: response.data.name,
-          email: response.data.email,
-          img: response.data.img,
-        });
-        localStorage.setItem("avtar", response.data.img);
+    if (!decoded?.sub) return;
 
-        // Dispatch event to update Navbar avatar
-        const event = new CustomEvent("avatarUpdated", {
-          detail: response.data.img,
+    authService.ReadProfileByEmail(decoded.sub)
+      .then((response) => {
+        const data = response.data;
+
+        localStorage.setItem("role", data.role);
+        localStorage.setItem("avtar", data.img);
+
+        setUser({
+          id: data.id,
+          name: data.name,
+          email: data.email,
+          img: data.img,
         });
-        window.dispatchEvent(event);
+
+        // Notify navbar avatar
+        window.dispatchEvent(
+          new CustomEvent("avatarUpdated", { detail: data.img })
+        );
       })
       .catch((error) => {
         console.error("Error fetching user data:", error);
       });
-  },[decodeToken.sub  ]);
-
-
+  }, [decoded?.sub]);
 
   return (
-    <div
-      className="profile-main flex justify-center items-center "
-      style={{ height: "91.2vh" }}
-    >
-      <div className="bg-gray-800 rounded-2xl w-96 p-6 text-white text-center inner-proflle-main">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black flex justify-center items-center p-4">
+
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="w-full max-w-md bg-white/10 backdrop-blur-2xl shadow-2xl border border-white/20 rounded-2xl p-8 text-white"
+      >
+
+        {/* EDIT BUTTON */}
         <div className="flex justify-end">
-          <a
+          <button
             onClick={() => navigate(`/updateprofile/${user.id}`)}
-            className="hover:cursor-pointer text-blue-400 hover:text-blue-300 transition-all duration-300 text-sm"
+            className="px-4 py-1.5 text-sm rounded-lg bg-blue-600/80 hover:bg-blue-500 transition shadow-md"
           >
-            📝 Edit Profile
-          </a>
+            ✏ Edit Profile
+          </button>
         </div>
-        <div className="flex flex-col items-center mt-4">
-          <img
+
+        {/* AVATAR */}
+        <div className="flex flex-col items-center mt-3">
+          <motion.img
+            initial={{ scale: 0.8 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.4 }}
             src={`data:image/jpeg;base64,${user.img}`}
             alt="User Avatar"
-            className="w-24 h-24 rounded-full shadow-lg border-4 border-gray-500 hover:scale-105 transition-transform duration-300"
+            className="w-28 h-28 rounded-full shadow-xl border-4 border-white/30 object-cover hover:scale-105 transition"
           />
-          <h1 className="text-2xl font-bold mt-3">
+
+          <h1 className="text-3xl font-bold mt-4 tracking-wide">
             {user.name || "Loading..."}
           </h1>
         </div>
 
-        <div className="mt-6 space-y-3 text-left">
-          <div className="border-b border-gray-600 pb-2">
-            <span className="font-semibold">Name:</span> {user.name || ""}
+        {/* DETAILS */}
+        <div className="mt-8 space-y-4 text-white/90">
+          <div className="flex justify-between border-b border-white/20 pb-2">
+            <span className="text-gray-300">Name</span>
+            <span className="font-semibold">{user.name}</span>
           </div>
-          <div className="border-b border-gray-600 pb-2">
-            <span className="font-semibold">Email:</span> {user.email || ""}
+
+          <div className="flex justify-between border-b border-white/20 pb-2">
+            <span className="text-gray-300">Email</span>
+            <span className="font-semibold">{user.email}</span>
           </div>
-          <div>
-            <span className="font-semibold">Password:</span>{" "}
+
+          <div className="flex justify-between">
+            <span className="text-gray-300">Password</span>
             <span className="text-gray-400">••••••••</span>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

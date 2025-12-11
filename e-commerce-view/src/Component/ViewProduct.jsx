@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import AdminServices from "../Services/AdminServices";
 import CartService from "../Services/CartService";
 import { toast, ToastContainer } from "react-toastify";
@@ -7,7 +7,6 @@ import { jwtDecode } from "jwt-decode";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom"
 
 function ViewProduct() {
   const { id } = useParams();
@@ -17,11 +16,14 @@ function ViewProduct() {
   const token = localStorage.getItem("token");
   const user_email = jwtDecode(token);
   const navigate = useNavigate();
+
+  // Fetch Product
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         const response = await AdminServices.getProductById(id);
         const productData = response.data;
+
         const category = await AdminServices.getCategoryById(
           productData.category_id
         );
@@ -40,134 +42,134 @@ function ViewProduct() {
     fetchProduct();
   }, [id]);
 
-  if (!product) return <p className="text-center text-lg">Loading...</p>;
+  if (!product)
+    return <p className="text-center text-lg pt-10">Loading Product…</p>;
 
-  const imageList = product.product_images;
-
-  const handleAddToCart = (e, userEmail, productId, quantity) => {
-    e.preventDefault();
-    CartService.addToCart(userEmail, productId, quantity)
-      .then((response) => {
-        if (response.status === 200) {
-          toast.success("Item added To The Cart Successfully");
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  const whatsappMessage = `Hello, I am interested in your product: ${product.product_name}.
-Price: ₹${product.price}.
-Please provide more details.`;
+  const whatsappMessage = `Hello, I am interested in your product: ${product.product_name}. Price: ₹${product.price}. Please share more details.`;
   const whatsappLink = `https://wa.me/+919512796272?text=${encodeURIComponent(
     whatsappMessage
   )}`;
 
   return (
     <motion.div
-      className="p-5"
-    // initial={{ opacity: 0 }}
-    // animate={{ opacity: 1 }}
-    // transition={{ duration: 0.5 }}
+      className="p-4 md:p-10 bg-gray-100 min-h-screen"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
     >
       <ToastContainer />
-      <motion.div
-        className="bg-white w-full flex flex-col md:flex-row"
-      // whileHover={{ scale: 1.02 }}
-      >
-        {/* Left - Image Section */}
-        <div className="w-[40vw]">
+
+      <div className="bg-white rounded-xl shadow-lg p-6 md:p-10 flex flex-col md:flex-row gap-10">
+
+        {/* LEFT — IMAGE GALLERY */}
+        <div className="w-full md:w-1/2">
+
+          {/* Main Image */}
           <motion.img
             src={`data:image/jpeg;base64,${mainImage}`}
             alt={product.product_name}
-            className="mb-4 h-80 w-auto rounded-md shadow-md mx-auto"
+            className="w-full max-h-[480px] rounded-xl shadow-md object-contain bg-gray-50 p-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.4 }}
           />
 
-          <div className="flex mt-3 gap-3">
-            {imageList.map((img, index) => {
-              const isActive = img === mainImage;
+          {/* Thumbnails */}
+          <div className="flex mt-4 gap-4 flex-wrap">
+            {product.product_images.map((img, index) => {
+              const active = img === mainImage;
               return (
                 <motion.img
                   key={index}
                   src={`data:image/jpeg;base64,${img}`}
-                  alt={`Thumbnail ${index + 1}`}
-                  className={`w-16 h-16 rounded border-2 cursor-pointer transition duration-300 ${isActive ? "border-blue-700" : "border-gray-300"
-                    }`}
-                  whileHover={{ scale: 1.1 }}
-                  onMouseEnter={() => setMainImage(img)}
+                  alt="Thumbnail"
                   onClick={() => setMainImage(img)}
+                  className={`w-20 h-20 rounded-lg border-2 cursor-pointer object-cover transition ${
+                    active ? "border-blue-700" : "border-gray-300"
+                  }`}
+                  whileHover={{ scale: 1.1 }}
                 />
               );
             })}
           </div>
         </div>
 
-
-        {/* Right - Product Details */}
-        <div className="w-full pl-6 mt-4 md:mt-0">
-          <h1 className="text-2xl font-bold text-gray-800">
+        {/* RIGHT — PRODUCT DETAILS */}
+        <div className="w-full md:w-1/2 flex flex-col">
+          <h1 className="text-3xl font-bold text-gray-800">
             {product.product_name}
           </h1>
-          <p className="text-gray-500 mt-2">{product.category_name}</p>
-          <p className="text-gray-500 mt-2">
-            <b>Brand :</b> {product.product_brand}
-          </p>
-          <p className="text-gray-500 mt-2">
-            <b>Color :</b> {product.product_color}
+
+          <p className="text-gray-500 mt-1">{product.category_name}</p>
+
+          <p className="text-gray-600 mt-2">
+            <span className="font-bold">Brand:</span> {product.product_brand}
           </p>
 
-          <div className="flex items-center space-x-3 mt-2">
-            <p className="text-2xl font-semibold text-green-600">
+          <p className="text-gray-600 mt-1">
+            <span className="font-bold">Color:</span> {product.product_color}
+          </p>
+
+          {/* Price Section */}
+          <div className="flex items-center gap-4 mt-4">
+            <p className="text-3xl font-bold text-green-600">
               ₹{Math.round(product.price)}
             </p>
-            <p className="text-gray-400 line-through">
+
+            <p className="text-gray-400 line-through text-lg">
               ₹
               {parseInt((product.price * product.discount) / 100) +
                 product.price}
             </p>
-            <p className="text-green-600 font-medium">
-              {product.discount}% off
+
+            <p className="text-green-600 font-medium text-lg">
+              {product.discount}% OFF
             </p>
           </div>
 
-          <p className="text-gray-600 mt-4 text-justify">{product.description}</p>
+          {/* Description */}
+          <p className="mt-5 text-gray-700 leading-relaxed text-justify">
+            {product.description}
+          </p>
 
-          <div className="mt-6 flex flex-wrap gap-4">
+          {/* ACTION BUTTONS */}
+          <div className="mt-8 flex flex-wrap gap-4">
+
+            {/* Add to Cart */}
             <motion.button
               onClick={(e) =>
-                handleAddToCart(e, user_email.sub, product.product_id, 1)
+                CartService.addToCart(
+                  user_email.sub,
+                  product.product_id,
+                  1
+                ).then(() => toast.success("Added to Cart"))
               }
-              className="bg-yellow-500 hover:bg-yellow-600 hover:cursor-pointer text-white font-bold py-2 px-6 rounded-lg"
+              className="bg-yellow-500 text-white px-6 py-3 rounded-xl font-semibold shadow hover:bg-yellow-600"
               whileTap={{ scale: 0.9 }}
             >
               Add to Cart
             </motion.button>
 
+            {/* WhatsApp */}
             <motion.a
               href={whatsappLink}
               target="_blank"
-              rel="noopener noreferrer"
-              className="bg-white border-2 text-green-600 border-green-600 hover:bg-green-600 hover:text-white font-bold py-2 px-6 rounded-lg flex items-center justify-center"
-              whileHover={{ scale: 1.1 }}
+              className="flex items-center gap-2 px-6 py-3 border-2 border-green-600 text-green-600 rounded-xl font-semibold hover:bg-green-600 hover:text-white"
+              whileHover={{ scale: 1.05 }}
             >
               <FontAwesomeIcon icon={faWhatsapp} className="text-2xl" />
+              Chat on WhatsApp
             </motion.a>
 
+            {/* Bulk Order */}
             <motion.button
-              type="submit"
               onClick={() => navigate("/BulkOrder")}
-              className="bg-blue-700 p-3 text-white font-bold border-2 rounded-lg hover:bg-transparent hover:cursor-pointer hover:border-blue-700 hover:text-blue-700 font-mono "
-              whileHover={{ scale: 1.1 }}
+              className="px-6 py-3 bg-blue-700 text-white rounded-xl font-bold hover:bg-blue-800"
+              whileHover={{ scale: 1.05 }}
             >
-              Bulk Order Or Customize Prodcut
+              Bulk / Custom Order
             </motion.button>
           </div>
         </div>
-      </motion.div>
+      </div>
     </motion.div>
   );
 }

@@ -77,7 +77,8 @@ function Brands() {
     });
 
     return (
-        <div  className="px-4 py-6 max-w-7xl mx-auto">
+        <div className="px-4 py-6 max-w-7xl mx-auto">
+
             {/* Search and Sort */}
             <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
                 <input
@@ -124,12 +125,30 @@ function Brands() {
                                             <img
                                                 src={`data:image/jpeg;base64,${product.product_images[0]}`}
                                                 alt={product.product_name}
-                                                className=" rounded-md mb-3"
+                                                className="rounded-md mb-3"
                                             />
+
                                             <h3 className="text-lg font-semibold mb-1">{product.product_name}</h3>
                                             <p className="text-sm text-gray-500 mb-1">Category: {product.category_name}</p>
                                             <p className="text-sm text-gray-700 mb-2 line-clamp-2">{product.description}</p>
-                                            <p className="text-base font-bold text-blue-600 mb-3">₹{product.price}</p>
+
+                                            {/* DISCOUNT BLOCK */}
+                                            <div className="mt-2 flex items-center gap-3">
+                                                <p className="text-lg font-bold text-blue-600">
+                                                    ₹{Math.round(product.price)}
+                                                </p>
+
+                                                <p className="text-sm text-gray-400 line-through">
+                                                    ₹{Math.round(product.price + (product.price * product.discount) / 100)}
+                                                </p>
+
+                                                {product.discount > 0 && (
+                                                    <span className="text-xs font-semibold text-green-700 bg-green-100 px-2 py-1 rounded">
+                                                        {product.discount}% OFF
+                                                    </span>
+                                                )}
+                                            </div>
+
                                             <button
                                                 onClick={(e) => handleViewProduct(e, product.product_id)}
                                                 className="mt-auto bg-blue-600 text-white py-2 rounded hover:bg-blue-500 transition"
