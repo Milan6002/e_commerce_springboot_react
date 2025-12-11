@@ -13,7 +13,7 @@ public class ProductImageEntity {
     private Long id;
 
     @Lob
-    @Column(columnDefinition = "LONGBLOB")
+    @Column(columnDefinition = "VARBINARY(MAX)")
     private byte[] image;
 
     @ManyToOne

@@ -9,7 +9,7 @@ class AdminServices {
   }
   getAllTypes() {
     return axios.get(BASE_URL + "getAllType");
-  }
+  }N
   deleteType(type_id) {
     return axios.delete(BASE_URL + "deleteType/" + type_id);
   }
