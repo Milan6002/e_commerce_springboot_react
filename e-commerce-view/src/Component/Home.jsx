@@ -105,7 +105,7 @@ export default function HomePremiumGlass() {
 
       {/* BEST SELLER CAROUSEL */}
       <section className="max-w-6xl mx-auto px-6 mt-12">
-        <h3 className="text-xl font-semibold mb-4">BEST SELLER COLLECTIONS</h3>
+        <h3 className="text-xl font-semibold mb-4">BEST SELLING PRODUCTS</h3>
         <Swiper
           modules={[Navigation]}
           slidesPerView={4}

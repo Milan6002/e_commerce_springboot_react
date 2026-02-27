@@ -5,6 +5,7 @@ import "../assets/shop.css";
 import { motion } from "framer-motion";
 import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
+import { Rating } from "primereact/rating";
 
 function Products() {
   const navigate = useNavigate();
@@ -214,10 +215,10 @@ function Products() {
                         ₹
                         {Math.round(
                           product.price +
-                            (product.price * product.discount) / 100
+                          (product.price * product.discount) / 100
                         )}
                       </p>
-
+                      <Rating value={2} readOnly cancel={false} />
                       {product.discount > 0 && (
                         <span className="text-sm font-semibold text-green-600 bg-green-100 px-2 py-1 rounded-md">
                           {product.discount}% OFF

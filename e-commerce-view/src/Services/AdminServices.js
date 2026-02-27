@@ -4,12 +4,12 @@ const BASE_URL = "http://localhost:8081/api/auth/";
 
 class AdminServices {
   //Category Related Services
-  addtype(typeData) {
-    return axios.post(BASE_URL + "addType", typeData);
+  addtype(typedata) {
+    return axios.post(BASE_URL + "addType", typedata);
   }
   getAllTypes() {
     return axios.get(BASE_URL + "getAllType");
-  }N
+  }
   deleteType(type_id) {
     return axios.delete(BASE_URL + "deleteType/" + type_id);
   }

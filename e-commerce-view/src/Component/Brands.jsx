@@ -1,167 +1,193 @@
-import { useEffect, useState } from 'react';
-import AdminService from '../Services/AdminServices';
-import "../assets/shop.css";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import AdminService from "../Services/AdminServices";
+
+import { Accordion, AccordionTab } from "primereact/accordion";
+import { Card } from "primereact/card";
+import { InputText } from "primereact/inputtext";
+import { Dropdown } from "primereact/dropdown";
+import { Button } from "primereact/button";
+import { Skeleton } from "primereact/skeleton";
+import { Paginator } from "primereact/paginator";
+import { Rating } from "primereact/rating";
+import { Slider } from "primereact/slider";
+import { Avatar } from "primereact/avatar";
 
 function Brands() {
     const [products, setProducts] = useState([]);
-    const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [sortOrder, setSortOrder] = useState('asc');
-    const [openBrand, setOpenBrand] = useState(null);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [sortOrder, setSortOrder] = useState("asc");
+    const [priceRange, setPriceRange] = useState([0, 100000]);
+    const [first, setFirst] = useState(0);
+    const rows = 8;
+
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true);
-            try {
-                const response = await AdminService.getAllProducts();
-                const productList = response.data;
-
-                const updatedProducts = await Promise.all(
-                    productList.map(async (product) => {
-                        const categoryResponse = await AdminService.getCategoryById(product.category_id);
-                        return {
-                            ...product,
-                            category_name: categoryResponse.data.category_name,
-                        };
-                    })
-                );
-
-                setProducts(updatedProducts);
-            } catch (error) {
-                console.error(error);
-            }
-            setLoading(false);
-        };
-
-        const fetchCategory = async () => {
-            try {
-                const response = await AdminService.getAllCategories();
-                setCategories(response.data);
-            } catch (error) {
-                console.error(error);
-            }
-        };
-
-        fetchCategory();
-        fetchData();
+        fetchProducts();
     }, []);
 
-    const handleViewProduct = (e, id) => {
-        e.preventDefault();
+    const fetchProducts = async () => {
+        setLoading(true);
+        try {
+            const response = await AdminService.getAllProducts();
+            setProducts(response.data);
+        } catch (error) {
+            console.error(error);
+        }
+        setLoading(false);
+    };
+
+    const handleViewProduct = (id) => {
         navigate(`/viewproduct/${id}`);
     };
 
-    const toggleBrand = (brand) => {
-        setOpenBrand(openBrand === brand ? null : brand);
-    };
+    // 🔍 Filtering
+    const filtered = products
+        .filter(p =>
+            p.product_brand.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+        .filter(p => p.price >= priceRange[0] && p.price <= priceRange[1]);
 
-    const filteredProducts = products.filter((product) =>
-        product.product_brand.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-    const groupedProducts = filteredProducts.reduce((groups, product) => {
+    // 🔤 Sort Brands
+    const grouped = filtered.reduce((acc, product) => {
         const brand = product.product_brand;
-        if (!groups[brand]) {
-            groups[brand] = [];
-        }
-        groups[brand].push(product);
-        return groups;
+        if (!acc[brand]) acc[brand] = [];
+        acc[brand].push(product);
+        return acc;
     }, {});
 
-    const sortedBrandNames = Object.keys(groupedProducts).sort((a, b) => {
-        const compare = a.localeCompare(b);
-        return sortOrder === 'asc' ? compare : -compare;
+    const sortedBrands = Object.keys(grouped).sort((a, b) => {
+        return sortOrder === "asc"
+            ? a.localeCompare(b)
+            : b.localeCompare(a);
     });
 
     return (
-        <div className="px-4 py-6 max-w-7xl mx-auto">
+        <div className="p-4 max-w-7xl mx-auto">
 
-            {/* Search and Sort */}
-            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
-                <input
-                    type="text"
-                    placeholder="Search by brand name..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full sm:max-w-md border px-4 py-2 rounded shadow-sm"
-                />
-                <select
+            {/* Filters Section */}
+            <div className="grid md:grid-cols-4 gap-4 mb-5">
+
+                <span className="p-input-icon-left col-span-2">
+                    <i className="pi pi-search" />
+                    <InputText
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        placeholder="Search brand..."
+                        className="w-full"
+                    />
+                </span>
+
+                <Dropdown
                     value={sortOrder}
-                    onChange={(e) => setSortOrder(e.target.value)}
-                    className="w-full sm:w-48 border px-4 py-2 rounded shadow-sm"
-                >
-                    <option value="asc">Sort: A-Z</option>
-                    <option value="desc">Sort: Z-A</option>
-                </select>
+                    options={[
+                        { label: "A-Z", value: "asc" },
+                        { label: "Z-A", value: "desc" }
+                    ]}
+                    onChange={(e) => setSortOrder(e.value)}
+                    className="w-full"
+                />
+
+                <div>
+                    <label className="text-sm font-semibold">
+                        Price Range: ₹{priceRange[0]} - ₹{priceRange[1]}
+                    </label>
+                    <Slider
+                        value={priceRange}
+                        onChange={(e) => setPriceRange(e.value)}
+                        range
+                        min={0}
+                        max={100000}
+                    />
+                </div>
             </div>
 
-            {/* Loading and Results */}
+            {/* Loading Skeleton */}
             {loading ? (
-                <p className="text-center text-gray-600">Loading products...</p>
-            ) : sortedBrandNames.length === 0 ? (
-                <p className="text-center text-gray-600">No products found.</p>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    {[...Array(8)].map((_, i) => (
+                        <Skeleton key={i} height="250px" />
+                    ))}
+                </div>
             ) : (
-                <div className="space-y-4">
-                    {sortedBrandNames.map((brand) => (
-                        <div key={brand} className="border rounded shadow-sm">
-                            <button
-                                onClick={() => toggleBrand(brand)}
-                                className="w-full text-left px-4 py-3 bg-gray-100 hover:bg-gray-200 flex justify-between items-center"
-                            >
-                                <span className="font-semibold text-lg">{brand}</span>
-                                <span className="text-xl">{openBrand === brand ? '▲' : '▼'}</span>
-                            </button>
-
-                            {openBrand === brand && (
-                                <div className="p-4 bg-white border-t grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                                    {groupedProducts[brand].map((product) => (
-                                        <div
+                <Accordion multiple>
+                    {sortedBrands.map((brand) => (
+                        <AccordionTab
+                            key={brand}
+                            header={
+                                <div className="flex align-items-center gap-3">
+                                    <Avatar
+                                        label={brand.charAt(0)}
+                                        shape="circle"
+                                        size="large"
+                                    />
+                                    <span className="font-bold">
+                                        {brand} ({grouped[brand].length})
+                                    </span>
+                                </div>
+                            }
+                        >
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                                {grouped[brand]
+                                    .slice(first, first + rows)
+                                    .map((product) => (
+                                        <Card
                                             key={product.product_id}
-                                            className="border rounded-lg p-4 shadow flex flex-col bg-white"
+                                            className="shadow-3 hover:shadow-6 transition-duration-300"
+                                            header={
+                                                <img
+                                                    src={`data:image/jpeg;base64,${product.product_images[0]}`}
+                                                    alt={product.product_name}
+                                                    className="w-full h-40 object-cover"
+                                                />
+                                            }
                                         >
-                                            <img
-                                                src={`data:image/jpeg;base64,${product.product_images[0]}`}
-                                                alt={product.product_name}
-                                                className="rounded-md mb-3"
-                                            />
+                                            <h3 className="text-lg font-semibold">
+                                                {product.product_name}
+                                            </h3>
 
-                                            <h3 className="text-lg font-semibold mb-1">{product.product_name}</h3>
-                                            <p className="text-sm text-gray-500 mb-1">Category: {product.category_name}</p>
-                                            <p className="text-sm text-gray-700 mb-2 line-clamp-2">{product.description}</p>
+                                            <p className="text-sm text-gray-500 mb-2">
+                                                {product.category_name}
+                                            </p>
 
-                                            {/* DISCOUNT BLOCK */}
-                                            <div className="mt-2 flex items-center gap-3">
-                                                <p className="text-lg font-bold text-blue-600">
-                                                    ₹{Math.round(product.price)}
-                                                </p>
+                                            <Rating value={4} readOnly cancel={false} />
 
-                                                <p className="text-sm text-gray-400 line-through">
-                                                    ₹{Math.round(product.price + (product.price * product.discount) / 100)}
-                                                </p>
+                                            <div className="flex gap-3 mt-2 mb-3">
+                                                <span className="text-xl font-bold text-primary">
+                                                    ₹{product.price}
+                                                </span>
 
                                                 {product.discount > 0 && (
-                                                    <span className="text-xs font-semibold text-green-700 bg-green-100 px-2 py-1 rounded">
+                                                    <span className="text-green-600 text-sm">
                                                         {product.discount}% OFF
                                                     </span>
                                                 )}
                                             </div>
 
-                                            <button
-                                                onClick={(e) => handleViewProduct(e, product.product_id)}
-                                                className="mt-auto bg-blue-600 text-white py-2 rounded hover:bg-blue-500 transition"
-                                            >
-                                                View Product
-                                            </button>
-                                        </div>
+                                            <Button
+                                                label="View"
+                                                icon="pi pi-eye"
+                                                className="w-full"
+                                                onClick={() =>
+                                                    handleViewProduct(product.product_id)
+                                                }
+                                            />
+                                        </Card>
                                     ))}
-                                </div>
-                            )}
-                        </div>
+                            </div>
+
+                            <Paginator
+                                first={first}
+                                rows={rows}
+                                totalRecords={grouped[brand].length}
+                                onPageChange={(e) => setFirst(e.first)}
+                                className="mt-4"
+                            />
+                        </AccordionTab>
                     ))}
-                </div>
+                </Accordion>
             )}
         </div>
     );

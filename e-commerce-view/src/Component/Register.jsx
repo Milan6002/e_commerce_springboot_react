@@ -1,11 +1,21 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { register } from "../Services/authService";
 import { useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
-import { motion } from "framer-motion";
-import "react-toastify/dist/ReactToastify.css";
+
+import { Card } from "primereact/card";
+import { InputText } from "primereact/inputtext";
+import { Password } from "primereact/password";
+import { Button } from "primereact/button";
+import { Toast } from "primereact/toast";
+import { FloatLabel } from "primereact/floatlabel";
 
 function Register() {
+
+  const toast = useRef(null);
+  const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(false);
+
   const [userData, setUserData] = useState({
     name: "",
     email: "",
@@ -13,180 +23,342 @@ function Register() {
     image: null,
   });
 
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [previewImage, setPreviewImage] = useState(null);
-  const navigate = useNavigate();
+  const [preview, setPreview] = useState(null);
 
-  // IMAGE UPLOAD PREVIEW
-  const handleFileChanges = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setUserData({ ...userData, image: file });
-
-      const reader = new FileReader();
-      reader.onloadend = () => setPreviewImage(reader.result);
-      reader.readAsDataURL(file);
-    }
-  };
-
-  // INPUT CHANGE
   const handleChange = (e) => {
-    setUserData({ ...userData, [e.target.name]: e.target.value });
+    setUserData({
+      ...userData,
+      [e.target.name]: e.target.value,
+    });
   };
 
-  // FORM SUBMIT
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleImage = (e) => {
+
+    const file = e.target.files[0];
+
+    if (!file) return;
+
+    setUserData({
+      ...userData,
+      image: file,
+    });
+
+    const reader = new FileReader();
+
+    reader.onload = () => setPreview(reader.result);
+
+    reader.readAsDataURL(file);
+  };
+
+const handleSubmit = async () => {
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  // NAME VALIDATION
+  if (!userData.name.trim()) {
+
+    toast.current.show({
+      severity: "warn",
+      summary: "Validation Error",
+      detail: "Name is required",
+    });
+
+    return;
+  }
+
+  // EMAIL VALIDATION
+  if (!userData.email.trim()) {
+
+    toast.current.show({
+      severity: "warn",
+      summary: "Validation Error",
+      detail: "Email is required",
+    });
+
+    return;
+  }
+
+  if (!emailRegex.test(userData.email)) {
+
+    toast.current.show({
+      severity: "warn",
+      summary: "Validation Error",
+      detail: "Enter valid email",
+    });
+
+    return;
+  }
+
+  // PASSWORD VALIDATION
+  if (!userData.password) {
+
+    toast.current.show({
+      severity: "warn",
+      summary: "Validation Error",
+      detail: "Password is required",
+    });
+
+    return;
+  }
+
+  if (userData.password.length < 6) {
+
+    toast.current.show({
+      severity: "warn",
+      summary: "Validation Error",
+      detail: "Password must be at least 6 characters",
+    });
+
+    return;
+  }
+
+  // IMAGE REQUIRED VALIDATION
+  // if (!userData.image) {
+
+  //   toast.current.show({
+  //     severity: "error",
+  //     summary: "Image Required",
+  //     detail: "Please upload profile image",
+  //   });
+
+  //   return;
+  // }
+
+  try {
+
     setLoading(true);
-    setError("");
 
-    // Validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const res = await register(userData);
 
-    if (!userData.name.trim()) {
-      setError("Name is required.");
-      setLoading(false);
-      return;
-    }
-    if (!emailRegex.test(userData.email)) {
-      setError("Please enter a valid email.");
-      setLoading(false);
-      return;
-    }
-    if (userData.password.length < 6) {
-      setError("Password must be at least 6 characters long.");
-      setLoading(false);
-      return;
-    }
+    toast.current.show({
+      severity: "success",
+      summary: "Success",
+      detail: res.data,
+    });
 
-    try {
-      const response = await register(userData);
+    setTimeout(() => navigate("/login"), 1500);
 
-      if (response.data === "User already exists") {
-        toast.error(response.data);
-        setTimeout(() => navigate("/login"), 2000);
-      } else if (response.data === "User registered successfully") {
-        toast.success("🎉 Account created successfully!");
-        setTimeout(() => navigate("/login"), 2000);
-      }
-    } catch (err) {
-      setError("Error creating account. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  } catch {
+
+    toast.current.show({
+      severity: "error",
+      summary: "Error",
+      detail: "Registration failed",
+    });
+
+  } finally {
+
+    setLoading(false);
+
+  }
+
+};
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-white to-blue-200 p-4">
-      <ToastContainer />
 
-      <motion.div
-        initial={{ opacity: 0, scale: 0.85, y: 40 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className="w-full max-w-lg bg-white/70 backdrop-blur-xl shadow-2xl rounded-3xl p-10 border border-white/30"
+    <div
+      className=" px-3"
+      style={{
+        minHeight: "100vh",
+        display: "flex",  
+        justifyContent: "center",
+        alignItems: "center",
+        background: "url(https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bGFwdG9wJTIwYmFnc3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60) no-repeat center center/cover",
+      }}
+    >
+
+      <Toast ref={toast} />
+
+      <Card
+        className="shadow-8 border-round-3xl w-100 opacity-80"
+    
       >
-        <h1 className="text-4xl font-bold text-center text-blue-700 mb-6">
-          Create Account
-        </h1>
 
-        {error && (
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-red-500 text-center mb-4 font-medium"
-          >
-            {error}
-          </motion.p>
-        )}
+        {/* Header */}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* NAME */}
-          <div>
-            <label className="text-sm font-semibold text-gray-600">Full Name</label>
+        <div className="text-center ">
+
+          <h1 className="font-bold mb-10 text-3xl">
+            Create Account
+          </h1>
+
+       
+
+        </div>
+
+
+        {/* Profile Image */}
+
+        {/* <div className="flex justify-content-center mb-4">
+
+          <div style={{ position: "relative" }}>
+
+            <div
+              className="border-circle shadow-4"
+              style={{
+                width: "110px",
+                height: "110px",
+                overflow: "hidden",
+                background: "#ffffff30",
+                border: "3px solid white",
+              }}
+            >
+
+              {preview ? (
+
+                <img
+                  src={preview}
+                  alt="profile"
+                  width="100%"
+                  height="100%"
+                  style={{ objectFit: "cover" }}
+                />
+
+              ) : (
+
+                <i
+                  className="pi pi-user text-white-alpha-70"
+                  style={{
+                    fontSize: "3rem",
+                    lineHeight: "110px",
+                    width: "100%",
+                    textAlign: "center",
+                  }}
+                ></i>
+
+              )}
+
+            </div>
+
+            <label
+              htmlFor="imageUpload"
+              className="shadow-3"
+              style={{
+                position: "absolute",
+                bottom: "0",
+                right: "0",
+                background: "white",
+                borderRadius: "50%",
+                padding: "8px",
+                cursor: "pointer",
+              }}
+            >
+
+              <i className="pi pi-camera text-indigo-500"></i>
+
+            </label>
+
             <input
-              type="text"
+              id="imageUpload"
+              type="file"
+              accept="image/*"
+              style={{ display: "none" }}
+              onChange={handleImage}
+            />
+
+          </div>
+
+        </div> */}
+
+
+        {/* Name */}
+
+        <div className="mb-9">
+
+          <FloatLabel>
+
+            <InputText
+              id="name"
               name="name"
               value={userData.name}
               onChange={handleChange}
-              placeholder="Enter your name"
-              className="w-full p-3 mt-1 bg-white/50 border border-gray-300 rounded-xl text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+              className="w-full"
             />
-          </div>
 
-          {/* EMAIL */}
-          <div>
-            <label className="text-sm font-semibold text-gray-600">Email Address</label>
-            <input
-              type="text"
+            <label htmlFor="name">Full Name</label>
+
+          </FloatLabel>
+
+        </div>
+
+
+        {/* Email */}
+
+        <div className="mb-9">
+
+          <FloatLabel>
+
+            <InputText
+              id="email"
               name="email"
               value={userData.email}
               onChange={handleChange}
-              placeholder="Enter your email"
-              className="w-full p-3 mt-1 bg-white/50 border border-gray-300 rounded-xl text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+              className="w-full"
             />
-          </div>
 
-          {/* PASSWORD */}
-          <div>
-            <label className="text-sm font-semibold text-gray-600">Password</label>
-            <input
-              type="password"
+            <label htmlFor="email">Email</label>
+
+          </FloatLabel>
+
+        </div>
+
+
+        {/* Password */}
+
+        <div className="mb-9">
+
+          <FloatLabel>
+
+            <Password
+              id="password"
               name="password"
               value={userData.password}
               onChange={handleChange}
-              placeholder="Enter your password"
-              className="w-full p-3 mt-1 bg-white/50 border border-gray-300 rounded-xl text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+              // feedback={false}
+              toggleMask
+              className="w-full"
             />
-          </div>
 
-          {/* PROFILE IMAGE */}
-          <div className="flex flex-col items-center">
-            <label className="text-sm font-semibold text-gray-600 mb-1">
-              Profile Image
-            </label>
+            <label htmlFor="password">Password</label>
 
-            {previewImage && (
-              <motion.img
-                initial={{ opacity: 0, scale: 0.85 }}
-                animate={{ opacity: 1, scale: 1 }}
-                src={previewImage}
-                className="w-24 h-24 rounded-full mb-3 border-4 border-white/60 shadow-md object-cover"
-                alt="preview"
-              />
-            )}
+          </FloatLabel>
 
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileChanges}
-              className="w-full p-2 bg-white/40 border border-gray-300 rounded-xl cursor-pointer"
-            />
-          </div>
+        </div>
 
-          {/* SUBMIT BUTTON */}
-          <button
-            type="submit"
-            className="w-full p-3 bg-blue-600 hover:bg-blue-700 rounded-xl text-white font-semibold shadow-lg transition"
-            disabled={loading}
-          >
-            {loading ? "Creating Account..." : "Register"}
-          </button>
-        </form>
 
-        {/* LOGIN REDIRECT */}
-        <p className="text-center mt-6 text-gray-600 text-sm">
-          Already have an account?{" "}
+        {/* Button */}
+
+        <Button
+          label="Create Account"
+          icon="pi pi-user-plus"
+          loading={loading}
+          onClick={handleSubmit}
+          className="w-full p-3 font-bold border-none"
+          style={{
+            background: "linear-gradient(135deg,#6366f1,#9333ea)",
+          }}
+        />
+
+
+        {/* Login */}
+
+        <div className="text-center mt-4 text-white">
+
+          Already have account?
+
           <span
+            className="ml-2 cursor-pointer font-bold"
             onClick={() => navigate("/login")}
-            className="text-blue-600 hover:underline cursor-pointer"
           >
             Login
           </span>
-        </p>
-      </motion.div>
+
+        </div>
+
+      </Card>
+
     </div>
+
   );
 }
 

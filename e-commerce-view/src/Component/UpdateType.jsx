@@ -1,16 +1,22 @@
-import React from 'react'
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AdminServices from "../Services/AdminServices";
+import { Card } from "primereact/card";
+import { InputText } from "primereact/inputtext";
+import { Button } from "primereact/button";
+import { Toast } from "primereact/toast";
+import { ProgressSpinner } from "primereact/progressspinner";
+import { classNames } from "primereact/utils";
 
 function UpdateType() {
     const navigate = useNavigate();
-
     const { id } = useParams();
+    const toast = React.useRef(null);
 
+    const [loading, setLoading] = useState(true);
     const [typeData, setTypeData] = useState({
         type_id: id,
-        type_name: "",
+        type_name: ""
     });
 
     const handleChanges = (e) => {
@@ -21,70 +27,106 @@ function UpdateType() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await AdminServices.getTypeById(
-                    typeData.type_id
-                );
+                const response = await AdminServices.getTypeById(id);
                 setTypeData(response.data);
             } catch (error) {
                 console.log(error);
+                toast.current.show({
+                    severity: "error",
+                    summary: "Error",
+                    detail: "Failed to load type data",
+                    life: 3000
+                });
+            } finally {
+                setLoading(false);
             }
         };
         fetchData();
-    }, [typeData.type_id]);
+    }, [id]);
 
-    const handleUpdate = (e, id) => {
+    const handleUpdate = (e) => {
         e.preventDefault();
-        AdminServices.updateType(id, typeData)
-            .then((response) => {
-               
-                navigate("/Type");
+
+        AdminServices.updateType(typeData.type_id, typeData)
+            .then(() => {
+                toast.current.show({
+                    severity: "success",
+                    summary: "Success",
+                    detail: "Type Updated Successfully",
+                    life: 3000
+                });
+
+                setTimeout(() => {
+                    navigate("/Type");
+                }, 1500);
             })
             .catch((error) => {
                 console.log(error);
+                toast.current.show({
+                    severity: "error",
+                    summary: "Error",
+                    detail: "Update Failed",
+                    life: 3000
+                });
             });
     };
+
+    if (loading) {
+        return (
+            <div className="flex justify-content-center align-items-center" style={{ height: "80vh" }}>
+                <ProgressSpinner />
+            </div>
+        );
+    }
+
     return (
-        <div className="p-4">
-            <h1 className="text-center text-3xl border-2 w-96 mx-auto  uppercase font-mono font-extrabold text-gray-900 ">
-                Update Type Form
-            </h1>
-            <form
-                action=""
-                method="post"
-                className="bg-gray-300 w-96 mx-auto border-2 p-5 "
+        <div className="flex justify-content-center align-items-center" style={{ minHeight: "80vh" }}>
+            <Toast ref={toast} />
+
+            <Card
+                title="Update Type"
+                className="shadow-4"
+                style={{ width: "400px" }}
             >
-                <div className="flex flex-col mb-3">
-                    <label htmlFor="category_id">Type ID </label>
-                    <input
-                        value={typeData.type_id}
-                        onChange={(e) => handleChanges(e)}
-                        type="text"
-                        name="type_id"
-                        id="type_id"
-                        className="bg-white p-1 hover:cursor-not-allowed rounded-lg"
-                        disabled
+                <form onSubmit={handleUpdate} className="p-fluid">
+
+                    <div className="field mb-3">
+                        <label htmlFor="type_id" className="font-bold">
+                            Type ID
+                        </label>
+                        <InputText
+                            id="type_id"
+                            name="type_id"
+                            value={typeData.type_id}
+                            disabled
+                            className="p-inputtext-sm"
+                        />
+                    </div>
+
+                    <div className="field mb-4">
+                        <label htmlFor="type_name" className="font-bold">
+                            Type Name
+                        </label>
+                        <InputText
+                            id="type_name"
+                            name="type_name"
+                            value={typeData.type_name}
+                            onChange={handleChanges}
+                            required
+                            className="p-inputtext-sm"
+                        />
+                    </div>
+
+                    <Button
+                        label="Update"
+                        icon="pi pi-check"
+                        type="submit"
+                        className="w-full"
                     />
-                </div>
-                <div className="flex flex-col mb-3">
-                    <label htmlFor="category_name">Type Name </label>
-                    <input
-                        className="bg-white p-1 rounded-lg"
-                        value={typeData.type_name}
-                        onChange={(e) => handleChanges(e)}
-                        type="text"
-                        name="type_name"
-                        id="type_name"
-                    />
-                </div>
-                <button
-                    onClick={(e) => handleUpdate(e, typeData.type_id)}
-                    type="submit"
-                    className="bg-gray-900 items-center text-white p-2 px-4 rounded-3xl hover:cursor-pointer  hover:bg-gray-800"
-                >
-                    UPDATE
-                </button>
-            </form>
+                </form>
+            </Card>
         </div>
-    )
+    );
 }
+
 export default UpdateType;

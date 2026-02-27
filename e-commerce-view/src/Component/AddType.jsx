@@ -1,61 +1,82 @@
-import React, { useState } from "react";
-import AdminServices from "../Services/AdminServices";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import AdminServices from "../Services/AdminServices";
+import { Card } from "primereact/card";
+import { Dropdown } from "primereact/dropdown";
+import { InputText } from "primereact/inputtext";
+import { Button } from "primereact/button";
+import { Toast } from "primereact/toast";
 
 function AddType() {
   const navigate = useNavigate();
+  const toast = useRef(null);
 
+  const [categories, setCategories] = useState([]);
   const [typedata, setTypeData] = useState({
-    type_id: "",
     type_name: "",
+    category_id: null,
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setTypeData({ ...typedata, [name]: value });
-  };
+  useEffect(() => {
+    AdminServices.getAllCategories().then((res) =>
+      setCategories(res.data)
+    );
+  }, []);
 
-  const AddType = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
- 
-    AdminServices.addtype(typedata)
-      .then((response) => {
-        console.log(response.data);
-        navigate("/Type");
-      })
-      .catch((error) => {
-        console.log(error);
+    try {
+      await AdminServices.addtype(typedata);
+
+      toast.current.show({
+        severity: "success",
+        summary: "Success",
+        detail: "Type Added Successfully",
       });
+
+      setTimeout(() => navigate("/Type"), 1500);
+    } catch (error) {
+      toast.current.show({
+        severity: "error",
+        summary: "Error",
+        detail: "Failed to Add Type",
+      });
+    }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900 p-4">
-      <form
-        onSubmit={AddType}
-        className="bg-gray-800 rounded-xl w-full max-w-md p-6 sm:p-8 text-white shadow-lg"
-      >
-        <h2 className="text-2xl font-semibold mb-6 text-center">Add Type</h2>
-        <div className="flex flex-col mb-4">
-          <label className="mb-2" htmlFor="type_name">
-            Type Name:
-          </label>
-          <input
-            required
-            type="text"
-            name="type_name"
-            id="type_name"
-            onChange={handleChange}
-            value={typedata.type_name}
-            className="bg-white text-gray-900 p-2 rounded-md text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-        <button
-          type="submit"
-          className="w-full bg-white text-gray-900 p-2 rounded-xl mt-4 hover:bg-gray-200 transition"
-        >
-          Add
-        </button>
-      </form>
+    <div className="flex justify-content-center mt-6">
+      <Toast ref={toast} />
+      <Card title="Add Type" style={{ width: "400px" }}>
+        <form onSubmit={submit} className="p-fluid">
+          <div className="field mb-3">
+            <label>Type Name</label>
+            <InputText
+              value={typedata.type_name}
+              onChange={(e) =>
+                setTypeData({ ...typedata, type_name: e.target.value })
+              }
+              required
+            />
+          </div>
+
+          <div className="field mb-3">
+            <label>Select Category</label>
+            <Dropdown
+              value={typedata.category_id}
+              options={categories}
+              optionLabel="category_name"
+              optionValue="category_id"
+              placeholder="Select Category"
+              onChange={(e) =>
+                setTypeData({ ...typedata, category_id: e.value })
+              }
+            />
+          </div>
+
+          <Button label="Add Type" icon="pi pi-check" />
+        </form>
+      </Card>
     </div>
   );
 }

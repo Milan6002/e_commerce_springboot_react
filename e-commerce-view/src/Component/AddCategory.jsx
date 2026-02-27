@@ -1,60 +1,60 @@
-import { useState } from "react";
-import AdminServices from "../Services/AdminServices";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import AdminServices from "../Services/AdminServices";
+import { Card } from "primereact/card";
+import { InputText } from "primereact/inputtext";
+import { Button } from "primereact/button";
+import { Toast } from "primereact/toast";
 
 function AddCategory() {
   const navigate = useNavigate();
+  const toast = useRef(null);
 
   const [categorydata, setCategoryData] = useState({
-    category_id:"",
     category_name: "",
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setCategoryData({ ...categorydata, [name]: value });
-  };
-
-  const addCategory = (e) => {
+  const addCategory = async (e) => {
     e.preventDefault();
-    AdminServices.addCategory(categorydata)
-      .then((response) => {
-        navigate("/Categories");
-      })
-      .catch((error) => {
-        console.log(error);
+    try {
+      await AdminServices.addCategory(categorydata);
+
+      toast.current.show({
+        severity: "success",
+        summary: "Success",
+        detail: "Category Added Successfully",
+        life: 3000,
       });
+
+      setTimeout(() => navigate("/admin/categories"), 1500);
+    } catch (error) {
+      toast.current.show({
+        severity: "error",
+        summary: "Error",
+        detail: "Failed to Add Category",
+      });
+    }
   };
 
   return (
-    <div className="p-7">
-      <form
-        action=""
-        method="post"
-        className="bg-gray-800 rounded-xl w-96 mx-auto  p-5 text-white"
-      >
-        <div className="flex flex-col mb-3">
-          <label className="mb-3" htmlFor="category_name">
-            Category Name :{" "}
-          </label>
-          <input
-            required
-            type="text"
-            name="category_name"
-            id="category_name"
-            onChange={handleChange}
-            value={categorydata.category_name}
-            className="bg-white text-gray-900 p-1 text-lg"
-          />
-        </div>
-        <button
-          type="submit"
-          onClick={addCategory}
-          className="bg-white text-gray-900 p-2 px-7 rounded-2xl mt-3 hover:cursor-pointer"
-        >
-          Add
-        </button>
-      </form>
+    <div className="flex justify-content-center mt-6">
+      <Toast ref={toast} />
+      <Card title="Add Category" style={{ width: "400px" }}>
+        <form onSubmit={addCategory} className="p-fluid">
+          <div className="field mb-3">
+            <label>Category Name</label>
+            <InputText
+              required
+              value={categorydata.category_name}
+              onChange={(e) =>
+                setCategoryData({ category_name: e.target.value })
+              }
+            />
+          </div>
+
+          <Button label="Add Category" icon="pi pi-plus" />
+        </form>
+      </Card>
     </div>
   );
 }
