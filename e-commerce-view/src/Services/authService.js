@@ -1,7 +1,7 @@
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
-const API_URL = "http:///localhost:8081/api/auth";
+const API_URL = "http://localhost:8081/api/auth";
 
 export const login = async (loginData) => {
   return await axios.post("http:///localhost:8081/api/auth/login", loginData);
@@ -38,6 +38,9 @@ export const logout = () => {
   localStorage.removeItem("token");
   localStorage.removeItem("role");
 };
+export const getAllUsers = async () => {
+  return await axios.get(`${API_URL}/admin/users`);
+};
 
 class authService {
   
@@ -52,6 +55,7 @@ class authService {
   ReadProfileByEmail(email) {
     return axios.get(API_URL + "/profile/" + email);
   }
+  
 }
 
 export default new authService();

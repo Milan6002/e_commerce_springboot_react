@@ -4,23 +4,40 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
-@Data
 @Table(name = "users")
+@Data
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    private String name;
 
-    @Column(unique = true, nullable = false)
+    // Personal
+    private String firstName;
+    private String lastName;
+
     private String email;
+    private String mobile;
 
-    @Column(nullable = false)
     private String password;
-    
-    @Lob
-    private byte[] img; 
 
-    private String role; // e.g., ROLE_USER, ROLE_ADMIN
+    // Address
+    private String addressLine1;
+    private String addressLine2;
+    private String city;
+    private String state;
+    private String pincode;
+    private String country;
+
+    // Profile
+    private String gender;
+    private String dob;
+
+    @Lob
+    private byte[] img;
+
+    private String role;
+
+    private Boolean active = true;
+
 }

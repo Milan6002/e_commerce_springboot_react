@@ -37,11 +37,20 @@ function Profile() {
         localStorage.setItem("avtar", data.img);
 
         setUser({
+
           id: data.id,
           name: data.name,
           email: data.email,
           img: data.img,
+          phone: data.phone,
+          gender: data.gender,
+          address: data.address,
+          city: data.city,
+          state: data.state,
+          pincode: data.pincode
+
         });
+
 
         // Notify navbar avatar
         window.dispatchEvent(
@@ -101,10 +110,36 @@ function Profile() {
             <span className="font-semibold">{user.email}</span>
           </div>
 
-          <div className="flex justify-between">
+          <div className="flex justify-between border-b border-white/20 pb-2">
             <span className="text-gray-300">Password</span>
             <span className="text-gray-400">••••••••</span>
           </div>
+
+          <div className="flex justify-between border-b border-white/20 pb-2">
+            <span className="text-gray-300">Address</span>
+            <span className="font-semibold">{user.address}</span>
+          </div>
+          <div className="flex justify-between border-b border-white/20 pb-2">
+            <span className="text-gray-300">Phone</span>
+            <span className="font-semibold">{user.phone}</span>
+          </div>
+          <div className="flex justify-between border-b border-white/20 pb-2">
+            <span className="text-gray-300">Gender</span>
+            <span className="font-semibold">{user.gender}</span>
+          </div>
+          <div className="flex justify-between border-b border-white/20 pb-2">
+            <span className="text-gray-300">City</span>
+            <span className="font-semibold">{user.city}</span>
+          </div>
+          <div className="flex justify-between border-b border-white/20 pb-2">
+            <span className="text-gray-300">State</span>
+            <span className="font-semibold">{user.state}</span>
+          </div>
+          <div className="flex justify-between border-b border-white/20 pb-2">
+            <span className="text-gray-300">Pincode</span>
+            <span className="font-semibold">{user.pincode}</span>
+          </div>
+
         </div>
       </motion.div>
     </div>

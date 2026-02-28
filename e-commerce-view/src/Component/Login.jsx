@@ -7,6 +7,7 @@ import { Button } from "primereact/button";
 import { FloatLabel } from "primereact/floatlabel";
 import { Divider } from "primereact/divider";
 import { motion } from "framer-motion";
+import { jwtDecode } from "jwt-decode";
 
 import "primereact/resources/themes/lara-light-blue/theme.css";
 import "primereact/resources/primereact.min.css";
@@ -21,32 +22,48 @@ function Login() {
     setLoginData({ ...loginData, [name]: value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await login(loginData);
+ const handleSubmit = async (e) => {
+  e.preventDefault();
 
-      if (response.data === "No Record Found") {
-        toast.error(response.data + " Register First");
-        setTimeout(() => navigate("/register"), 2000);
-        return;
-      }
+  try {
+    const response = await login(loginData);
 
-      if (response.data === "Invalid credentials") {
-        toast.error(response.data);
-        return;
-      }
-
-      toast.success("Login Successfully");
-      setTimeout(() => {
-        localStorage.setItem("token", response.data);
-        navigate("/profile");
-      }, 1500);
-    } catch (err) {
-      console.log(err);
-      setError("Invalid email or password");
+    if (response.data === "No Record Found") {
+      toast.error(response.data + " Register First");
+      setTimeout(() => navigate("/register"), 2000);
+      return;
     }
-  };
+
+    if (response.data === "Invalid credentials") {
+      toast.error(response.data);
+      return;
+    }
+
+    // Save token
+    const token = response.data;
+    localStorage.setItem("token", token);
+
+    // Decode token
+    const decoded = jwtDecode(token);
+
+    console.log(decoded);
+
+    toast.success("Login Successfully");
+
+    // Role based redirect
+    setTimeout(() => {
+      if (decoded.role === "ROLE_ADMIN") {
+        navigate("/admin");
+      } else {
+        navigate("/profile");
+      }
+    }, 1500);
+
+  } catch (err) {
+    console.log(err);
+    toast.error("Login Failed");
+  }
+};
 
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 justify-center items-center p-4">
@@ -172,6 +189,7 @@ function Login() {
         </div>
       </motion.div>
     </div>
+
   );
 }
 

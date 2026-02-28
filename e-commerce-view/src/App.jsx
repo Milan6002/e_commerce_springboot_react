@@ -27,6 +27,7 @@ import AddType from "./Component/AddType";
 import Type from "./Component/Type";
 import UpdateType from "./Component/UpdateType";
 import Duffle from "./Component/Duffle";
+import AdminUsers from "./Component/AdminUsers";
 
 function App() {
   const user_role = localStorage.getItem("role");
@@ -131,6 +132,8 @@ function App() {
           <Route path="/register" element={<Register />} />
 
           <Route path="/updateprofile/:id" element={<UpdateProfile />} />
+          
+          <Route path="/admin/users" element={<AdminUsers />} />
 
           <Route
             path="/profile"

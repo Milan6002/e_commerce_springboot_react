@@ -28,16 +28,28 @@ public class AuthService {
     PasswordEncoder passwordEncoder;
 
     public String register(UserModel userModel, MultipartFile image) throws IOException {
-        if (userRepository.findByEmail(userModel.getEmail()) == null) {
-            User user = new User();
-            BeanUtils.copyProperties(userModel, user);
-            user.setPassword(passwordEncoder.encode(userModel.getPassword()));
-            user.setRole("ROLE_USER");
-            user.setImg(image.getBytes());
-            userRepository.save(user);
-            return "User registered successfully";
+
+        if (userRepository.findByEmail(userModel.getEmail()) != null) {
+            return "User already exists";
         }
-        return "User already exists";
+
+        User user = new User();
+
+        BeanUtils.copyProperties(userModel, user);
+
+        user.setPassword(passwordEncoder.encode(userModel.getPassword()));
+
+        user.setRole("ROLE_USER");
+
+        user.setActive(true);
+
+        if (image != null && !image.isEmpty()) {
+            user.setImg(image.getBytes());
+        }
+
+        userRepository.save(user);
+
+        return "User registered successfully";
     }
 
     public String login(LoginModel loginModel) {
@@ -66,5 +78,27 @@ public class AuthService {
         user.setImg(image.getBytes());
         userRepository.save(user);
         return "Profile updated successfully";
+    }
+
+    public java.util.List<UserModel> getAllUsers() {
+
+        java.util.List<User> users = userRepository.findAll();
+
+        java.util.List<UserModel> userModels = new java.util.ArrayList<>();
+
+        for (User user : users) {
+
+            UserModel model = new UserModel();
+
+            model.setFirstName(user.getFirstName());
+            model.setLastName(user.getLastName());
+            model.setMobile(user.getMobile());
+            model.setCity(user.getCity());
+            model.setRole(user.getRole());
+
+            userModels.add(model);
+        }
+
+        return userModels;
     }
 }

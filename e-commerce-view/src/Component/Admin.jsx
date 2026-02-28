@@ -60,6 +60,22 @@ function Admin() {
           </button>
         </div>
       </div>
+      <div className="border-4 border-gray-300 bg-white shadow-lg rounded-2xl text-center p-5">
+        <h1 className="text-xl md:text-3xl uppercase font-semibold">
+          Users
+        </h1>
+
+        <p className="mt-3 text-gray-600">
+          Manage registered users
+        </p>
+
+        <button
+          onClick={() => navigate("/admin/users")}
+          className="mt-5 bg-blue-600 p-3 px-8 rounded-3xl text-white"
+        >
+          Manage
+        </button>
+      </div>
     </div>
   );
 }
