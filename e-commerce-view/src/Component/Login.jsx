@@ -71,7 +71,7 @@ function Login() {
 
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
-      const response = await axios.post("http://localhost:8081/api/auth/google", {
+      const response = await axios.post("https://e-commerce-springboot-react-8i4i.onrender.com/api/auth/google", {
         token: credentialResponse.credential
       });
       

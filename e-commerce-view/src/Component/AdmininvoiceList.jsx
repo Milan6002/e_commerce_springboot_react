@@ -39,7 +39,7 @@ function AdminInvoiceList() {
   };
 
   const markPaid = (id) => {
-    axios.put(`http://localhost:8081/api/sales/payment/${id}`)
+    axios.put(`https://e-commerce-springboot-react-8i4i.onrender.com/api/sales/payment/${id}`)
       .then(() => {
         toast.current?.show({ severity: 'success', summary: 'Success', detail: 'Payment Done', life: 3000 });
         loadInvoices();

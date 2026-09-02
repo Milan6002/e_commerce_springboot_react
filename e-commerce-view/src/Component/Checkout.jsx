@@ -119,7 +119,7 @@ function Checkout() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8081/api/sales/placeOrder",
+        "https://e-commerce-springboot-react-8i4i.onrender.com/api/sales/placeOrder",
         order
       );
 

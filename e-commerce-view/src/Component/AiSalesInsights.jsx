@@ -15,7 +15,7 @@ function AiSalesInsights() {
     setLoading(true);
     setError(false);
     try {
-      const response = await axios.get("http://localhost:8081/api/ai/sales-insights");
+      const response = await axios.get("https://e-commerce-springboot-react-8i4i.onrender.com/api/ai/sales-insights");
       setInsights(response.data.insights);
     } catch (err) {
       console.error("Failed to fetch AI insights:", err);

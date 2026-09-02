@@ -1,7 +1,7 @@
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
-const API_URL = "http://localhost:8081/api/auth";
+const API_URL = "https://e-commerce-springboot-react-8i4i.onrender.com/api/auth";
 
 
 // ✅ LOGIN

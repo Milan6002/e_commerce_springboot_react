@@ -30,7 +30,7 @@ function SalesReport() {
   const fetchSalesData = async () => {
     setLoading(true);
     try {
-      const response = await axios.get("http://localhost:8081/api/sales");
+      const response = await axios.get("https://e-commerce-springboot-react-8i4i.onrender.com/api/sales");
       const data = response.data || [];
       setSales(data);
       processChartData(data);

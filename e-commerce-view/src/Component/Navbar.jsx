@@ -108,7 +108,7 @@ const Navbar = () => {
       setIsSearching(true);
       try {
           // Ask AI where to navigate based on the query
-          const response = await axios.post("http://localhost:8081/api/ai/smart-search", { query: searchQuery });
+          const response = await axios.post("https://e-commerce-springboot-react-8i4i.onrender.com/api/ai/smart-search", { query: searchQuery });
           const route = response.data.route;
           setSearchQuery("");
           navigate(route);

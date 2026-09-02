@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:8081/api/supplier";
+const BASE_URL = "https://e-commerce-springboot-react-8i4i.onrender.com/api/supplier";
 
 class SupplierService {
   createSupplier(payload) {

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:8081/api/auth/";
+const BASE_URL = "https://e-commerce-springboot-react-8i4i.onrender.com/api/auth/";
 
 class AdminServices {
   //Category Related Services
@@ -73,25 +73,25 @@ class AdminServices {
     return axios.get(BASE_URL + "getProductByCategory/" + category_id);
   }
    getAllInvoices() {
-    return axios.get("http://localhost:8081/api/invoice");
+    return axios.get("https://e-commerce-springboot-react-8i4i.onrender.com/api/invoice");
   }
 
   getInvoiceById(id) {
-    return axios.get(`http://localhost:8081/api/invoice/${id}`);
+    return axios.get(`https://e-commerce-springboot-react-8i4i.onrender.com/api/invoice/${id}`);
   }
 
   // Bulk Order Inquiry Services
   submitBulkOrderInquiry(inquiryData) {
-    return axios.post("http://localhost:8081/api/bulk-order/submit", inquiryData);
+    return axios.post("https://e-commerce-springboot-react-8i4i.onrender.com/api/bulk-order/submit", inquiryData);
   }
 
   getAllBulkOrderInquiries() {
-    return axios.get("http://localhost:8081/api/bulk-order/all");
+    return axios.get("https://e-commerce-springboot-react-8i4i.onrender.com/api/bulk-order/all");
   }
 
   // AI Services
   generateAiDescription(data) {
-    return axios.post("http://localhost:8081/api/ai/generate-description", data);
+    return axios.post("https://e-commerce-springboot-react-8i4i.onrender.com/api/ai/generate-description", data);
   }
 }
 

@@ -12,7 +12,7 @@ function AdminRecentOrders() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        axios.get("http://localhost:8081/api/sales")
+        axios.get("https://e-commerce-springboot-react-8i4i.onrender.com/api/sales")
             .then(res => {
                 // Get the last 5 orders (assuming the array might not be strictly sorted, we reverse it to get latest)
                 const data = res.data || [];

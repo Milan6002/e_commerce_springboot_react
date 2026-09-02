@@ -82,7 +82,7 @@ export default function Sales() {
 
   const fetchData = () => {
     setLoading(true);
-    axios.get("http://localhost:8081/api/sales")
+    axios.get("https://e-commerce-springboot-react-8i4i.onrender.com/api/sales")
       .then(res => {
           const d = res.data || [];
           setData(d);
@@ -100,7 +100,7 @@ export default function Sales() {
   }, []);
 
   const updateStatus = (id, status) => {
-    axios.put(`http://localhost:8081/api/sales/status/${id}?status=${status}`)
+    axios.put(`https://e-commerce-springboot-react-8i4i.onrender.com/api/sales/status/${id}?status=${status}`)
       .then(() => {
         toast.current?.show({ severity: 'success', summary: 'Success', detail: `Order marked as ${status}`, life: 3000 });
         fetchData();

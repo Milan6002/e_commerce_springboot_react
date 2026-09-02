@@ -30,7 +30,7 @@ export default function Purchase() {
   // Fetch data
   const fetchData = () => {
     setLoading(true);
-    axios.get("http://localhost:8081/api/purchase")
+    axios.get("https://e-commerce-springboot-react-8i4i.onrender.com/api/purchase")
       .then(res => setData(res.data || []))
       .catch(err => {
         console.error(err);
@@ -51,7 +51,7 @@ export default function Purchase() {
       return;
     }
 
-    axios.post("http://localhost:8081/api/purchase", form)
+    axios.post("https://e-commerce-springboot-react-8i4i.onrender.com/api/purchase", form)
       .then(() => {
         toast.current?.show({ severity: 'success', summary: 'Success', detail: 'Purchase added successfully', life: 3000 });
         fetchData();
@@ -70,7 +70,7 @@ export default function Purchase() {
 
   // Delete
   const handleDelete = (id) => {
-    axios.delete(`http://localhost:8081/api/purchase/${id}`)
+    axios.delete(`https://e-commerce-springboot-react-8i4i.onrender.com/api/purchase/${id}`)
       .then(() => {
         toast.current?.show({ severity: 'success', summary: 'Success', detail: 'Purchase deleted successfully', life: 3000 });
         fetchData();

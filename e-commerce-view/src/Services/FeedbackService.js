@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:8081/api/feedback";
+const BASE_URL = "https://e-commerce-springboot-react-8i4i.onrender.com/api/feedback";
 
 class FeedbackService {
   addFeedback(payload) {
@@ -20,7 +20,7 @@ class FeedbackService {
   }
 
   analyzeFeedback() {
-    return axios.get("http://localhost:8081/api/ai/analyze-feedback");
+    return axios.get("https://e-commerce-springboot-react-8i4i.onrender.com/api/ai/analyze-feedback");
   }
 }
 

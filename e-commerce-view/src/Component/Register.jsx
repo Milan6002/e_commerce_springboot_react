@@ -90,7 +90,7 @@ export default function Register() {
 
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
-      const response = await axios.post("http://localhost:8081/api/auth/google", {
+      const response = await axios.post("https://e-commerce-springboot-react-8i4i.onrender.com/api/auth/google", {
         token: credentialResponse.credential
       });
       const data = response.data;
@@ -169,7 +169,7 @@ export default function Register() {
         data.append("image", image);
       }
 
-      await axios.post("http://localhost:8081/api/auth/register", data);
+      await axios.post("https://e-commerce-springboot-react-8i4i.onrender.com/api/auth/register", data);
 
       toast.current.show({
         severity: "success",

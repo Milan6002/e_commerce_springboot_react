@@ -25,7 +25,7 @@ function ForgotPassword() {
       return;
     }
     setLoading(true);
-    axios.post(`http://localhost:8081/api/auth/send-otp?email=${email}`)
+    axios.post(`https://e-commerce-springboot-react-8i4i.onrender.com/api/auth/send-otp?email=${email}`)
       .then(() => {
         toast.current.show({ severity: 'success', summary: 'Success', detail: 'OTP Sent successfully.' });
         setStep(2);
@@ -42,7 +42,7 @@ function ForgotPassword() {
       return;
     }
     setLoading(true);
-    axios.post(`http://localhost:8081/api/auth/verify-otp?email=${email}&otp=${otp}`)
+    axios.post(`https://e-commerce-springboot-react-8i4i.onrender.com/api/auth/verify-otp?email=${email}&otp=${otp}`)
       .then(res => {
         if (res.data === "Verified") {
           toast.current.show({ severity: 'success', summary: 'Success', detail: 'OTP Verified.' });
@@ -63,7 +63,7 @@ function ForgotPassword() {
       return;
     }
     setLoading(true);
-    axios.post(`http://localhost:8081/api/auth/reset-password?email=${email}&password=${password}`)
+    axios.post(`https://e-commerce-springboot-react-8i4i.onrender.com/api/auth/reset-password?email=${email}&password=${password}`)
       .then(() => {
         toast.current.show({ severity: 'success', summary: 'Success', detail: 'Password Updated Successfully.' });
         setTimeout(() => navigate('/login'), 1500);

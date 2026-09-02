@@ -31,7 +31,7 @@ const AiChatbot = () => {
         setIsTyping(true);
 
         try {
-            const response = await axios.post("http://localhost:8081/api/ai/chat", { message: userMessage });
+            const response = await axios.post("https://e-commerce-springboot-react-8i4i.onrender.com/api/ai/chat", { message: userMessage });
             setMessages(prev => [...prev, { sender: 'ai', text: response.data.reply }]);
         } catch (error) {
             console.error("Chat Error:", error);

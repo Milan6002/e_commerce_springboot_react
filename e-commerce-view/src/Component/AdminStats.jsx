@@ -12,7 +12,7 @@ function AdminStats() {
     });
 
     useEffect(() => {
-        axios.get("http://localhost:8081/api/sales")
+        axios.get("https://e-commerce-springboot-react-8i4i.onrender.com/api/sales")
             .then(res => {
                 const orders = res.data || [];
                 const pending = orders.filter(o => o.paymentStatus && o.paymentStatus.toUpperCase() === "PENDING").length;

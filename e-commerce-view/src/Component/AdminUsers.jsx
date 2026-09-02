@@ -37,7 +37,7 @@ function AdminUsers() {
   };
 
   const updateStatus = (id, active) => {
-    axios.put(`http://localhost:8081/api/auth/admin/user/status/${id}?active=${active}`)
+    axios.put(`https://e-commerce-springboot-react-8i4i.onrender.com/api/auth/admin/user/status/${id}?active=${active}`)
       .then(() => {
         toast.current?.show({ 
             severity: 'success', 
