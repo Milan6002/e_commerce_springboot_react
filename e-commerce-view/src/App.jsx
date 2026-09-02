@@ -152,6 +152,7 @@ function App() {
               <Route path="/admin/profile" element={<AdminProfile />} />
               <Route path="/admin/bulk-orders" element={<AdminBulkOrders />} />
                             <Route path="/admin/feedback" element={<Feedback />} />
+                            <Route path="/admin/users" element={<AdminUsers />} />
             </Route>
           ) : (
             <Route path="/Admin" element={<Navigate to="/" />} />
