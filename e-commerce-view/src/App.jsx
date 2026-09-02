@@ -1,4 +1,5 @@
-import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+
+import { HashRouter, Route, Routes, Navigate } from "react-router-dom";
 import "./App.css";
 import Admin from "./Component/Admin";
 import Navbar from "./Component/Navbar";
@@ -51,7 +52,7 @@ function App() {
 
   return (
     <>
-      <BrowserRouter>
+      <HashRouter>
         <Navbar />
 
         <Routes>
@@ -260,7 +261,7 @@ function App() {
 
         <AiChatbot />
         <Footer />
-      </BrowserRouter>
+      </HashRouter>
     </>
   );
 }
