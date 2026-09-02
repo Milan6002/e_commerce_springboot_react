@@ -1,26 +1,33 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import AdminServices from "../Services/AdminServices";
 import CartService from "../Services/CartService";
-import { toast, ToastContainer } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 import { motion } from "framer-motion";
+import { calculateDiscountPrice } from "../Utils/priceUtils";
+
+// PrimeReact Imports
+import { Toast } from 'primereact/toast';
+import { Button } from 'primereact/button';
+import { Skeleton } from 'primereact/skeleton';
 
 function ViewProduct() {
+
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [mainImage, setMainImage] = useState("");
+  const toast = useRef(null);
 
-  const token = localStorage.getItem("token");
-  const user_email = jwtDecode(token);
   const navigate = useNavigate();
 
-  // Fetch Product
+  // ✅ Fetch Product
   useEffect(() => {
+
     const fetchProduct = async () => {
       try {
+
         const response = await AdminServices.getProductById(id);
         const productData = response.data;
 
@@ -28,42 +35,138 @@ function ViewProduct() {
           productData.category_id
         );
 
-        setProduct({
+        const updatedProduct = {
           ...productData,
           category_name: category.data.category_name,
-        });
+        };
 
-        setMainImage(productData.product_images[0]);
+        setProduct(updatedProduct);
+
+        if (productData.product_images?.length > 0) {
+          setMainImage(productData.product_images[0]);
+        }
+
       } catch (error) {
         console.log(error);
+        toast.current?.show({ severity: 'error', summary: 'Error', detail: 'Failed to load product', life: 3000 });
       }
     };
 
     fetchProduct();
+
   }, [id]);
 
-  if (!product)
-    return <p className="text-center text-lg pt-10">Loading Product…</p>;
+  // ✅ BUY NOW FUNCTION
+  const handleBuyNow = () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        toast.current?.show({ severity: 'warn', summary: 'Warning', detail: 'Please login first to buy', life: 3000 });
+        navigate("/login");
+        return;
+      }
+      
+      const item = {
+          ...product,
+          quantity: 1
+      };
+      navigate("/checkout", { state: [item] });
+  };
 
-  const whatsappMessage = `Hello, I am interested in your product: ${product.product_name}. Price: ₹${product.price}. Please share more details.`;
-  const whatsappLink = `https://wa.me/+919512796272?text=${encodeURIComponent(
+  // ✅ ADD TO CART FUNCTION (FIXED)
+  const handleAddToCart = async () => {
+    try {
+
+      const token = localStorage.getItem("token");
+
+      // ❌ Not logged in
+      if (!token) {
+        toast.current?.show({ severity: 'warn', summary: 'Warning', detail: 'Please login first', life: 3000 });
+        return;
+      }
+
+      const decoded = jwtDecode(token);
+
+      // ✅ Flexible email extraction
+      const userEmail = decoded?.email || decoded?.sub;
+
+      if (!userEmail) {
+        toast.current?.show({ severity: 'error', summary: 'Error', detail: 'User email not found', life: 3000 });
+        return;
+      }
+
+      await CartService.addToCart(
+        userEmail,
+        product.product_id,
+        1
+      );
+
+      toast.current?.show({ severity: 'success', summary: 'Success', detail: 'Added to Cart 🛒', life: 3000 });
+      window.dispatchEvent(new CustomEvent("cartUpdated"));
+
+    } catch (error) {
+
+      console.error("Cart Error:", error);
+
+      if (error.response?.data) {
+        toast.current?.show({ severity: 'error', summary: 'Error', detail: error.response.data, life: 3000 });
+      } else {
+        toast.current?.show({ severity: 'error', summary: 'Error', detail: 'Something went wrong', life: 3000 });
+      }
+    }
+  };
+
+  if (!product)
+    return (
+      <div className="p-4 md:p-10 bg-gray-100 min-h-screen">
+        <div className="bg-white rounded-xl shadow-lg p-6 md:p-10 flex flex-col md:flex-row gap-10">
+          <div className="w-full md:w-1/2">
+            <Skeleton width="100%" height="30rem" className="mb-4"></Skeleton>
+            <div className="flex gap-4">
+              <Skeleton width="5rem" height="5rem"></Skeleton>
+              <Skeleton width="5rem" height="5rem"></Skeleton>
+              <Skeleton width="5rem" height="5rem"></Skeleton>
+            </div>
+          </div>
+          <div className="w-full md:w-1/2 flex flex-col">
+            <Skeleton width="80%" height="3rem" className="mb-3"></Skeleton>
+            <Skeleton width="40%" className="mb-2"></Skeleton>
+            <Skeleton width="50%" className="mb-4"></Skeleton>
+            <Skeleton width="30%" height="2rem" className="mb-4"></Skeleton>
+            <Skeleton width="100%" height="10rem"></Skeleton>
+          </div>
+        </div>
+      </div>
+    );
+
+  const discountPrice = calculateDiscountPrice(
+    product.price,
+    product.discount
+  );
+
+  // ✅ WhatsApp message
+  const whatsappMessage = `Hello, I am interested in your product: ${product.product_name}. Price: ₹${Math.round(
+    discountPrice
+  )}. Please share more details.`;
+
+  const whatsappLink = `https://wa.me/919512796272?text=${encodeURIComponent(
     whatsappMessage
   )}`;
 
   return (
+
     <motion.div
       className="p-4 md:p-10 bg-gray-100 min-h-screen"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
     >
-      <ToastContainer />
+
+      <Toast ref={toast} />
 
       <div className="bg-white rounded-xl shadow-lg p-6 md:p-10 flex flex-col md:flex-row gap-10">
 
-        {/* LEFT — IMAGE GALLERY */}
+        {/* LEFT IMAGE */}
         <div className="w-full md:w-1/2">
 
-          {/* Main Image */}
           <motion.img
             src={`data:image/jpeg;base64,${mainImage}`}
             alt={product.product_name}
@@ -72,33 +175,37 @@ function ViewProduct() {
             animate={{ opacity: 1 }}
           />
 
-          {/* Thumbnails */}
           <div className="flex mt-4 gap-4 flex-wrap">
-            {product.product_images.map((img, index) => {
+            {product.product_images?.map((img, index) => {
+
               const active = img === mainImage;
+
               return (
                 <motion.img
                   key={index}
                   src={`data:image/jpeg;base64,${img}`}
                   alt="Thumbnail"
                   onClick={() => setMainImage(img)}
-                  className={`w-20 h-20 rounded-lg border-2 cursor-pointer object-cover transition ${
-                    active ? "border-blue-700" : "border-gray-300"
-                  }`}
+                  className={`w-20 h-20 rounded-lg border-2 cursor-pointer object-cover ${active ? "border-blue-700" : "border-gray-300"
+                    }`}
                   whileHover={{ scale: 1.1 }}
                 />
               );
             })}
           </div>
+
         </div>
 
-        {/* RIGHT — PRODUCT DETAILS */}
+        {/* RIGHT DETAILS */}
         <div className="w-full md:w-1/2 flex flex-col">
+
           <h1 className="text-3xl font-bold text-gray-800">
             {product.product_name}
           </h1>
 
-          <p className="text-gray-500 mt-1">{product.category_name}</p>
+          <p className="text-gray-500 mt-1">
+            Category : {product.category_name}
+          </p>
 
           <p className="text-gray-600 mt-2">
             <span className="font-bold">Brand:</span> {product.product_brand}
@@ -108,68 +215,72 @@ function ViewProduct() {
             <span className="font-bold">Color:</span> {product.product_color}
           </p>
 
-          {/* Price Section */}
-          <div className="flex items-center gap-4 mt-4">
-            <p className="text-3xl font-bold text-green-600">
-              ₹{Math.round(product.price)}
+          {/* PRICE */}
+          <div className="flex items-center gap-3 mt-2">
+            <p className="text-xl font-semibold text-green-600">
+              ₹{discountPrice}
             </p>
-
-            <p className="text-gray-400 line-through text-lg">
-              ₹
-              {parseInt((product.price * product.discount) / 100) +
-                product.price}
+            <p className="text-gray-400 line-through">
+              ₹{product.price}
             </p>
-
-            <p className="text-green-600 font-medium text-lg">
+            <p className="text-green-600 font-medium">
               {product.discount}% OFF
             </p>
           </div>
 
-          {/* Description */}
+          {/* DESCRIPTION */}
           <p className="mt-5 text-gray-700 leading-relaxed text-justify">
             {product.description}
           </p>
 
-          {/* ACTION BUTTONS */}
+          {/* BUTTONS */}
           <div className="mt-8 flex flex-wrap gap-4">
 
-            {/* Add to Cart */}
-            <motion.button
-              onClick={(e) =>
-                CartService.addToCart(
-                  user_email.sub,
-                  product.product_id,
-                  1
-                ).then(() => toast.success("Added to Cart"))
-              }
-              className="bg-yellow-500 text-white px-6 py-3 rounded-xl font-semibold shadow hover:bg-yellow-600"
-              whileTap={{ scale: 0.9 }}
-            >
-              Add to Cart
-            </motion.button>
+            {/* ✅ BUY NOW BUTTON */}
+            <Button
+              label="Buy Now"
+              icon="pi pi-bolt"
+              onClick={handleBuyNow}
+              className="px-5 border-round-xl font-bold shadow-2 border-none"
+              style={{ background: '#f97316' }} /* Orange-500 */
+            />
+
+            {/* ✅ FIXED ADD TO CART */}
+            <Button
+              label="Add to Cart"
+              icon="pi pi-shopping-cart"
+              onClick={handleAddToCart}
+              className="p-button-warning text-white px-5 border-round-xl font-semibold shadow-2"
+            />
 
             {/* WhatsApp */}
-            <motion.a
+            <a
               href={whatsappLink}
               target="_blank"
-              className="flex items-center gap-2 px-6 py-3 border-2 border-green-600 text-green-600 rounded-xl font-semibold hover:bg-green-600 hover:text-white"
-              whileHover={{ scale: 1.05 }}
+              rel="noopener noreferrer"
+              className="no-underline"
             >
-              <FontAwesomeIcon icon={faWhatsapp} className="text-2xl" />
-              Chat on WhatsApp
-            </motion.a>
+              <Button
+                label="Chat on WhatsApp"
+                className="p-button-outlined p-button-success border-round-xl font-semibold px-5"
+              >
+                <FontAwesomeIcon icon={faWhatsapp} className="mr-2 text-xl" />
+              </Button>
+            </a>
 
             {/* Bulk Order */}
-            <motion.button
-              onClick={() => navigate("/BulkOrder")}
-              className="px-6 py-3 bg-blue-700 text-white rounded-xl font-bold hover:bg-blue-800"
-              whileHover={{ scale: 1.05 }}
-            >
-              Bulk / Custom Order
-            </motion.button>
+            <Button
+              label="Bulk / Custom Order"
+              onClick={() => navigate("/BulkOrder", { state: { product } })}
+              className="p-button-primary border-round-xl font-bold px-5"
+            />
+
           </div>
+
         </div>
+
       </div>
+
     </motion.div>
   );
 }

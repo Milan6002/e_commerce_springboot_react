@@ -3,36 +3,24 @@ package com.ecommerce.ecommerce.Entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-@Entity
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Table(name = "CartEntity")
+@Entity
+@Table(name = "cart_entity")
 public class CartEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // ✅ One Cart → One User
     @OneToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "cart")
-    @JsonIgnore  // 🔹 Prevent recursion
-    private List<CartItemEntity> cartItems = new ArrayList<>(); // 🔹 Ensure it's initialized
+    // ✅ One Cart → Many Items
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CartItemEntity> cartItems = new ArrayList<>();
 }

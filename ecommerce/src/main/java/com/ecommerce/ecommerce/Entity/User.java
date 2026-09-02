@@ -2,10 +2,11 @@ package com.ecommerce.ecommerce.Entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
+@Data
 @Entity
 @Table(name = "users")
-@Data
 public class User {
 
     @Id
@@ -13,12 +14,10 @@ public class User {
     private Long id;
 
     // Personal
-    private String firstName;
-    private String lastName;
-
+    private String firstname;
+    private String lastname;
     private String email;
     private String mobile;
-
     private String password;
 
     // Address
@@ -37,7 +36,10 @@ public class User {
     private byte[] img;
 
     private String role;
-
     private Boolean active = true;
 
+    // ✅ One User → One Cart
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private CartEntity cart;
 }

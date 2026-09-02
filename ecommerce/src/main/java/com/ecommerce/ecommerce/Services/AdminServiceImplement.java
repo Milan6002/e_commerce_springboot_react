@@ -123,6 +123,7 @@ public class AdminServiceImplement implements AdminService {
             productModel.setDescription(allProductList.getDescription());
             productModel.setQuantity(allProductList.getQuantity());
             productModel.setPrice(allProductList.getPrice());
+            productModel.setDiscount(allProductList.getDiscount());
             productModel.setCategory_id(allProductList.getCategory().getCategory_id());
 
             // Convert List<ProductImageEntity> to List<byte[]>

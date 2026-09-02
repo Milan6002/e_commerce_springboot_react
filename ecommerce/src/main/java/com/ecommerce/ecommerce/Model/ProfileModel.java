@@ -9,49 +9,62 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProfileModel {
     private Long id;
-    private String name;
+    private String firstname;
+    private String lastname;
     private String email;
     private byte[] img;
     private String role;
+    private String mobile;
+    private String addressLine1;
+    private String addressLine2;
+    private String city;
+    private String state;
+    private String pincode;
+    private String country;
+    private String gender;
+    private String dob;
 
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    // public Long getId() {
+    //     return id;
+    // }
 
-    public String getName() {
-        return name;
-    }
+    // public void setId(Long id) {
+    //     this.id = id;
+    // }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    // public String getName() {
+    //     return first_name + " " + last_name;
+    // }
 
-    public String getEmail() {
-        return email;
-    }
+    // public void setName(String name) {
+    //     String[] parts = name.split(" ", 2);
+    //     this.first_name = parts[0];
+    //     this.last_name = parts.length > 1 ? parts[1] : "";
+    // }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    // public String getEmail() {
+    //     return email;
+    // }
 
-    public byte[] getImg() {
-        return img;
-    }
+    // public void setEmail(String email) {
+    //     this.email = email;
+    // }
 
-    public void setImg(byte[] img) {
-        this.img = img;
-    }
+    // public byte[] getImg() {
+    //     return img;
+    // }
 
-    public String getRole() {
-        return role;
-    }
+    // public void setImg(byte[] img) {
+    //     this.img = img;
+    // }
 
-    public void setRole(String role) {
-        this.role = role;
-    }
+    // public String getRole() {
+    //     return role;
+    // }
+
+    // public void setRole(String role) {
+    //     this.role = role;
+    // }
 }
 

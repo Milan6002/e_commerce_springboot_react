@@ -72,6 +72,27 @@ class AdminServices {
   getProductByCategory(category_id) {
     return axios.get(BASE_URL + "getProductByCategory/" + category_id);
   }
+   getAllInvoices() {
+    return axios.get("http://localhost:8081/api/invoice");
+  }
+
+  getInvoiceById(id) {
+    return axios.get(`http://localhost:8081/api/invoice/${id}`);
+  }
+
+  // Bulk Order Inquiry Services
+  submitBulkOrderInquiry(inquiryData) {
+    return axios.post("http://localhost:8081/api/bulk-order/submit", inquiryData);
+  }
+
+  getAllBulkOrderInquiries() {
+    return axios.get("http://localhost:8081/api/bulk-order/all");
+  }
+
+  // AI Services
+  generateAiDescription(data) {
+    return axios.post("http://localhost:8081/api/ai/generate-description", data);
+  }
 }
 
 export default new AdminServices();

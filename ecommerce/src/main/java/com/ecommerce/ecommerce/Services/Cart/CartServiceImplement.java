@@ -3,12 +3,9 @@ package com.ecommerce.ecommerce.Services.Cart;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.ecommerce.ecommerce.Entity.CartEntity;
 import com.ecommerce.ecommerce.Entity.CartItemEntity;
 import com.ecommerce.ecommerce.Entity.ProductEntity;
@@ -20,98 +17,129 @@ import com.ecommerce.ecommerce.Repository.CartRepository;
 import com.ecommerce.ecommerce.Repository.ProductRepository;
 import com.ecommerce.ecommerce.Repository.UserRepository;
 
-import lombok.RequiredArgsConstructor;
-
 @Service
-@RequiredArgsConstructor
 public class CartServiceImplement implements CartService {
 
     @Autowired
-    CartRepository cartRepository;
+    private CartRepository cartRepository;
 
     @Autowired
-    CartItemRepository cartItemRepository;
+    private CartItemRepository cartItemRepository;
 
     @Autowired
-    ProductRepository productRepository;
+    private ProductRepository productRepository;
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
+    // ✅ ADD TO CART
     @Override
     public CartModel addToCart(String userEmail, Long productId, int quantity) {
+
         User user = userRepository.findByEmail(userEmail);
+
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+
+        CartEntity cart = cartRepository.findByUser(user)
+                .orElseGet(() -> {
+                    CartEntity newCart = new CartEntity();
+                    newCart.setUser(user);
+                    return cartRepository.save(newCart);
+                });
 
         ProductEntity product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
-        CartEntity cart = cartRepository.findByUser(user).orElseGet(() -> {
-            CartEntity newCart = new CartEntity();
-            newCart.setUser(user);
-            newCart.setCartItems(new ArrayList<>()); // 🔹 Ensure list is initialized
-            return cartRepository.save(newCart);
-        });
-
-        Optional<CartItemEntity> existingItem = cart.getCartItems().stream()
-                .filter(item -> item.getProduct().getProduct_id().equals(productId))
+        // 🔥 FIX: check existing item
+        Optional<CartItemEntity> existingItem = cart.getCartItems()
+                .stream()
+                .filter(i -> i.getProduct().getProduct_id().equals(productId))
                 .findFirst();
 
         if (existingItem.isPresent()) {
-            existingItem.get().setQuantity(existingItem.get().getQuantity() + quantity);
+            CartItemEntity item = existingItem.get();
+            item.setQuantity(item.getQuantity() + quantity);
+            cartItemRepository.save(item);
         } else {
-            CartItemEntity newItem = new CartItemEntity();
-            newItem.setCart(cart); // 🔹 Set cart reference
-            newItem.setProduct(product);
-            newItem.setQuantity(quantity);
-            cart.getCartItems().add(newItem);
+            CartItemEntity item = new CartItemEntity();
+            item.setCart(cart);
+            item.setProduct(product);
+            item.setQuantity(quantity);
+            cartItemRepository.save(item);
         }
-
-        cartRepository.save(cart); // 🔹 Persist the cart with the updated list
 
         return convertToDTO(cart);
     }
 
+    // ✅ DTO CONVERTER
     private CartModel convertToDTO(CartEntity cart) {
         CartModel cartDTO = new CartModel();
         cartDTO.setId(cart.getId());
         cartDTO.setUserId(cart.getUser().getId());
+
         cartDTO.setCartItems(cart.getCartItems().stream().map(item -> {
-            CartItemModel cartItemDTO = new CartItemModel();
-            cartItemDTO.setProductId(item.getProduct().getProduct_id());
-            cartItemDTO.setQuantity(item.getQuantity());
-            return cartItemDTO;
+            CartItemModel dto = new CartItemModel();
+            dto.setId(item.getId()); // 🔥 IMPORTANT
+            dto.setProductId(item.getProduct().getProduct_id());
+            dto.setQuantity(item.getQuantity());
+            return dto;
         }).toList());
+
         return cartDTO;
     }
 
+    // ✅ GET CART ID
     @Override
     public CartModel getCartIdFromUserId(Long user_id) {
-        User user = userRepository.findById(user_id).get();
-        CartEntity cartEntity = cartRepository.findByUser(user).get();
-        CartModel cartModel = new CartModel();
-        cartModel.setUserId(cartEntity.getUser().getId());
-        BeanUtils.copyProperties(cartEntity, cartModel);
-        return cartModel;
+
+        User user = userRepository.findById(user_id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        CartEntity cart = cartRepository.findByUser(user)
+                .orElseThrow(() -> new RuntimeException("Cart not found"));
+
+        return convertToDTO(cart);
     }
 
+    // ✅ GET CART ITEMS
     @Override
     public List<CartItemModel> getCartItemByCartId(Long cart_Id) {
-        CartEntity cartEntity = cartRepository.findById(cart_Id).get();
-        List<CartItemEntity> listOfCartItem = cartItemRepository.findByCart(cartEntity);
+
+        CartEntity cartEntity = cartRepository.findById(cart_Id)
+                .orElseThrow(() -> new RuntimeException("Cart not found"));
+
         List<CartItemModel> cartItems = new ArrayList<>();
-        for (CartItemEntity listOfCartItems: listOfCartItem) {
-            CartItemModel cartItem = new CartItemModel();
-            cartItem.setProductId(listOfCartItems.getProduct().getProduct_id());
-            cartItem.setQuantity(listOfCartItems.getQuantity());
-            cartItems.add(cartItem);
+
+        for (CartItemEntity item : cartEntity.getCartItems()) {
+            CartItemModel dto = new CartItemModel();
+            dto.setId(item.getId()); // 🔥 IMPORTANT
+            dto.setProductId(item.getProduct().getProduct_id());
+            dto.setQuantity(item.getQuantity());
+            cartItems.add(dto);
         }
+
         return cartItems;
+    }
+
+    // ✅ REMOVE ITEM
+    @Override
+    @Transactional
+    public String removeItem(Long cartItemId) {
+        cartItemRepository.deleteById(cartItemId);
+        return "Product removed from cart";
     }
 
     @Override
     @Transactional
-    public String removeItem(Long productId) {
-        cartItemRepository.deleteByProduct(productId);
-        return "Product removed from the cart successfully";
+    public void updateQuantity(Long cartItemId, int quantity) {
+
+        CartItemEntity item = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() -> new RuntimeException("Cart item not found"));
+
+        item.setQuantity(quantity);
+        cartItemRepository.save(item);
     }
+
 }

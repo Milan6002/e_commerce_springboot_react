@@ -1,39 +1,66 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import authService from "../Services/authService";
 import { jwtDecode } from "jwt-decode";
+import { Toast } from "primereact/toast";
+
+// PrimeReact Imports
+import { Card } from 'primereact/card';
+import { Button } from 'primereact/button';
+import { InputText } from 'primereact/inputtext';
+import { Avatar } from 'primereact/avatar';
 
 function UpdateProfile() {
+
   const navigate = useNavigate();
   const { id } = useParams();
+  const toast = useRef(null);
 
   const [user, setUser] = useState({
     id: id,
-    name: "",
+    firstname: "",
+    lastname: "",
     email: "",
     img: null,
+    mobile: "",
+    gender: "",
+    addressLine1: "",
+    addressLine2: "",
+    city: "",
+    state: "",
+    pincode: ""
   });
 
   const [previewImage, setPreviewImage] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+
   const decodeToken = jwtDecode(localStorage.getItem("token"));
+
   useEffect(() => {
+
     const fetchData = async () => {
       try {
+
         const response = await authService.ReadProfileByEmail(decodeToken.sub);
         setUser(response.data);
 
         if (response.data.img) {
           setPreviewImage(`data:image/jpeg;base64,${response.data.img}`);
         }
-        
+
       } catch (error) {
-        console.error("Error fetching profile:", error);
-        setError("Failed to load profile data.");
+
+        toast.current.show({
+          severity: "error",
+          summary: "Error",
+          detail: "Failed to load profile data",
+        });
+
       }
     };
+
     fetchData();
+
   }, [id]);
 
   const handleChange = (e) => {
@@ -41,92 +68,244 @@ function UpdateProfile() {
   };
 
   const handleFileChange = (e) => {
+
     const file = e.target.files[0];
+
     if (file) {
+
       const reader = new FileReader();
+
       reader.onloadend = () => {
         setPreviewImage(reader.result);
-        setUser({ ...user, image: file }); // Store Base64 image without prefix
+        setUser({ ...user, image: file });
       };
+
       reader.readAsDataURL(file);
     }
   };
 
+  const validateForm = () => {
+
+    if (!user.firstname || !user.lastname) {
+
+      toast.current.show({
+        severity: "warn",
+        summary: "Validation",
+        detail: "First name and Last name required",
+      });
+
+      return false;
+    }
+
+    const mobilePattern = /^[0-9]{10}$/;
+
+    if (user.mobile && !mobilePattern.test(user.mobile)) {
+
+      toast.current.show({
+        severity: "warn",
+        summary: "Validation",
+        detail: "Mobile must be 10 digits",
+      });
+
+      return false;
+    }
+
+    const pinPattern = /^[0-9]{6}$/;
+
+    if (user.pincode && !pinPattern.test(user.pincode)) {
+
+      toast.current.show({
+        severity: "warn",
+        summary: "Validation",
+        detail: "Pincode must be 6 digits",
+      });
+
+      return false;
+    }
+
+    return true;
+  };
+
   const handleUpdateUser = async (e) => {
+
     e.preventDefault();
+
+    if (!validateForm()) return;
+
     setLoading(true);
-    setError("");
 
     try {
+
       await authService.Updateprofile(id, user);
-      navigate("/profile");
+
+      toast.current.show({
+        severity: "success",
+        summary: "Success",
+        detail: "Profile Updated Successfully",
+      });
+
+      setTimeout(() => {
+        navigate("/profile");
+      }, 1500);
+
     } catch (err) {
-      console.error("Error updating profile:", err);
-      setError("Failed to update profile. Please try again.");
+
+      toast.current.show({
+        severity: "error",
+        summary: "Error",
+        detail: "Failed to update profile",
+      });
+
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex items-center justify-center  p-3">
-      <div className="bg-gray-800 text-white p-8 rounded-lg shadow-lg w-96">
-        <h1 className="text-3xl font-bold text-center mb-6">Update Profile</h1>
 
-        {error && <p className="text-red-400 text-center mb-4">{error}</p>}
+    <div className="min-h-screen bg-gray-50 flex justify-content-center align-items-center p-4">
 
-        <form onSubmit={handleUpdateUser} className="space-y-4">
-          <div className="flex flex-col">
-            <label className="mb-1 font-semibold">Name:</label>
-            <input
-              type="text"
-              name="name"
-              value={user.name}
-              onChange={handleChange}
-              placeholder="Enter your name"
-              className="p-3 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
-          </div>
+      <Toast ref={toast} />
 
-          <div className="flex flex-col">
-            <label className="mb-1 font-semibold">Email:</label>
-            <input
-              type="email"
-              name="email"
-              value={user.email}
-              onChange={handleChange}
-              placeholder="Enter your email"
-              className="p-3 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-              required
-            />
-          </div>
+      <div className="w-full max-w-30rem">
+        <Card className="shadow-4 border-round-2xl">
 
-          <div className="flex flex-col items-center">
-            <label className="mb-1 font-semibold">Profile Image:</label>
-            {previewImage && (
-              <img
-                src={previewImage}
-                alt="Profile Preview"
-                className="w-24 h-24 rounded-full border-4 border-gray-500 mb-3 shadow-lg"
+          <h1 className="text-3xl font-bold text-center mb-5 text-gray-800 m-0">
+            Update Profile
+          </h1>
+
+          <form onSubmit={handleUpdateUser} className="flex flex-column gap-3">
+
+            <div className="flex flex-column gap-2">
+              <label htmlFor="firstname" className="font-semibold text-gray-700">First Name</label>
+              <InputText
+                id="firstname"
+                name="firstname"
+                value={user.firstname}
+                onChange={handleChange}
+                className="w-full"
               />
-            )}
-            <input
-              type="file"
-              name="img"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="p-2 border border-gray-600 bg-gray-700 rounded-lg focus:outline-none cursor-pointer"
-            />
-          </div>
+            </div>
 
-          <button
-            type="submit"
-            className="w-full p-3 bg-blue-500 rounded-lg text-white font-semibold hover:bg-blue-600 transition duration-300"
-            disabled={loading}
-          >
-            {loading ? "Updating..." : "Update Profile"}
-          </button>
-        </form>
+            <div className="flex flex-column gap-2">
+              <label htmlFor="lastname" className="font-semibold text-gray-700">Last Name</label>
+              <InputText
+                id="lastname"
+                name="lastname"
+                value={user.lastname}
+                onChange={handleChange}
+                className="w-full"
+              />
+            </div>
+
+            <div className="flex flex-column gap-2">
+              <label htmlFor="email" className="font-semibold text-gray-700">Email</label>
+              <InputText
+                id="email"
+                type="email"
+                name="email"
+                value={user.email}
+                onChange={handleChange}
+                className="w-full"
+                required
+              />
+            </div>
+
+            <div className="flex flex-column gap-2">
+              <label htmlFor="mobile" className="font-semibold text-gray-700">Mobile</label>
+              <InputText
+                id="mobile"
+                type="text"
+                name="mobile"
+                value={user.mobile}
+                onChange={handleChange}
+                className="w-full"
+                keyfilter="int"
+              />
+            </div>
+
+            <div className="flex flex-column gap-2">
+              <label htmlFor="city" className="font-semibold text-gray-700">City</label>
+              <InputText
+                id="city"
+                type="text"
+                name="city"
+                value={user.city}
+                onChange={handleChange}
+                className="w-full"
+              />
+            </div>
+
+            <div className="flex flex-column gap-2">
+              <label htmlFor="state" className="font-semibold text-gray-700">State</label>
+              <InputText
+                id="state"
+                type="text"
+                name="state"
+                value={user.state}
+                onChange={handleChange}
+                className="w-full"
+              />
+            </div>
+
+            <div className="flex flex-column gap-2">
+              <label htmlFor="pincode" className="font-semibold text-gray-700">Pincode</label>
+              <InputText
+                id="pincode"
+                type="text"
+                name="pincode"
+                value={user.pincode}
+                onChange={handleChange}
+                className="w-full"
+                keyfilter="int"
+              />
+            </div>
+
+            <div className="flex flex-column align-items-center mt-3">
+
+              <label className="mb-2 font-semibold text-gray-700">Profile Image</label>
+
+              {previewImage ? (
+                <img
+                  src={previewImage}
+                  alt="preview"
+                  className="w-8rem h-8rem border-circle border-3 border-primary shadow-2 mb-3 object-cover"
+                />
+              ) : (
+                <Avatar icon="pi pi-user" size="xlarge" shape="circle" className="w-8rem h-8rem text-5xl bg-primary-100 text-primary mb-3 border-2 border-primary" />
+              )}
+
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary hover:file:bg-primary-100 border-round transition-colors"
+              />
+
+            </div>
+
+            <div className="flex gap-3 mt-4">
+              <Button
+                type="button"
+                label="Cancel"
+                icon="pi pi-times"
+                severity="secondary"
+                outlined
+                className="w-full"
+                onClick={() => navigate('/profile')}
+              />
+              <Button
+                type="submit"
+                label={loading ? "Updating..." : "Update Profile"}
+                icon={loading ? "pi pi-spin pi-spinner" : "pi pi-check"}
+                className="w-full"
+                disabled={loading}
+              />
+            </div>
+
+          </form>
+
+        </Card>
       </div>
     </div>
   );

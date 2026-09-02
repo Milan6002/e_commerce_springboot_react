@@ -28,6 +28,23 @@ import Type from "./Component/Type";
 import UpdateType from "./Component/UpdateType";
 import Duffle from "./Component/Duffle";
 import AdminUsers from "./Component/AdminUsers";
+import Purchase from "./Component/Purchase";
+import Sales from "./Component/Sales";
+import Checkout from "./Component/Checkout";
+import Invoice from "./Component/Invoice";
+import AdminInvoice from "./Component/AdminInvoice";
+import AdminInvoiceList from "./Component/AdmininvoiceList";
+import AdminSettings from "./Component/AdminSettings";
+import AdminProfile from "./Component/AdminProfile";
+import AdminLayout from "./Component/AdminLayout";
+import AdminBulkOrders from "./Component/AdminBulkOrders";
+import ForgotPassword from "./Component/otp"; // path check karo
+import Supplier from "./Component/Supplier";
+import Warehouse from "./Component/Warehouse";
+import Payment from "./Component/Payment";
+import Feedback from "./Component/Feedback";
+import AiChatbot from "./Component/AiChatbot";
+import SalesReport from "./Component/SalesReport";
 
 function App() {
   const user_role = localStorage.getItem("role");
@@ -41,7 +58,7 @@ function App() {
           <Route index path="/" element={<Home />} />
 
           {user_role == "ROLE_ADMIN" ? (
-            <>
+            <Route element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
               <Route
                 path="/Admin"
                 element={
@@ -122,19 +139,31 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-            </>
+              <Route path="/purchase" element={<Purchase />} />
+              <Route path="/sales" element={<Sales />} />
+              <Route path="/supplier" element={<Supplier />} />
+              <Route path="/warehouse" element={<Warehouse />} />
+              <Route path="/payment" element={<Payment />} />
+              <Route path="/admin/invoices" element={<AdminInvoiceList />} />
+              <Route path="/admin/invoice/:id" element={<AdminInvoice />} />
+              <Route path="/admin/reports" element={<SalesReport />} />
+              <Route path="/admin/settings" element={<AdminSettings />} />
+              <Route path="/admin/profile" element={<AdminProfile />} />
+              <Route path="/admin/bulk-orders" element={<AdminBulkOrders />} />
+                            <Route path="/admin/feedback" element={<Feedback />} />
+            </Route>
           ) : (
             <Route path="/Admin" element={<Navigate to="/" />} />
           )}
 
           <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
 
           <Route path="/register" element={<Register />} />
 
           <Route path="/updateprofile/:id" element={<UpdateProfile />} />
-          
-          <Route path="/admin/users" element={<AdminUsers />} />
 
+          
           <Route
             path="/profile"
             element={
@@ -215,11 +244,21 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route path="/checkout" element={<ProtectedRoute>
+            <Checkout />
+          </ProtectedRoute>} />
+          <Route path="/invoice" element={<ProtectedRoute>
+            <Invoice />
+          </ProtectedRoute>} />
+          <Route path="/feedback" element={<ProtectedRoute>
+            <Feedback />
+          </ProtectedRoute>} />
 
           {/* 404 Not Found Route */}
           <Route path="*" element={<NotFound />} />
         </Routes>
-        
+
+        <AiChatbot />
         <Footer />
       </BrowserRouter>
     </>

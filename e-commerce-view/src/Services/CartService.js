@@ -20,6 +20,11 @@ class CartService {
   removeItem(product_id) {
     return axios.delete(BASE_URL + "deleteCartItem/" + product_id);
   }
+  updateCartItemQuantity(cartItemId, quantity) {
+  return axios.put(BASE_URL + "updateQuantity", null, {
+    params: { cartItemId, quantity },
+  });
+}
 }
 
 export default new CartService();

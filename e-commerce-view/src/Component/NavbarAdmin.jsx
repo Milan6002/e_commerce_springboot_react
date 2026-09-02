@@ -1,227 +1,175 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import LogoBg from "../assets/Img/BL_Long_Logo.png";
 
-function NavbarAdmin() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [avatar, setAvatar] = useState(localStorage.getItem("avtar")); // Initialize state with localStorage value
+// PrimeReact Imports
+import { Menubar } from 'primereact/menubar';
+import { Menu } from 'primereact/menu';
+import { Avatar } from 'primereact/avatar';
+import { Badge } from 'primereact/badge';
 
+function NavbarAdmin() {
+  const [avatar, setAvatar] = useState(localStorage.getItem("avtar"));
   const navigate = useNavigate();
+  const location = useLocation();
+  const menuLeft = useRef(null);
 
   const handleLogout = () => {
-    // Clear user-related data from localStorage
     localStorage.removeItem("email");
     localStorage.removeItem("token");
     localStorage.removeItem("avtar");
     localStorage.removeItem("role");
-    setAvatar(null); // Clear avatar state
-
+    setAvatar(null);
     navigate("/login");
   };
 
   const handleAvatarUpdate = (event) => {
-    const newAvatar = event.detail; // Get new avatar
-    localStorage.setItem("avtar", newAvatar); // Save new avatar in localStorage
-    setAvatar(newAvatar); // Update state
+    const newAvatar = event.detail;
+    localStorage.setItem("avtar", newAvatar);
+    setAvatar(newAvatar);
   };
 
   useEffect(() => {
-    // Listen for avatar updates
     window.addEventListener("avatarUpdated", handleAvatarUpdate);
-
     return () => {
       window.removeEventListener("avatarUpdated", handleAvatarUpdate);
     };
   }, []);
-  return (
-    <nav className=" bg-black p-3">
-      <div className="  px-2 sm:px-6 lg:px-8">
-        <div className="relative flex h-16 items-center justify-between">
-          {/* Mobile menu button */}
-          <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
-            <button
-              type="button"
-              className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:ring-2 focus:ring-white focus:outline-none focus:ring-inset"
-              aria-controls="mobile-menu"
-              aria-expanded={mobileMenuOpen}
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
-              <span className="sr-only">Open main menu</span>
-              {mobileMenuOpen ? (
-                <svg
-                  className="block w-6 h-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              ) : (
-                <svg
-                  className="block w-6 h-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-                  />
-                </svg>
-              )}
-            </button>
-          </div>
 
-          {/* Logo and desktop menu */}
-          <div className="flex items-center">
-            <img
-              className="h-20 w-auto rounded-lg"
-              src={LogoBg}
-              alt="Bombay Luggage"
-            />
+  const items = [
+    { 
+        label: 'Dashboard', 
+        icon: 'pi pi-fw pi-home', 
+        command: () => navigate('/admin'),
+        className: location.pathname === '/admin' ? 'bg-teal-50 text-teal-700 font-bold border-round-md' : ''
+    },
+    { 
+        label: 'Products', 
+        icon: 'pi pi-fw pi-box', 
+        command: () => navigate('/Products'),
+        className: location.pathname.includes('/Products') ? 'bg-teal-50 text-teal-700 font-bold border-round-md' : ''
+    },
+    { 
+        label: 'Categories', 
+        icon: 'pi pi-fw pi-list', 
+        command: () => navigate('/Categories'),
+        className: location.pathname.includes('/Categories') ? 'bg-teal-50 text-teal-700 font-bold border-round-md' : ''
+    },
+    { 
+        label: 'Types', 
+        icon: 'pi pi-fw pi-tags', 
+        command: () => navigate('/Type'),
+        className: location.pathname.includes('/Type') ? 'bg-teal-50 text-teal-700 font-bold border-round-md' : ''
+    },
+    { 
+        label: 'B2B Orders', 
+        icon: 'pi pi-fw pi-briefcase', 
+        command: () => navigate('/admin/bulk-orders'),
+        className: location.pathname.includes('/bulk-orders') ? 'bg-teal-50 text-teal-700 font-bold border-round-md' : ''
+    },
+    {
+        label: 'Storefront',
+        icon: 'pi pi-fw pi-external-link',
+        command: () => navigate('/'),
+        className: 'ml-2 text-primary font-semibold'
+    }
+  ];
 
-            <div className="px-2 sm:px-6 lg:px-8 ">
-              <div className="flex gap-20 h-16 items-center justify-between text-lg font-semibold">
-                <a
-                  onClick={() => navigate("")}
-                  className="hover:cursor-pointer rounded-md  px-3 py-2  text-white"
-                  aria-current="page"
-                >
-                  Home
-                </a>
-                <a
-                  onClick={() => navigate("/Type")}
-                  className="rounded-md px-3 py-2  text-gray-300 hover:bg-gray-700 hover:text-white"
-                >
-                  Type
-                </a>
-                <a
-                  onClick={() => navigate("/Categories")}
-                  className="hover:cursor-pointer rounded-md px-3 py-2  text-gray-300 hover:bg-gray-700 hover:text-white"
-                >
-                  Categories
-                </a>
-                <a
-                  onClick={() => navigate("/Products")}
-                  className="hover:cursor-pointer rounded-md px-3 py-2  text-gray-300 hover:bg-gray-700 hover:text-white"
-                >
-                  Products
-                </a>
-                <a
-                  onClick={() => navigate("/admin")}
-                  className="hover:cursor-pointer rounded-md px-3 py-2  text-gray-300 hover:bg-gray-700 hover:text-white"
-                >
-                  Admin Pannel
-                </a>
-              </div>
-            </div>
-          </div>
-
-          {/* Notifications and profile dropdown */}
-          <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-            <div className="relative ml-3">
-              <button
-                type="button"
-                className="relative flex rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-none"
-                onClick={() => setDropdownOpen(!dropdownOpen)}
-              >
-                <span className="sr-only">Open user menu</span>
-                <img
-                  className="w-8 h-8 rounded-full"
-                  src={
-                    avatar
-                      ? `data:image/jpeg;base64,${avatar}`
-                      : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-                  }
-                  alt="User Avatar"
+  const profileItems = [
+    {
+      template: () => {
+        return (
+            <div className="flex flex-column align-items-center p-3 border-bottom-1 surface-border">
+                <Avatar 
+                    image={avatar ? `data:image/jpeg;base64,${avatar}` : null} 
+                    icon={!avatar ? "pi pi-user" : null}
+                    shape="circle" 
+                    size="xlarge"
+                    className="mb-2"
                 />
-              </button>
-              {dropdownOpen && (
-                <div
-                  className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-none"
-                  role="menu"
-                  aria-orientation="vertical"
-                  aria-labelledby="user-menu-button"
-                >
-                  <a
-                    onClick={() => navigate("/profile")}
-                    className="hover:cursor-pointer block px-4 py-2 text-sm text-gray-700"
-                    role="menuitem"
-                  >
-                    Your Profile
-                  </a>
-                  {!localStorage.getItem("token") && (
-                    <a
-                      onClick={() => navigate("/login")}
-                      className="hover:cursor-pointer block px-4 py-2 text-sm text-gray-700"
-                      role="menuitem"
-                    >
-                      Login
-                    </a>
-                  )}
-                  <a
-                    className="hover:cursor-pointer block px-4 py-2 text-sm text-gray-700"
-                    role="menuitem"
-                    onClick={handleLogout}
-                  >
-                    Sign out
-                  </a>
-                </div>
-              )}
+                <span className="font-bold text-900">Admin User</span>
+                <span className="text-sm text-500">Administrator</span>
             </div>
-          </div>
-        </div>
-      </div>
+        )
+      }
+    },
+    {
+      label: 'Your Profile',
+      icon: 'pi pi-fw pi-user',
+      command: () => navigate('/profile')
+    },
+    {
+      label: 'Settings',
+      icon: 'pi pi-fw pi-cog',
+      command: () => navigate('/admin/settings')
+    },
+    { separator: true },
+    {
+      label: 'Sign out',
+      icon: 'pi pi-fw pi-power-off',
+      command: handleLogout,
+      className: 'text-red-500'
+    }
+  ];
 
-      {/* Mobile menu */}
-      {mobileMenuOpen && (
-        <div className="sm:hidden" id="mobile-menu">
-          <div className="space-y-1 px-2 pt-2 pb-3">
-            <a
-              onClick={() => navigate("")}
-              className="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white"
-              aria-current="page"
-            >
-              Home
-            </a>
-            <a
-              onClick={() => navigate("/shop")}
-              className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-            >
-              Shop
-            </a>
-            <a
-              onClick={() => navigate("/Categories")}
-              className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-            >
-              Categories
-            </a>
-            <a
-              onClick={() => navigate("/Products")}
-              className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-            >
-              Products
-            </a>
-            <a
-              onClick={() => navigate("/admin")}
-              className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-            >
-              Admin Pannel
-            </a>
-          </div>
+  const start = (
+    <div className="flex align-items-center gap-3 mr-4 pr-4 border-right-1 surface-border cursor-pointer" onClick={() => navigate("/admin")}>
+        <img
+            alt="logo"
+            src={LogoBg}
+            className="h-3rem"
+            style={{ objectFit: 'contain' }}
+        />
+        <div className="hidden md:block">
+            <span className="font-bold text-xl text-800 block">Admin Center</span>
+            <span className="text-xs text-500 block">Management Portal</span>
         </div>
-      )}
-    </nav>
+    </div>
+  );
+
+  const end = (
+    <div className="flex align-items-center gap-4 pl-3">
+        {/* Notification Icon */}
+        <div className="cursor-pointer text-600 hover:text-800 transition-colors p-overlay-badge" onClick={() => navigate('/admin/invoices')}>
+            <i className="pi pi-bell text-xl"></i>
+            <Badge value="3" severity="danger"></Badge>
+        </div>
+
+        <div className="h-2rem border-left-1 surface-border hidden md:block"></div>
+
+        {/* Profile Menu */}
+        <Menu model={profileItems} popup ref={menuLeft} id="popup_menu_left_admin" className="w-15rem" />
+        <div 
+            className="flex align-items-center gap-2 cursor-pointer p-2 hover:surface-hover border-round transition-colors"
+            onClick={(event) => menuLeft.current.toggle(event)} 
+            aria-controls="popup_menu_left_admin" 
+            aria-haspopup
+        >
+            <Avatar 
+                image={avatar ? `data:image/jpeg;base64,${avatar}` : null} 
+                icon={!avatar ? "pi pi-user" : null}
+                shape="circle" 
+                className="border-circle shadow-1"
+                style={{ width: '35px', height: '35px' }}
+            />
+            <div className="hidden md:flex flex-column align-items-start">
+                <span className="text-sm font-semibold text-800 line-height-1">Admin</span>
+                <span className="text-xs text-500 line-height-1 mt-1">Options <i className="pi pi-angle-down text-xs ml-1"></i></span>
+            </div>
+        </div>
+    </div>
+  );
+
+  return (
+    <div className="sticky top-0 z-5" style={{ backdropFilter: 'blur(10px)', backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
+      <Menubar 
+        model={items} 
+        start={start} 
+        end={end} 
+        className="border-none border-bottom-1 surface-border border-round-none px-4 py-2 bg-transparent" 
+        style={{ minHeight: '70px' }}
+      />
+    </div>
   );
 }
 

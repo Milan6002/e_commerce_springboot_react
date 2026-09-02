@@ -5,15 +5,32 @@ import authService from "../Services/authService";
 import { motion } from "framer-motion";
 import '../assets/profile.css';
 
+// PrimeReact Imports
+import { Card } from 'primereact/card';
+import { Button } from 'primereact/button';
+import { Divider } from 'primereact/divider';
+import { Avatar } from 'primereact/avatar';
+import { Chip } from 'primereact/chip';
+
 function Profile() {
   const navigate = useNavigate();
 
   const [user, setUser] = useState({
     id: "",
-    name: "",
+    firstname: "",
+    lastname: "",
     email: "",
     img: null,
+    mobile: "",
+    gender: "",
+    addressLine1: "",
+    addressLine2: "",
+    city: "",
+    state: "",
+    pincode: ""
   });
+
+  const [loading, setLoading] = useState(true);
 
   // Safely decode token
   const token = localStorage.getItem("token");
@@ -32,115 +49,143 @@ function Profile() {
     authService.ReadProfileByEmail(decoded.sub)
       .then((response) => {
         const data = response.data;
-
         localStorage.setItem("role", data.role);
-        localStorage.setItem("avtar", data.img);
+        if (data.img) {
+            localStorage.setItem("avtar", data.img);
+        }
 
         setUser({
-
           id: data.id,
-          name: data.name,
+          firstname: data.firstname,
+          lastname: data.lastname,
           email: data.email,
           img: data.img,
-          phone: data.phone,
+          mobile: data.mobile,
           gender: data.gender,
-          address: data.address,
+          addressLine1: data.addressLine1,
+          addressLine2: data.addressLine2,
           city: data.city,
           state: data.state,
           pincode: data.pincode
-
         });
-
-
+        
         // Notify navbar avatar
         window.dispatchEvent(
           new CustomEvent("avatarUpdated", { detail: data.img })
         );
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching user data:", error);
+        setLoading(false);
       });
   }, [decoded?.sub]);
 
+  const InfoItem = ({ icon, label, value }) => (
+    <div className="flex align-items-center p-3 surface-50 border-round-xl mb-3 shadow-1 transition-all hover:shadow-2" style={{ transition: '0.3s' }}>
+      <div className="flex align-items-center justify-content-center bg-white border-circle shadow-1 mr-3" style={{ width: '40px', height: '40px', color: 'var(--primary-color)' }}>
+        <i className={`pi ${icon} text-xl`}></i>
+      </div>
+      <div className="flex flex-column flex-grow-1">
+        <span className="text-500 text-sm mb-1 font-medium">{label}</span>
+        <span className="text-900 font-semibold">{value || <span className="text-400 font-italic">Not provided</span>}</span>
+      </div>
+    </div>
+  );
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black flex justify-center items-center p-4">
+    <div className="min-h-screen flex justify-content-center align-items-center py-6 px-4 relative overflow-hidden" 
+         style={{ background: 'linear-gradient(135deg, #f5f7fa 0%, #e4e9f2 100%)' }}>
+      
+      {/* Decorative Background Elements */}
+      <div className="absolute border-circle bg-primary opacity-10" style={{ width: '400px', height: '400px', top: '-100px', left: '-100px', filter: 'blur(50px)' }}></div>
+      <div className="absolute border-circle bg-blue-500 opacity-10" style={{ width: '300px', height: '300px', bottom: '-50px', right: '-50px', filter: 'blur(40px)' }}></div>
 
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="w-full max-w-md bg-white/10 backdrop-blur-2xl shadow-2xl border border-white/20 rounded-2xl p-8 text-white"
+        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 0.5, type: 'spring', bounce: 0.4 }}
+        className="w-full max-w-40rem z-1"
       >
-
-        {/* EDIT BUTTON */}
-        <div className="flex justify-end">
-          <button
-            onClick={() => navigate(`/updateprofile/${user.id}`)}
-            className="px-4 py-1.5 text-sm rounded-lg bg-blue-600/80 hover:bg-blue-500 transition shadow-md"
-          >
-            ✏ Edit Profile
-          </button>
-        </div>
-
-        {/* AVATAR */}
-        <div className="flex flex-col items-center mt-3">
-          <motion.img
-            initial={{ scale: 0.8 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 0.4 }}
-            src={`data:image/jpeg;base64,${user.img}`}
-            alt="User Avatar"
-            className="w-28 h-28 rounded-full shadow-xl border-4 border-white/30 object-cover hover:scale-105 transition"
-          />
-
-          <h1 className="text-3xl font-bold mt-4 tracking-wide">
-            {user.name || "Loading..."}
-          </h1>
-        </div>
-
-        {/* DETAILS */}
-        <div className="mt-8 space-y-4 text-white/90">
-          <div className="flex justify-between border-b border-white/20 pb-2">
-            <span className="text-gray-300">Name</span>
-            <span className="font-semibold">{user.name}</span>
+        <Card className="shadow-6 border-round-2xl overflow-hidden p-0">
+          
+          {/* Banner Image */}
+          <div className="w-full relative" style={{ height: '160px', background: 'linear-gradient(120deg, var(--primary-color) 0%, #818cf8 100%)' }}>
+            <div className="absolute top-0 right-0 p-3">
+               <Button
+                  onClick={() => navigate(`/updateprofile/${user.id}`)}
+                  label="Edit Profile"
+                  icon="pi pi-user-edit"
+                  className="p-button-rounded p-button-secondary bg-white text-primary border-none shadow-2"
+                />
+            </div>
           </div>
 
-          <div className="flex justify-between border-b border-white/20 pb-2">
-            <span className="text-gray-300">Email</span>
-            <span className="font-semibold">{user.email}</span>
+          {/* Avatar Section */}
+          <div className="flex flex-column align-items-center relative" style={{ marginTop: '-60px' }}>
+            <motion.div
+              initial={{ scale: 0, rotate: -10 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+              className="p-1 surface-0 border-circle shadow-4"
+            >
+              {user.img ? (
+                <img
+                  src={`data:image/jpeg;base64,${user.img}`}
+                  alt="User Avatar"
+                  className="w-8rem h-8rem border-circle object-cover"
+                />
+              ) : (
+                <Avatar icon="pi pi-user" size="xlarge" shape="circle" className="w-8rem h-8rem text-5xl bg-primary-100 text-primary" />
+              )}
+            </motion.div>
+
+            <h1 className="text-3xl font-bold mt-3 mb-1 text-900">
+              {loading ? "Loading..." : `${user.firstname} ${user.lastname}`}
+            </h1>
+            
+            {user.role && (
+                <Chip label={user.role.toUpperCase()} icon="pi pi-star-fill" className="bg-primary-50 text-primary-700 text-sm font-semibold mb-3 px-3" />
+            )}
+            
+            <p className="text-600 m-0 flex align-items-center">
+              <i className="pi pi-envelope mr-2"></i> {user.email}
+            </p>
           </div>
 
-          <div className="flex justify-between border-b border-white/20 pb-2">
-            <span className="text-gray-300">Password</span>
-            <span className="text-gray-400">••••••••</span>
-          </div>
+          <Divider className="my-4" />
 
-          <div className="flex justify-between border-b border-white/20 pb-2">
-            <span className="text-gray-300">Address</span>
-            <span className="font-semibold">{user.address}</span>
+          {/* Details Grid */}
+          <div className="px-4 pb-4">
+            <h3 className="text-xl font-semibold text-800 mb-4 border-left-3 border-primary pl-2">Personal Information</h3>
+            
+            <div className="grid">
+              <div className="col-12 md:col-6">
+                <InfoItem icon="pi-phone" label="Mobile Number" value={user.mobile} />
+              </div>
+              <div className="col-12 md:col-6">
+                <InfoItem icon="pi-users" label="Gender" value={user.gender} />
+              </div>
+              <div className="col-12 md:col-12">
+                <InfoItem 
+                    icon="pi-map-marker" 
+                    label="Address" 
+                    value={`${user.addressLine1} ${user.addressLine2 ? ', ' + user.addressLine2 : ''}`} 
+                />
+              </div>
+              <div className="col-12 md:col-4">
+                <InfoItem icon="pi-building" label="City" value={user.city} />
+              </div>
+              <div className="col-12 md:col-4">
+                <InfoItem icon="pi-map" label="State" value={user.state} />
+              </div>
+              <div className="col-12 md:col-4">
+                <InfoItem icon="pi-compass" label="Pincode" value={user.pincode} />
+              </div>
+            </div>
           </div>
-          <div className="flex justify-between border-b border-white/20 pb-2">
-            <span className="text-gray-300">Phone</span>
-            <span className="font-semibold">{user.phone}</span>
-          </div>
-          <div className="flex justify-between border-b border-white/20 pb-2">
-            <span className="text-gray-300">Gender</span>
-            <span className="font-semibold">{user.gender}</span>
-          </div>
-          <div className="flex justify-between border-b border-white/20 pb-2">
-            <span className="text-gray-300">City</span>
-            <span className="font-semibold">{user.city}</span>
-          </div>
-          <div className="flex justify-between border-b border-white/20 pb-2">
-            <span className="text-gray-300">State</span>
-            <span className="font-semibold">{user.state}</span>
-          </div>
-          <div className="flex justify-between border-b border-white/20 pb-2">
-            <span className="text-gray-300">Pincode</span>
-            <span className="font-semibold">{user.pincode}</span>
-          </div>
-
-        </div>
+          
+        </Card>
       </motion.div>
     </div>
   );

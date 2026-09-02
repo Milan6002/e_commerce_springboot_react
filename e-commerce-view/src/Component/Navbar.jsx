@@ -1,290 +1,227 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import LogoBg from "../assets/Img/BL_Long_Logo.png";
 import NavbarAdmin from "./NavbarAdmin";
-import "../assets/Navbar.css";
+import { jwtDecode } from "jwt-decode";
+import authService from "../Services/authService";
+import CartService from "../Services/CartService";
+import axios from "axios";
+
+// PrimeReact Imports
+import { Menubar } from 'primereact/menubar';
+import { Menu } from 'primereact/menu';
+import { Badge } from 'primereact/badge';
+import { Button } from 'primereact/button';
+import { Avatar } from 'primereact/avatar';
+import { InputText } from 'primereact/inputtext';
 
 const Navbar = () => {
   const user_role = localStorage.getItem("role");
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [avatar, setAvatar] = useState(localStorage.getItem("avtar")); // Initialize state with localStorage value
+  const token = localStorage.getItem("token");
+
+  const [avatar, setAvatar] = useState(localStorage.getItem("avtar"));
+  const [cartCount, setCartCount] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const menuLeft = useRef(null);
 
+  // Logout
   const handleLogout = () => {
-    // Clear user-related data from localStorage
-    localStorage.removeItem("email");
-    localStorage.removeItem("token");
-    localStorage.removeItem("avtar");
-    localStorage.removeItem("role");
-    setAvatar(null); // Clear avatar state
-
+    localStorage.clear();
+    setAvatar(null);
+    setCartCount(0);
     navigate("/login");
   };
 
+  // Avatar update listener
   const handleAvatarUpdate = (event) => {
-    const newAvatar = event.detail; // Get new avatar
-    localStorage.setItem("avtar", newAvatar); // Save new avatar in localStorage
-    setAvatar(newAvatar); // Update state
+    const newAvatar = event.detail;
+    localStorage.setItem("avtar", newAvatar);
+    setAvatar(newAvatar);
   };
 
   useEffect(() => {
-    // Listen for avatar updates
     window.addEventListener("avatarUpdated", handleAvatarUpdate);
-
     return () => {
       window.removeEventListener("avatarUpdated", handleAvatarUpdate);
     };
   }, []);
 
-  return user_role === "ROLE_ADMIN" ? (
-    <NavbarAdmin />
-  ) : (
-    <>
-      <nav className=" bg-black flex p-2 items-center">
+  const fetchCartCount = async () => {
+    try {
+      if (!token || user_role === "ROLE_ADMIN") {
+        setCartCount(0);
+        return;
+      }
 
-        <img
-          className="h-20 w-60 rounded-lg"
-          src={LogoBg}
-          alt="Bombay Luggage"
-        />
+      const decoded = jwtDecode(token);
+      const email = decoded?.email || decoded?.sub;
+      if (!email) {
+        setCartCount(0);
+        return;
+      }
+
+      const userResponse = await authService.ReadProfileByEmail(email);
+      const userId = userResponse?.data?.id;
+      if (!userId) {
+        setCartCount(0);
+        return;
+      }
+
+      const cartResponse = await CartService.getCartID(userId);
+      const cartId = cartResponse?.data?.id;
+      if (!cartId) {
+        setCartCount(0);
+        return;
+      }
+
+      const itemsResponse = await CartService.getCartItems(cartId);
+      const items = Array.isArray(itemsResponse?.data) ? itemsResponse.data : [];
+      const totalItems = items.reduce((sum, item) => sum + (item.quantity || 0), 0);
+      setCartCount(totalItems);
+    } catch (error) {
+      console.error("Failed to load cart count", error);
+      setCartCount(0);
+    }
+  };
+
+  useEffect(() => {
+    fetchCartCount();
+
+    const handleCartUpdated = () => {
+      fetchCartCount();
+    };
+
+    window.addEventListener("cartUpdated", handleCartUpdated);
+    return () => {
+      window.removeEventListener("cartUpdated", handleCartUpdated);
+    };
+  }, [token, user_role]);
+
+  const handleSearch = async (e) => {
+      e.preventDefault();
+      if (!searchQuery.trim()) return;
+
+      setIsSearching(true);
+      try {
+          // Ask AI where to navigate based on the query
+          const response = await axios.post("http://localhost:8081/api/ai/smart-search", { query: searchQuery });
+          const route = response.data.route;
+          setSearchQuery("");
+          navigate(route);
+      } catch (error) {
+          console.error("Smart Search Error:", error);
+          navigate("/shop");
+      } finally {
+          setIsSearching(false);
+      }
+  };
 
 
-        <div className="mx-auto">
-          <div className="relative flex h-16 items-center justify-between">
-            {/* Mobile menu button */}
-            <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
-              <button
-                type="button"
-                className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:ring-2 focus:ring-white focus:outline-none focus:ring-inset"
-                aria-controls="mobile-menu"
-                aria-expanded={mobileMenuOpen}
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              >
-                <span className="sr-only">Open main menu</span>
-                {mobileMenuOpen ? (
-                  <svg
-                    className="block w-6 h-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                ) : (
-                  <svg
-                    className="block w-6 h-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-                    />
-                  </svg>
-                )}
-              </button>
-            </div>
+  if (user_role === "ROLE_ADMIN") {
+    // If we are on an admin page that uses the new AdminLayout, don't show the old navbar
+    const adminRoutes = ['/admin', '/Admin', '/Products', '/Categories', '/Type', '/AddType', '/AddCategory', '/AddProduct', '/Update', '/purchase', '/sales', '/supplier', '/warehouse', '/payment'];
+    const isLayoutRoute = adminRoutes.some(route => location.pathname.startsWith(route));
+    if (isLayoutRoute) {
+        return null;
+    }
+    return <NavbarAdmin />;
+  }
 
-            {/* Logo and desktop menu */}
-            <div className="">
-              <div className="hidden sm:block">
-                <div className="flex gap-8">
 
-                  <div onClick={() => navigate("/")}
-                    className="hover:cursor-pointer rounded-md px-3 py-2 text-lg font-medium text-white hover:bg-gray-700 hover:text-white">
-                    Home
-                  </div>
-                  <div className="relative group ">
-                    <div
-                      onClick={() => navigate("//Shop")}
-                      className="hover:cursor-pointer rounded-md px-3 py-2 text-lg font-medium text-white hover:bg-gray-700 hover:text-white"
-                    >
-                      Shop
-                    </div>
+  const items = [
+    { label: 'Home', icon: 'pi pi-fw pi-home', command: () => navigate('/') },
+    { label: 'Shop', icon: 'pi pi-fw pi-shopping-bag', command: () => navigate('/shop') },
+    { label: 'Brands', icon: 'pi pi-fw pi-tags', command: () => navigate('/brands') },
+    { label: 'Luggage', icon: 'pi pi-fw pi-briefcase', command: () => navigate('/luggage') },
+    { label: 'Backpack', icon: 'pi pi-fw pi-map', command: () => navigate('/backpack') },
+    { label: 'Duffle', icon: 'pi pi-fw pi-box', command: () => navigate('/duffle') },
+    { label: 'Bulk Order', icon: 'pi pi-fw pi-users', command: () => navigate('/bulkorder') },
+    { label: 'Feedback', icon: 'pi pi-fw pi-comment', command: () => navigate('/feedback') }
+  ];
 
-                  </div>
-                  <div className="relative group ">
-                    <div
-                      onClick={() => navigate("//Brands")}
-                      className="hover:cursor-pointer rounded-md px-3 py-2 text-lg font-medium text-white hover:bg-gray-700 hover:text-white"
-                    >
-                      Brands
-                    </div>
+  const profileItems = [
+    { label: 'Profile', icon: 'pi pi-fw pi-user', command: () => navigate('/profile'), visible: !!token },
+    { label: 'Login', icon: 'pi pi-fw pi-sign-in', command: () => navigate('/login'), visible: !token },
+    { label: 'Logout', icon: 'pi pi-fw pi-power-off', command: handleLogout, visible: !!token }
+  ];
 
-                  </div>
+  const start = (
+    <img
+      alt="logo"
+      src={LogoBg}
+      onClick={() => navigate("/")}
+      className="h-3rem md:h-4rem mr-4 ml-2 cursor-pointer transition-transform transition-duration-200 hover:scale-105"
+    />
+  );
 
-                  <div className="relative group">
-                    <div
-                      onClick={() => navigate("//Luggage")}
-                      className="hover:cursor-pointer rounded-md px-3 py-2 text-lg font-medium text-white hover:bg-gray-700 hover:text-white"
-                    >
-                      Luggage
-                    </div>
+  const end = (
+    <div className="flex align-items-center gap-2 md:gap-4 mr-2">
+      
+      {/* Smart AI Search Bar */}
+      <form onSubmit={handleSearch} className="hidden md:block relative">
+        <span className="p-input-icon-left p-input-icon-right">
+            <i className="pi pi-sparkles text-primary" />
+            <InputText 
+                value={searchQuery} 
+                onChange={(e) => setSearchQuery(e.target.value)} 
+                placeholder="Ask AI (e.g. 'bag for college')" 
+                className="border-round-3xl w-14rem lg:w-20rem p-inputtext-sm transition-all transition-duration-300 focus:w-22rem"
+                disabled={isSearching}
+            />
+            {isSearching && <i className="pi pi-spin pi-spinner text-primary" />}
+        </span>
+      </form>
 
-                  </div>
+      {/* Cart Icon with Badge */}
+      <Button 
+        type="button" 
+        icon="pi pi-shopping-cart" 
+        className="p-button-text p-button-secondary relative p-2" 
+        onClick={() => navigate("/cart")}
+      >
+        {cartCount > 0 && <Badge value={cartCount} severity="danger" className="absolute" style={{ top: '0', right: '0' }} />}
+      </Button>
 
-                  <div className="relative group">
-                    <div
-                      onClick={() => navigate("//Backpack")}
-                      className="hover:cursor-pointer rounded-md px-3 py-2 text-lg font-medium text-white hover:bg-gray-700 hover:text-white"
-                    >
-                      Backpack
-                    </div>
+      {/* Avatar Menu */}
+      <Menu model={profileItems} popup ref={menuLeft} id="popup_menu_left" />
+      <Avatar 
+        image={avatar ? `data:image/jpeg;base64,${avatar}` : null} 
+        icon={!avatar ? "pi pi-user" : null}
+        shape="circle" 
+        size="large"
+        className="cursor-pointer border-circle shadow-2 transition-transform transition-duration-200 hover:scale-105"
+        onClick={(event) => menuLeft.current.toggle(event)} 
+        aria-controls="popup_menu_left" 
+        aria-haspopup
+      />
+    </div>
+  );
 
-                  </div>
-
-                  <a
-                    onClick={() => navigate("/Duffle")}
-                    className="hover:cursor-pointer rounded-md px-3 py-2 text-lg font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-                  >
-                    Duffle
-                  </a>
-
-                  <a
-                    onClick={() => navigate("/BulkOrder")}
-                    className="hover:cursor-pointer rounded-md px-3 py-2 text-lg font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-                  >
-                    Bulk Order
-                  </a>
-
-                  <a
-                    onClick={() => navigate("/cart")}
-                    className="hover:cursor-pointer rounded-md px-3 py-2 text-lg font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-                  >
-                    Cart
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            {/* Notifications and profile dropdown */}
-            <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-              <div className="relative ml-3">
-                <button
-                  type="button"
-                  className="relative flex rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-none"
-                  onClick={() => setDropdownOpen(!dropdownOpen)}
-                >
-                  <span className="sr-only">Open user menu</span>
-                  <img
-                    className="w-8 h-8 rounded-full"
-                    src={
-                      avatar
-                        ? `data:image/jpeg;base64,${avatar}`
-                        : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-                    }
-                    alt="User Avatar"
-                  />
-                </button>
-                {dropdownOpen && (
-                  <div
-                    className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-none"
-                    role="menu"
-                    aria-orientation="vertical"
-                    aria-labelledby="user-menu-button"
-                  >
-                    <a
-                      onClick={() => navigate("/profile")}
-                      className="hover:cursor-pointer block px-4 py-2 text-sm text-gray-700"
-                      role="menuitem"
-                    >
-                      Your Profile
-                    </a>
-                    {!localStorage.getItem("token") && (
-                      <a
-                        onClick={() => navigate("/login")}
-                        className="hover:cursor-pointer block px-4 py-2 text-sm text-gray-700"
-                        role="menuitem"
-                      >
-                        Login
-                      </a>
-                    )}
-                    <a
-                      className="hover:cursor-pointer block px-4 py-2 text-sm text-gray-700"
-                      role="menuitem"
-                      onClick={handleLogout}
-                    >
-                      Sign out
-                    </a>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile menu */}
-        {mobileMenuOpen && (
-          <div className="sm:hidden" id="mobile-menu">
-            <div className="space-y-1 px-2 pt-2 pb-3">
-              <a
-                onClick={() => navigate("/")}
-                className="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white"
-                aria-current="page"
-              >
-                Home
-              </a>
-
-              <a
-                onClick={() => navigate("/shop")}
-                className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-              >
-                Shop
-              </a>
-              <a
-                onClick={() => navigate("/Brands")}
-                className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-              >
-                Brands
-              </a>
-              <a
-                onClick={() => navigate("/Luggage")}
-                className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-              >
-                Luggage
-              </a>
-              <a
-                onClick={() => navigate("/Backpack")}
-                className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-              >
-                Backpack
-              </a>
-              <a
-                onClick={() => navigate("/Duffle")}
-                className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-              >
-                Duffle
-              </a>
-
-              <a
-                onClick={() => navigate("/BulkOrder")}
-                className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-              >
-                Bulk Order
-              </a>
-              <a
-                onClick={() => navigate("/cart")}
-                className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-              >
-                Cart
-              </a>
-            </div>
-          </div>
-        )}
-      </nav>
-    </>
+  return (
+    <div className="sticky top-0 z-50 w-full shadow-2">
+      <Menubar model={items} start={start} end={end} className="border-none py-2 px-2 md:px-5 surface-0" />
+      
+      {/* Mobile AI Search */}
+      <div className="md:hidden bg-white px-3 pb-3 border-bottom-1 surface-border">
+          <form onSubmit={handleSearch} className="w-full">
+            <span className="p-input-icon-left p-input-icon-right w-full">
+                <i className="pi pi-sparkles text-primary" />
+                <InputText 
+                    value={searchQuery} 
+                    onChange={(e) => setSearchQuery(e.target.value)} 
+                    placeholder="Ask AI (e.g. 'bag for college')" 
+                    className="border-round-3xl w-full p-inputtext-sm"
+                    disabled={isSearching}
+                />
+                {isSearching && <i className="pi pi-spin pi-spinner text-primary" />}
+            </span>
+          </form>
+      </div>
+    </div>
   );
 };
 

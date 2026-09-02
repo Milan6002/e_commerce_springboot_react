@@ -15,6 +15,7 @@ public class ProductEntity {
     private Long product_id;
 
     private String product_brand;
+    @Column(length = 2000)
     private String product_name;
     
     @Lob

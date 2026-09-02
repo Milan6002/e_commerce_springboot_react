@@ -6,7 +6,6 @@ import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { Toast } from "primereact/toast";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { classNames } from "primereact/utils";
 
 function UpdateType() {
     const navigate = useNavigate();
@@ -14,6 +13,7 @@ function UpdateType() {
     const toast = React.useRef(null);
 
     const [loading, setLoading] = useState(true);
+    const [updating, setUpdating] = useState(false);
     const [typeData, setTypeData] = useState({
         type_id: id,
         type_name: ""
@@ -31,7 +31,7 @@ function UpdateType() {
                 setTypeData(response.data);
             } catch (error) {
                 console.log(error);
-                toast.current.show({
+                toast.current?.show({
                     severity: "error",
                     summary: "Error",
                     detail: "Failed to load type data",
@@ -46,10 +46,11 @@ function UpdateType() {
 
     const handleUpdate = (e) => {
         e.preventDefault();
+        setUpdating(true);
 
         AdminServices.updateType(typeData.type_id, typeData)
             .then(() => {
-                toast.current.show({
+                toast.current?.show({
                     severity: "success",
                     summary: "Success",
                     detail: "Type Updated Successfully",
@@ -62,36 +63,38 @@ function UpdateType() {
             })
             .catch((error) => {
                 console.log(error);
-                toast.current.show({
+                toast.current?.show({
                     severity: "error",
                     summary: "Error",
                     detail: "Update Failed",
                     life: 3000
                 });
+            })
+            .finally(() => {
+                setUpdating(false);
             });
     };
 
     if (loading) {
         return (
-            <div className="flex justify-content-center align-items-center" style={{ height: "80vh" }}>
+            <div className="flex justify-content-center align-items-center min-h-screen bg-gray-50">
                 <ProgressSpinner />
             </div>
         );
     }
 
     return (
-        <div className="flex justify-content-center align-items-center" style={{ minHeight: "80vh" }}>
+        <div className="flex justify-content-center align-items-center min-h-screen bg-gray-50 p-4">
             <Toast ref={toast} />
 
-            <Card
-                title="Update Type"
-                className="shadow-4"
-                style={{ width: "400px" }}
-            >
-                <form onSubmit={handleUpdate} className="p-fluid">
+            <Card className="w-full max-w-28rem shadow-4 border-round-xl">
+                <h2 className="text-2xl font-bold text-center text-gray-800 m-0 mb-4">
+                    Update Type
+                </h2>
+                <form onSubmit={handleUpdate} className="flex flex-column gap-4">
 
-                    <div className="field mb-3">
-                        <label htmlFor="type_id" className="font-bold">
+                    <div className="flex flex-column gap-2">
+                        <label htmlFor="type_id" className="font-semibold text-gray-700">
                             Type ID
                         </label>
                         <InputText
@@ -99,12 +102,12 @@ function UpdateType() {
                             name="type_id"
                             value={typeData.type_id}
                             disabled
-                            className="p-inputtext-sm"
+                            className="w-full bg-gray-100"
                         />
                     </div>
 
-                    <div className="field mb-4">
-                        <label htmlFor="type_name" className="font-bold">
+                    <div className="flex flex-column gap-2">
+                        <label htmlFor="type_name" className="font-semibold text-gray-700">
                             Type Name
                         </label>
                         <InputText
@@ -113,16 +116,28 @@ function UpdateType() {
                             value={typeData.type_name}
                             onChange={handleChanges}
                             required
-                            className="p-inputtext-sm"
+                            className="w-full"
                         />
                     </div>
 
-                    <Button
-                        label="Update"
-                        icon="pi pi-check"
-                        type="submit"
-                        className="w-full"
-                    />
+                    <div className="flex gap-3 mt-2">
+                        <Button
+                            type="button"
+                            label="Cancel"
+                            icon="pi pi-times"
+                            severity="secondary"
+                            outlined
+                            className="w-full border-round-lg"
+                            onClick={() => navigate('/Type')}
+                        />
+                        <Button
+                            label="Update"
+                            icon="pi pi-check"
+                            type="submit"
+                            className="w-full border-round-lg"
+                            loading={updating}
+                        />
+                    </div>
                 </form>
             </Card>
         </div>

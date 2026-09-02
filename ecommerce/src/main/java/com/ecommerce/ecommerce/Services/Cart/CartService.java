@@ -10,4 +10,5 @@ public interface CartService {
 	CartModel getCartIdFromUserId(Long user_id);
 	List<CartItemModel> getCartItemByCartId(Long cart_Id);
 	String removeItem(Long product_id);
+	void updateQuantity(Long cartItemId, int quantity);
 }

@@ -1,12 +1,24 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import AdminServices from "../Services/AdminServices";
+import { motion } from "framer-motion";
+
+// PrimeReact Imports
+import { Toast } from "primereact/toast";
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { Button } from 'primereact/button';
+import { Card } from 'primereact/card';
+import { Skeleton } from 'primereact/skeleton';
+import { InputText } from 'primereact/inputtext';
 
 function Type() {
     const navigate = useNavigate();
     const [typeData, setTypeData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [globalFilter, setGlobalFilter] = useState(null);
+    const toast = useRef(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -14,9 +26,7 @@ function Type() {
             setError(null);
             try {
                 const response = await AdminServices.getAllTypes();
-                const data = Array.isArray(response.data)
-                    ? response.data
-                    : response.data?.data || [];
+                const data = Array.isArray(response.data) ? response.data : response.data?.data || [];
                 setTypeData(data);
             } catch (err) {
                 console.error(err);
@@ -35,105 +45,108 @@ function Type() {
         try {
             await AdminServices.deleteType(id);
             setTypeData((prev) => prev.filter((type) => type.type_id !== id));
+            toast.current?.show({ severity: "success", summary: "Deleted", detail: "Type deleted successfully", life: 3000 });
         } catch (err) {
             console.error("Failed to delete type:", err);
-            setError("Failed to delete type. Please try again.");
+            toast.current?.show({ severity: "error", summary: "Error", detail: "Failed to delete type", life: 3000 });
         }
     };
 
+    const actionBodyTemplate = (rowData) => {
+        return (
+            <div className="flex gap-2">
+                <Button 
+                    icon="pi pi-pencil" 
+                    className="p-button-rounded p-button-warning p-button-text" 
+                    aria-label="Update" 
+                    onClick={() => navigate(`/UpdateType/${rowData.type_id}`)} 
+                    tooltip="Edit Type"
+                    tooltipOptions={{ position: 'top' }}
+                />
+                <Button 
+                    icon="pi pi-trash" 
+                    className="p-button-rounded p-button-danger p-button-text" 
+                    aria-label="Delete" 
+                    onClick={() => handleDeleteType(rowData.type_id)} 
+                    tooltip="Delete Type"
+                    tooltipOptions={{ position: 'top' }}
+                />
+            </div>
+        );
+    };
+
+    const header = (
+        <div className="flex flex-wrap align-items-center justify-content-between gap-2">
+            <span className="text-xl text-900 font-bold">Type List</span>
+            <span className="p-input-icon-left">
+                <i className="pi pi-search" />
+                <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Search..." className="border-round-xl w-full sm:w-auto" />
+            </span>
+        </div>
+    );
+
     return (
-        <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-6">
-            <div className="max-w-6xl mx-auto bg-white dark:bg-gray-800 shadow-xl rounded-2xl p-6">
-
-                {/* Header */}
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-                    <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
-                        Manage Types
-                    </h1>
-
-                    <button
+        <div className="p-4 md:p-6 bg-gray-50 min-h-screen">
+            <Toast ref={toast} />
+            
+            <motion.div 
+              initial={{ opacity: 0, y: -20 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              transition={{ duration: 0.5 }}
+              className="max-w-7xl mx-auto"
+            >
+                <div className="flex flex-column sm:flex-row justify-content-between align-items-start sm:align-items-center mb-5 gap-3">
+                    <div>
+                        <h1 className="text-3xl font-bold text-gray-800 m-0 mb-2">Manage Types</h1>
+                        <p className="text-600 m-0">Organize your products into distinct types.</p>
+                    </div>
+                    <Button
+                        label="Add Type"
+                        icon="pi pi-plus"
                         onClick={() => navigate("/addType")}
-                        className="mt-4 md:mt-0 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg shadow-md transition duration-200"
-                    >
-                        + Add Type
-                    </button>
+                        className="p-button-primary border-round-full shadow-2 hover:shadow-4 transition-all"
+                    />
                 </div>
 
-                {/* Loader */}
-                {loading && (
-                    <div className="flex justify-center py-10">
-                        <div className="h-12 w-12 border-4 border-blue-500 border-dashed rounded-full animate-spin"></div>
-                    </div>
-                )}
-
-                {/* Error */}
-                {error && (
-                    <div className="text-center text-red-500 font-semibold py-4">
-                        {error}
-                    </div>
-                )}
-
-                {/* Table */}
-                {!loading && !error && typeData.length > 0 && (
-                    <div className="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700">
-                        <table className="min-w-full text-sm text-left">
-                            <thead className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
-                                <tr>
-                                    <th className="px-6 py-3">#</th>
-                                    <th className="px-6 py-3">Type Name</th>
-                                    <th className="px-6 py-3 text-center">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {typeData.map((data, index) => (
-                                    <tr
-                                        key={data.type_id}
-                                        className="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
-                                    >
-                                        <td className="px-6 py-4 font-medium text-gray-800 dark:text-gray-200">
-                                            {index + 1}
-                                        </td>
-                                        <td className="px-6 py-4 text-gray-600 dark:text-gray-300">
-                                            {data.type_name}
-                                        </td>
-                                        <td className="px-6 py-4 text-center space-x-2">
-                                            <button
-                                                onClick={() => navigate(`/UpdateType/${data.type_id}`)}
-                                                className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-1 rounded-md transition"
-                                            >
-                                                Update
-                                            </button>
-
-                                            <button
-                                                onClick={() => handleDeleteType(data.type_id)}
-                                                className="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded-md transition"
-                                            >
-                                                Delete
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                )}
-
-                {/* Empty State */}
-                {!loading && !error && typeData.length === 0 && (
-                    <div className="text-center py-12">
-                        <div className="text-5xl mb-4">📂</div>
-                        <p className="text-gray-500 dark:text-gray-400 text-lg">
-                            No Types Available
-                        </p>
-                        <button
-                            onClick={() => navigate("/addType")}
-                            className="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg transition"
+                <Card className="shadow-3 border-round-2xl surface-0 overflow-hidden">
+                    {loading ? (
+                        <div className="p-4">
+                            <Skeleton height="3rem" className="mb-2 border-round"></Skeleton>
+                            <Skeleton height="3rem" className="mb-2 border-round"></Skeleton>
+                            <Skeleton height="3rem" className="mb-2 border-round"></Skeleton>
+                            <Skeleton height="3rem" className="border-round"></Skeleton>
+                        </div>
+                    ) : error ? (
+                        <div className="flex align-items-center justify-content-center p-6 text-red-500 font-semibold text-lg">
+                            <i className="pi pi-exclamation-triangle mr-2 text-2xl"></i> {error}
+                        </div>
+                    ) : typeData.length > 0 ? (
+                        <DataTable 
+                            value={typeData} 
+                            paginator 
+                            rows={10} 
+                            rowsPerPageOptions={[5, 10, 25, 50]} 
+                            emptyMessage="No types found."
+                            globalFilter={globalFilter}
+                            header={header}
+                            stripedRows
+                            className="p-datatable-sm"
+                            responsiveLayout="stack"
+                            breakpoint="960px"
                         >
-                            Add Your First Type
-                        </button>
-                    </div>
-                )}
-            </div>
+                            <Column header="Sr No." body={(data, options) => options.rowIndex + 1} style={{ width: '10%' }}></Column>
+                            <Column field="type_name" header="Type Name" sortable style={{ width: '70%' }}></Column>
+                            <Column header="Actions" body={actionBodyTemplate} style={{ width: '20%' }}></Column>
+                        </DataTable>
+                    ) : (
+                        <div className="text-center py-8">
+                            <i className="pi pi-folder-open text-6xl text-gray-400 mb-4 block"></i>
+                            <p className="text-gray-500 text-lg m-0 mb-4">No Types Available</p>
+                            <Button label="Add Your First Type" icon="pi pi-plus" onClick={() => navigate("/addType")} className="p-button-outlined border-round-full" />
+                        </div>
+                    )}
+                </Card>
+            </motion.div>
         </div>
     );
 }
