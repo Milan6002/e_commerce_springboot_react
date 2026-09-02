@@ -59,6 +59,8 @@ function Login() {
 
       toast.current?.show({ severity: 'success', summary: 'Success', detail: 'Login Successful', life: 3000 });
 
+      localStorage.setItem("role", decoded.role === "ROLE_ADMIN" ? "ADMIN" : "USER");
+
       // ✅ role based redirect
       setTimeout(() => {
         if (decoded.role === "ROLE_ADMIN") {
