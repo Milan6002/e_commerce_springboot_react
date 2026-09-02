@@ -51,7 +51,7 @@ function App() {
 
   return (
     <>
-      <BrowserRouter basename="/ecommerce">
+      <BrowserRouter>
         <Navbar />
 
         <Routes>
