@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import AdminService from "../Services/AdminServices";
 import CartService from "../Services/CartService";
 import { jwtDecode } from "jwt-decode";
-import "../assets/shop.css";
+import "../assets/Shop.css";
 import { motion } from "framer-motion";
 
 // PrimeReact Imports

@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import AdminService from "../Services/AdminServices";
-import "../assets/shop.css";
+import "../assets/Shop.css";
 import { motion } from "framer-motion";
 import { calculateDiscountPrice } from "../Utils/priceUtils";
 import CartService from "../Services/CartService";

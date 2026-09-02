@@ -5,7 +5,7 @@ import Navbar from "./Component/Navbar";
 import Home from "./Component/Home";
 import Categories from "./Component/Categories";
 import AddCategory from "./Component/AddCategory";
-import UpdateCategory from "./Component/updateCategory";
+import UpdateCategory from "./Component/UpdateCategory";
 import Products from "./Component/Products";
 import AddProductForm from "./Component/AddProductForm";
 import UpdateProductForm from "./Component/UpdateProductForm";
